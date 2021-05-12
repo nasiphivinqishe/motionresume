@@ -29,4 +29,3 @@ node main.js
 ```
 
 (on the terminal)
-"# motionresume"
