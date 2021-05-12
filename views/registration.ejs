@@ -1,0 +1,104 @@
+<%- include ('Layout/header') %>
+<body>
+  <form id="registration">
+    <h1>Register</h1>
+    <p>Please fill in this form to create an account.</p>
+    <hr />
+    <label for="name"><b>Name</b></label>
+    <input
+      type="text"
+      placeholder="Enter Name"
+      name="name"
+      id="name"
+      required
+    /><br />
+
+    <label for="email"><b>Email</b></label>
+    <input
+      type="text"
+      placeholder="Enter Email"
+      name="email"
+      id="email"
+      required
+    /><br />
+
+    <label for="phone"><b>Phone</b></label>
+    <input
+      type="number"
+      placeholder="Enter Phone"
+      name="phone"
+      id="phone"
+      required
+    /><br />
+
+    <label for="psw"><b>Password</b></label>
+    <input
+      type="password"
+      placeholder="Enter Password"
+      name="password"
+      id="password"
+      required
+    /><br />
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input
+      type="password"
+      placeholder="Repeat Password"
+      name="password-repeat"
+      id="password-repeat"
+      required
+    /><br />
+
+    <input type="radio" id="recruiter" name="typeOfUser" value="recruiter" />
+    <label for="recruiuter">I am a recruiter</label><br />
+    <input type="radio" id="jobseeker" name="typeOfUser" value="jobseeker" />
+    <label for="jobseeker">I am a jobseeker</label><br />
+    <hr />
+    <p>
+      By creating an account you agree to our <a href="#">Terms & Privacy</a>.
+    </p>
+
+    <button type="submit" class="btnNext">Next</button>
+
+    <div class="container signin">
+      <p>Already have an account? <a href="/">Sign in</a></p>
+    </div>
+  </form>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      //on click next get user data and store it in localstorage for later user when other data
+      // is provided
+      $(".btnNext").click(function (e) {
+        e.preventDefault();
+        var password = $("#password").val();
+        var confirmPassword = $("#password-repeat").val();
+
+        if (password === confirmPassword) {
+          var userObject = {
+            name: $("#name").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val(),
+            password: password,
+            typeofUser: $("input[name=typeOfUser]").val(),
+          };
+
+          localStorage.setItem("userObjectString", JSON.stringify(userObject)); //Keeping user data for later use
+
+          if ($("input[name=typeOfUser]:checked").val() === "recruiter") {
+            window.location.replace("/registration_next_recruiter");
+          } else {
+            window.location.replace("/registration_next_jobseeker");
+          }
+        } else {
+          alert("Password does not match");
+          console.log(password);
+          console.log(confirmPassword);
+        }
+        console.log(name);
+      });
+    });
+  </script>
+</body>
+<% - include('Layout/footer') %>

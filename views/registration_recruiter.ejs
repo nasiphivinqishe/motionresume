@@ -1,0 +1,160 @@
+<%- include ('Layout/header') %>
+    <form>
+      <label for="company"><b>Company name</b></label>
+      <input
+        type="text"
+        placeholder="Enter company name"
+        name="company"
+        id="company"
+        required
+      /><br />
+
+      <label for="company_url"><b>Company URL</b></label>
+      <input
+        type="text"
+        placeholder="Enter company url"
+        name="company_url"
+        id="company_url"
+        required
+      /><br />
+
+      <label for="work_email"><b>Work email</b></label>
+      <input
+        type="text"
+        placeholder="Enter work email"
+        name="work_email"
+        id="work_email"
+        required
+      /><br />
+
+      <label>Image</label>
+      <input type="file" id="image" name="image" /><br />
+
+      <button type="submit" class="registerbtn" href="/motion_resume">
+        Finish registration
+      </button>
+    </form>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $(".registerbtn").click(function (e) {
+        e.preventDefault();
+
+        var companyURL = $("#company_url").val();
+        var getDomainDetails = function (fullyQualifiedUrl) {
+          var url = {},
+            tempProtocol;
+          var a = document.createElement("a");
+          // if doesn't start with something like https:// it's not a url, but try to work around that
+          if (fullyQualifiedUrl.indexOf("://") == -1) {
+            tempProtocol = "https://";
+            a.href = tempProtocol + fullyQualifiedUrl;
+          } else a.href = fullyQualifiedUrl;
+          var parts = a.hostname.split(".");
+          url.origin = tempProtocol ? "" : a.origin;
+          url.domain = a.hostname;
+          url.subdomain = parts[0];
+          url.domainroot = "";
+          url.domainpath = "";
+          url.tld = "." + parts[parts.length - 1];
+          url.path = a.pathname.substring(1);
+          url.query = a.search.substr(1);
+          url.protocol = tempProtocol
+            ? ""
+            : a.protocol.substr(0, a.protocol.length - 1);
+          url.port = tempProtocol
+            ? ""
+            : a.port
+            ? a.port
+            : a.protocol === "http:"
+            ? 80
+            : a.protocol === "https:"
+            ? 443
+            : a.port;
+          url.parts = parts;
+          url.segments =
+            a.pathname === "/" ? [] : a.pathname.split("/").slice(1);
+          url.params = url.query === "" ? [] : url.query.split("&");
+          for (var j = 0; j < url.params.length; j++) {
+            var param = url.params[j];
+            var keyval = param.split("=");
+            url.params[j] = {
+              key: keyval[0],
+              val: keyval[1],
+            };
+          }
+          // domainroot
+          if (parts.length > 2) {
+            url.domainroot =
+              parts[parts.length - 2] + "." + parts[parts.length - 1];
+            // check for country code top level domain
+            if (
+              parts[parts.length - 1].length == 2 &&
+              parts[parts.length - 1].length == 2
+            )
+              url.domainroot = parts[parts.length - 3] + "." + url.domainroot;
+          }
+          // domainpath (domain+path without filenames)
+          if (url.segments.length > 0) {
+            var lastSegment = url.segments[url.segments.length - 1];
+            var endsWithFile = lastSegment.indexOf(".") != -1;
+            if (endsWithFile) {
+              var fileSegment = url.path.indexOf(lastSegment);
+              var pathNoFile = url.path.substr(0, fileSegment - 1);
+              url.domainpath = url.domain;
+              if (pathNoFile)
+                url.domainpath = url.domainpath + "/" + pathNoFile;
+            } else url.domainpath = url.domain + "/" + url.path;
+          } else url.domainpath = url.domain;
+          return url;
+        };
+        //console.log(getRootDomain(companyURL).domainroot);
+        var domainroot = getDomainDetails(companyURL).domainroot;
+        var blackListedEmailDomains = ["gmail.com", "yahoo.com"];
+        var workEmail = $("#work_email").val();
+        var emailDomain = workEmail.substring(workEmail.lastIndexOf("@") + 1);
+
+        if (emailDomain != domainroot) {
+          alert("Please provide your work email to continue with registration");
+        } else if (blackListedEmailDomains.indexOf(emailDomain) != -1) {
+          alert("Please provide work email!");
+        } else {
+          //continue witgh registration
+          var previousUserString = localStorage.getItem("userObjectString");
+
+          if (!previousUserString) {
+            //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
+          } else {
+            var previousUserObject = JSON.parse(previousUserString);
+            previousUserObject.companyName = $("#company").val();
+            previousUserObject.companyURL = $("#company_url").val();
+            previousUserObject.companyEmail = $("#work_email").val();
+            delete previousUserObject.email;
+            console.log(previousUserObject);
+            $.ajax({
+              method: "POST",
+              url: "/register_recruiter",
+              data: { userDataObject: previousUserObject },
+              // contentType: "json",
+              success: function (data, status, xhr) {
+                // Success callback function
+                alert("Success, check logs");
+                console.log(data);
+              },
+              error: function (data, status, xhr) {
+                // success callback function
+                alert("Error, check logs");
+                console.log(data);
+              },
+            });
+          }
+        }
+      });
+    });
+  </script>
+
+  <div class="container signin">
+    <p>Already have an account? <a href="/">Sign in</a></p>
+  </div>
+  <% - include('Layout/footer') %>  

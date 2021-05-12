@@ -1,0 +1,197 @@
+<% include ('layout/header') %>
+  <head> </head>
+  <body>
+    <div class="w3-container"> 
+      <form id="myForm">
+          <div class="container">
+            <h1>Continue registration...</h1>
+            
+            <hr />
+            <h1>Education</h1>
+            <label for="university"><b>University Attended</b></label>
+            <input
+              type="text"
+              placeholder="Enter university you attended"
+              name="university"
+              id="university"
+              required
+            />
+            <br />
+    
+            <label for="qualification"><b>Qualification</b></label>
+            <input
+              type="text"
+              placeholder="Enter qualification"
+              name="qualification"
+              id="qualification"
+              required
+            />
+            <br />
+    
+            <label for="degree"><b>Degree</b></label>
+            <input
+              type="text"
+              placeholder="Enter degree"
+              name="degree"
+              id="degree"
+              required
+            /><br />
+    
+            <label for="field"><b>Field of Study</b></label>
+            <input
+              type="text"
+              placeholder="Enter field"
+              name="field"
+              id="field"
+              required
+            /><br />
+    
+            <label for="year_obtained"><b>Year Obtained</b></label>
+            <input
+              type="number"
+              placeholder="Enter year obtained"
+              name="year_obtained"
+              id="year_obtained"
+              required
+            /><br />
+          </div>
+    </div>
+
+    <div class="container">
+      <h1>Experience</h1>
+      <br />
+      <label for="title"><b>Title</b></label>
+      <input
+        type="text"
+        placeholder="Enter title"
+        name="title"
+        id="title"
+        required
+      />
+      <br />
+
+      <label for="type"><b>Employment type</b></label>
+      <input
+        type="text"
+        placeholder="Enter employment type"
+        name="type"
+        id="type"
+        required
+      />
+      <br />
+
+      <label for="company"><b>Company</b></label>
+      <input
+        type="text"
+        placeholder="Enter company you worked for"
+        name="company"
+        id="company"
+        required
+      /><br />
+
+      <label for="location"><b>Location</b></label>
+      <input
+        type="text"
+        placeholder="Enter job location"
+        name="location"
+        id="location"
+        required
+      /><br />
+
+      <label for="years"><b>Year Worked</b></label>
+      <input
+        type="number"
+        placeholder="Enter years worked"
+        name="years"
+        id="years"
+        required
+      /><br />
+    </div>
+</div>
+ <div class="container">
+   <h1>Skills</h1>
+   <input
+        type="text"
+        placeholder="Enter your skills"
+        name="skills"
+        id="skills"
+        required
+      /><br />
+      <br>
+      
+      <label>Image</label><br />
+      <input type="file" id="image" name="image" required /><br>
+      <br>
+      <label>Browse for a video</label><br />
+      <input type="file" id="video" name="video" required /><br>
+      
+      <br>
+      <button type="submit" class="registerbtn" id="finishreg">Finish registration</button>
+
+      <div class="container signin">
+        <p>Already have an account? <a href="/">Sign in</a></p>
+      </div>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(".registerbtn").click(function (e) {
+          e.preventDefault();
+
+          var video = $("#video").val();
+          var previousUserString = localStorage.getItem("userObjectString");
+          var  previousUserObject = JSON.parse(previousUserString);
+          previousUserObject.isRegistrationCompleted = true
+
+          if (!video) {
+            previousUserObject.isRegistrationCompleted = false
+          } 
+            //continue witgh registration
+          
+
+          if (!previousUserString) {
+            //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
+          } else {
+            previousUserObject.universityName = $("#university").val();
+            previousUserObject.qualification = $("#qualification").val();
+            previousUserObject.degree = $("#degree").val();
+            previousUserObject.yearObtained = $("#year_obtained").val();
+            previousUserObject.title = $("#title").val();
+            previousUserObject.employmentType = $("#type").val();
+            previousUserObject.company = $("#company").val();
+            previousUserObject.location = $("#location").val();
+            previousUserObject.yearsWorked = $("#years").val();
+            previousUserObject.skills = $("#skills").val();
+
+            console.log(typeof previousUserObject);
+            console.log(previousUserObject);
+
+            $.ajax({
+              method: "POST",
+              url: "/register_jobseeker",
+              data: { userDataObject: previousUserObject },
+              success: function (data) {
+                // success callback function
+                alert("Success, check logs");
+                console.log(data)
+              },
+              error: function (data, status, xhr) {
+                // error callback function
+                alert("Error, check logs");
+                console.log(data)
+              },
+            });
+    
+          }  
+        });
+      })
+      
+    function myFunction() {
+    document.getElementById("myForm").submit();
+}
+
+    </script>
+
+  </body>
+
+  <% include ('layout/footer') %>
