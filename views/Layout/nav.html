@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/v/bs4/dt-1.10.24/datatables.min.css"
+    />
+    <style>
+      .navbar {
+        border-radius: 0px !important;
+        height: 70px !important;
+      }
+
+      .navbar-item {
+        font-weight: 700;
+      }
+      .navbar-brand {
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+
+    
+
+    <nav class="navbar navbar-expand-sm bg-light">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/motion_resume">Motion Resume</a>
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/messages">Messages </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/notifications"> Notifications </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/my_profile"> My Profile </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/add_job"> Add Job </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/log_out"> Log Out </a>
+        </li>
+      </ul>
+    </nav>
+<p>
+      <input value="Interview Questions" />
+      <button>Take Interview</button>
+    </p>
+    <div class="row">
+      <div class="form-group col-md-5">
+        <div class="field_wrapper">
+          <div>
+            <label for="skills">Skills:</label> <br />
+            <input type="text" name="skills" value="" />
+            <a href="javascript:void(0);" class="add_button" title="Add field"
+              >Add Skill</a
+            >
+          </div>
+        </div>
+
+        <script type="text/javascript">
+          $(document).ready(function () {
+            var maxField = 10; //Input fields increment limitation
+            var addButton = $(".add_button"); //Add button selector
+            var wrapper = $(".field_wrapper"); //Input field wrapper
+            var fieldHTML =
+              '<div><input type="text" name="skills" value=""/><a href="javascript:void(0);" class="remove_button">Remove skill</a></div>'; //New input field html
+            var x = 1; //Initial field counter is 1
+
+            //Once add button is clicked
+            $(addButton).click(function () {
+              //Check maximum number of input fields
+              if (x < maxField) {
+                x++; //Increment field counter
+                $(wrapper).append(fieldHTML); //Add field html
+              }
+            });
+
+            //Once remove button is clicked
+            $(wrapper).on("click", ".remove_button", function (e) {
+              e.preventDefault();
+              $(this).parent("div").remove(); //Remove field html
+              x--; //Decrement field counter
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

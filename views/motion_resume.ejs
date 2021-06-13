@@ -1,23 +1,101 @@
 <%- include ('Layout/header') %>
-<head>
-  <title>Motion Resume</title>
-</head>
+<link rel="stylesheet" href="ckeditor/ckeditor.js" />
 <body>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Motion Resume</a></li>
-        <input type="text" placeholder="Search.." />
-        <li><a href="/connect-to-people">Connect To People</a></li>
-        <li><a href="/available-jobs">Available Jobs</a></li>
-        <li><a href="/messages">Messages</a></li>
-        <li><a href="/notifications">Notifications</a></li>
-        <li><a href="/my-profile">My Profile</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </div>
-  </nav>
+  <div class="container">
+    <% for (var i = 0; i < jobs.length; i++) { %>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-4">
+                <img src="./logo.png" class="center" width="70%" alt="Company Logo" />
+              </div>
+              <div class="col-sm-6">
+                <h3><b>Job Level:</b></h3>
+                <p><%= levelDescriptionObj[jobs[i].level]%></p>
+                <h3><b>Field:</b></h3>
+                <p><%= jobs[i].field %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h3><b>Requirements</b></h3>
+            <p><%- jobs[i].requirements %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h3><b>Discription and Responsibilitie</b></h3>
+            <p><%- jobs[i].functions %></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h3><b>Job Start Date:</b></h3>
+            <p><%= jobs[i].start_date%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h3><b>Closing Date:</b></h3>
+            <p><%= jobs[i].application_closing_date%></p>
+          </div>
+        </div>
 
-  <h3>Page content</h3>
+        <% if(jobs[i].poster != userId) { %>   
+          <div class="row">
+               <div class="col-sm-12">
+                <button class="btn btn-md btn-primary btn-apply" id="<%=jobs[i]._id %>">Apply For This Job</button>
+              </div>
+          </div>
+      <% } %>
+
+    <% if(jobs[i].poster == userId) { %>   
+        <div class="row">
+             <div class="col-sm-12">
+              <button class="btn btn-md btn-primary job_details" id="<%=jobs[i]._id %>">My Job details</button>
+            </div>
+        </div>
+    <% } %>
+    <hr />
+  <% } %>
+  </div> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+
+    $(document).ready(function () {
+      $(".btn-apply").click(function () {
+        var jobId = $(this).attr('id')
+        $.ajax({
+          method: "POST",
+          url: "/apply_for_job",
+          data: { jobId: jobId },
+          success: function (data) {
+            // success callback function
+            alert("Success, check logs");
+            console.log(data)
+          },
+          error: function (data, status, xhr) {
+            // error callback function
+            alert("Error, check logs");
+            console.log(data)
+          },
+        });
+        
+    });
+
+    $(".job_details").click(function () {
+      var jobId = $(this).attr('id')
+      location.replace(`/job_details?jobId=${jobId}`);
+      
+    })
+  });
+  </script>
+
+</script>
+
 </body>
 <%- include ('Layout/footer') %>

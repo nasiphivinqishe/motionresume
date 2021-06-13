@@ -1,0 +1,18 @@
+<%- include ('Layout/header') %>
+<head>
+  <title>My Profile</title>
+</head>
+<body>
+  <div>
+    <textarea cols="30" rows="10" placeholder="Post Something"></textarea>
+    <input type="file" id="add-video" hidden />
+    <label for="add-video">Add Video</label> &nbsp &nbsp
+    <input type="file" id="add-img" hidden />
+    <label for="add-img">Add Photo</label>
+  </div>
+  <div class="topnav">
+    <a href="/user_information">User Information</a> &nbsp &nbsp
+    <a href="/myposts">My Posts</a>
+  </div>
+</body>
+<%- include ('Layout/footer') %>

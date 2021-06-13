@@ -1,197 +1,275 @@
-<% include ('layout/header') %>
-  <head> </head>
-  <body>
-    <div class="w3-container"> 
-      <form id="myForm">
-          <div class="container">
-            <h1>Continue registration...</h1>
-            
-            <hr />
-            <h1>Education</h1>
-            <label for="university"><b>University Attended</b></label>
-            <input
-              type="text"
-              placeholder="Enter university you attended"
-              name="university"
-              id="university"
-              required
-            />
-            <br />
-    
-            <label for="qualification"><b>Qualification</b></label>
-            <input
-              type="text"
-              placeholder="Enter qualification"
-              name="qualification"
-              id="qualification"
-              required
-            />
-            <br />
-    
-            <label for="degree"><b>Degree</b></label>
-            <input
-              type="text"
-              placeholder="Enter degree"
-              name="degree"
-              id="degree"
-              required
-            /><br />
-    
-            <label for="field"><b>Field of Study</b></label>
-            <input
-              type="text"
-              placeholder="Enter field"
-              name="field"
-              id="field"
-              required
-            /><br />
-    
-            <label for="year_obtained"><b>Year Obtained</b></label>
-            <input
-              type="number"
-              placeholder="Enter year obtained"
-              name="year_obtained"
-              id="year_obtained"
-              required
-            /><br />
+<%- include ('Layout/registration-header') %>
+<head> </head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <h3 style="text-align: center">
+              <b>Please finish registration here..</b>
+            </h3>
+            <form id="myForm">
+              <h3><b>Education</b></h3>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="university">University Attended:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="university"
+                    name="university"
+                    placeholder="Enter university attended"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="qualification">Qualification:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="qualification"
+                    name="qualification"
+                    placeholder="Enter your qualification"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="degree">Degree:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="degree"
+                    name="degree"
+                    placeholder="Enter your degree"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="field">Field/ Industry:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="field"
+                    name="field"
+                    placeholder="Enter field/ Industry"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="year_obtained">Year Obtained:</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="year_obtained"
+                    name="year_obtained"
+                    placeholder="Enter year you obtained degree"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <h3><b>Experience</b></h3>
+                  <label for="tittle">Job tittle:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="tittle"
+                    name="tittle"
+                    placeholder="Enter job tittle"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="type">Employment type:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="type"
+                    name="type"
+                    placeholder="What was your employment type? "
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="company">Company:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="company"
+                    name="company"
+                    placeholder="Enter company "
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="location">Company Location:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter company location"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="years">Years worked</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="years"
+                    name="years"
+                    placeholder="Enter years you worked for the company"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <div class="field_wrapper">
+                    <div>
+                      <label for="skills">Skills:</label> <br />
+                      <input type="text" name="skills" value="" />
+                      <a
+                        href="javascript:void(0);"
+                        class="add_button"
+                        title="Add field"
+                        >Add More Skill</a
+                      >
+                    </div>
+                  </div>
+
+                  <script type="text/javascript">
+                    $(document).ready(function () {
+                      var maxField = 10; //Input fields increment limitation
+                      var addButton = $(".add_button"); //Add button selector
+                      var wrapper = $(".field_wrapper"); //Input field wrapper
+                      var fieldHTML =
+                        '<div><input type="text" name="skills" value=""/><a href="javascript:void(0);" class="remove_button">Remove skill</a></div>'; //New input field html
+                      var x = 1; //Initial field counter is 1
+
+                      //Once add button is clicked
+                      $(addButton).click(function () {
+                        //Check maximum number of input fields
+                        if (x < maxField) {
+                          x++; //Increment field counter
+                          $(wrapper).append(fieldHTML); //Add field html
+                        }
+                      });
+
+                      //Once remove button is clicked
+                      $(wrapper).on("click", ".remove_button", function (e) {
+                        e.preventDefault();
+                        $(this).parent("div").remove(); //Remove field html
+                        x--; //Decrement field counter
+                      });
+                    });
+                  </script>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label>Image</label><br />
+                  <input type="file" id="image" name="image" required />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label>Browse for a video</label><br />
+                  <input type="file" id="video" name="video" required /><br />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-md btn-primary registerbtn"
+                id="finishreg"
+              >
+                Finish registration
+              </button>
+
+              <div class="container signin">
+                <p>Already have an account? <a href="/">Sign in</a></p>
+              </div>
+            </form>
           </div>
-    </div>
-
-    <div class="container">
-      <h1>Experience</h1>
-      <br />
-      <label for="title"><b>Title</b></label>
-      <input
-        type="text"
-        placeholder="Enter title"
-        name="title"
-        id="title"
-        required
-      />
-      <br />
-
-      <label for="type"><b>Employment type</b></label>
-      <input
-        type="text"
-        placeholder="Enter employment type"
-        name="type"
-        id="type"
-        required
-      />
-      <br />
-
-      <label for="company"><b>Company</b></label>
-      <input
-        type="text"
-        placeholder="Enter company you worked for"
-        name="company"
-        id="company"
-        required
-      /><br />
-
-      <label for="location"><b>Location</b></label>
-      <input
-        type="text"
-        placeholder="Enter job location"
-        name="location"
-        id="location"
-        required
-      /><br />
-
-      <label for="years"><b>Year Worked</b></label>
-      <input
-        type="number"
-        placeholder="Enter years worked"
-        name="years"
-        id="years"
-        required
-      /><br />
-    </div>
-</div>
- <div class="container">
-   <h1>Skills</h1>
-   <input
-        type="text"
-        placeholder="Enter your skills"
-        name="skills"
-        id="skills"
-        required
-      /><br />
-      <br>
-      
-      <label>Image</label><br />
-      <input type="file" id="image" name="image" required /><br>
-      <br>
-      <label>Browse for a video</label><br />
-      <input type="file" id="video" name="video" required /><br>
-      
-      <br>
-      <button type="submit" class="registerbtn" id="finishreg">Finish registration</button>
-
-      <div class="container signin">
-        <p>Already have an account? <a href="/">Sign in</a></p>
+        </div>
       </div>
-    </form>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $(".registerbtn").click(function (e) {
-          e.preventDefault();
+    </div>
+  </div>
 
-          var video = $("#video").val();
-          var previousUserString = localStorage.getItem("userObjectString");
-          var  previousUserObject = JSON.parse(previousUserString);
-          previousUserObject.isRegistrationCompleted = true
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("form").submit(function (e) {
+        e.preventDefault(e);
 
-          if (!video) {
-            previousUserObject.isRegistrationCompleted = false
-          } 
-            //continue witgh registration
-          
+        var video = $("#video").val();
+        var previousUserString = localStorage.getItem("userObjectString");
+        var previousUserObject = JSON.parse(previousUserString);
+        previousUserObject.isRegistrationCompleted = true;
 
-          if (!previousUserString) {
-            //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
-          } else {
-            previousUserObject.universityName = $("#university").val();
-            previousUserObject.qualification = $("#qualification").val();
-            previousUserObject.degree = $("#degree").val();
-            previousUserObject.yearObtained = $("#year_obtained").val();
-            previousUserObject.title = $("#title").val();
-            previousUserObject.employmentType = $("#type").val();
-            previousUserObject.company = $("#company").val();
-            previousUserObject.location = $("#location").val();
-            previousUserObject.yearsWorked = $("#years").val();
-            previousUserObject.skills = $("#skills").val();
+        if (!video) {
+          previousUserObject.isRegistrationCompleted = false;
+        }
+        //continue witgh registration
 
-            console.log(typeof previousUserObject);
-            console.log(previousUserObject);
+        if (!previousUserString) {
+          //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
+        } else {
+          previousUserObject.universityName = $("#university").val();
+          previousUserObject.qualification = $("#qualification").val();
+          previousUserObject.degree = $("#degree").val();
+          previousUserObject.yearObtained = $("#year_obtained").val();
+          previousUserObject.title = $("#title").val();
+          previousUserObject.employmentType = $("#type").val();
+          previousUserObject.company = $("#company").val();
+          previousUserObject.location = $("#location").val();
+          previousUserObject.yearsWorked = $("#years").val();
+          previousUserObject.skills = $("#skills").val();
 
-            $.ajax({
-              method: "POST",
-              url: "/register_jobseeker",
-              data: { userDataObject: previousUserObject },
-              success: function (data) {
-                // success callback function
-                alert("Success, check logs");
-                console.log(data)
-              },
-              error: function (data, status, xhr) {
-                // error callback function
-                alert("Error, check logs");
-                console.log(data)
-              },
-            });
-    
-          }  
-        });
-      })
-      
-    function myFunction() {
-    document.getElementById("myForm").submit();
-}
+          console.log(typeof previousUserObject);
+          console.log(previousUserObject);
 
-    </script>
+          $.ajax({
+            method: "POST",
+            url: "/register_jobseeker",
+            data: { userDataObject: previousUserObject },
+            success: function (data) {
+              // success callback function
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              // error callback function
+              alert("Error, check logs");
+              console.log(data);
+            },
+          });
+        }
+      });
+    });
+  </script>
+</body>
 
-  </body>
-
-  <% include ('layout/footer') %>
+<% include ('layout/registration-footer') %>

@@ -1,0 +1,324 @@
+<%- include ('Layout/header') %>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <form id="update_job">
+          <div class="row">
+            <div class="form-group col-md-5">
+              <h3><b>Update Job here..</b></h3>
+              <label for="level">Level Type:</label>
+              <select
+                class="form-control"
+                id="level"
+                name="level"
+                value="<%=jobDetails.level %>"
+                required
+              >
+                <option disabled>select here.</option>
+                <option value="1">Entry (0 yrs of Exp)</option>
+                <option value="2">Junior (0-2 yrs of Exp)</option>
+                <option value="3">Intermediate (3-5 yrs of Exp)</option>
+                <option value="4">Senior (6+ yrs of Exp)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="field">Field/ Industry:</label>
+              <input
+                class="form-control"
+                type="text"
+                id="field"
+                name="field"
+                value="<%= jobDetails.field %>"
+                placeholder="Enter field/ Industry"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="skills">Skills Needed:</label>
+              <input
+                class="form-control"
+                type="text"
+                id="skills"
+                name="skills"
+                value="<%= jobDetails.skills %>"
+                placeholder="Enter Skills needed"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="start_date">Experted Start Date:</label>
+              <input
+                class="form-control"
+                type="date"
+                id="start_date"
+                name="start_date"
+                placeholder="Enter Expected Start date"
+                required
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="application_closing_date"
+                >Application Closing Date:</label
+              >
+              <input
+                class="form-control"
+                type="date"
+                id="application_closing_date"
+                name="application_closing_date"
+                placeholder="Enter closing date for this job"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5 col-md-5">
+              <label for="requirements">Job Requirements:</label>
+              <textarea
+                class="form-control"
+                rows="5"
+                id="requirements"
+                name="requirements"
+                style="visibility: hidden"
+                placeholder="Enter Job Requirements"
+                required
+              >
+              </textarea>
+              <script>
+                CKEDITOR.replace("requirements");
+              </script>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-5 col-md-5">
+              <label for="functions"
+                >Job Discription and Responsibilitie:</label
+              >
+              <textarea
+                class="form-control"
+                rows="5"
+                id="functions"
+                name="functions"
+                style="visibility: hidden"
+                value="<%= jobDetails.field %>"
+                placeholder="Enter Job Functions"
+                required
+              >
+              </textarea>
+              <script>
+                CKEDITOR.replace("functions");
+              </script>
+            </div>
+          </div>
+          <button
+            class="btn btn-md btn-primary save_updated_job"
+            id="save_updated_job"
+          >
+            Save Updated Job
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3><b>Hello, Please add interview questions</b></h3>
+        <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
+        for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
+        <div>
+          <input name="the_types[]" type="checkbox" <%=
+          jobDetails.interview.questions[a].isVideo == 'true' ? "checked" : ""
+          %> /><input
+            type="text"
+            name="field_name[]"
+            value="<%= jobDetails.interview.questions[a].question %>"
+          />
+          <a href="javascript:void(0);" class="remove_button">Remove</a>
+        </div>
+        <% } %> <% } %>
+
+        <div class="field_wrapper">
+          <div>
+            <a href="javascript:void(0);" class="add_button" title="Add field"
+              >Add</a
+            >
+          </div>
+        </div>
+        <script type="text/javascript">
+                    $(document).ready(function () {
+                      var maxField = 10; //Input fields increment limitation
+                      var addButton = $(".add_button"); //Add button selector
+                      var wrapper = $(".field_wrapper"); //Input field wrapper
+                      var fieldHTML =
+                        `<div> <input name="the_types[]" type="checkbox"/>
+                        <input type="text" name="field_name[]" value=""/>
+                        <a href="javascript:void(0);" class="remove_button">Remove</a>
+                        </div>`; //New input field html
+                      var x = 1; //Initial field counter is 1
+
+                      //Once add button is clicked
+                      $(addButton).click(function () {
+                        //Check maximum number of input fields
+                        if (x < maxField) {
+                          x++; //Increment field counter
+                          $(wrapper).append(fieldHTML); //Add field html
+                        }
+                      });
+
+                      //Once remove button is clicked
+                      $(wrapper).on("click", ".remove_button", function (e) {
+                        e.preventDefault();
+                        $(this).parent("div").remove(); //Remove field html
+                        x--; //Decrement field counter
+                      });
+                    });
+                  </script>
+        <button
+          class="btn btn-md btn-primary submit_questions"
+          id="submit_questions"
+        >
+          Submit questions
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="row my-4">
+          <div class="col-lg-12">
+            <h3><b>People Applied for this job</b></h3>
+         
+                <% for(var i=0; i < jobApplantsNames.length; i++) { %>
+                    <p id="<%= jobDetails.applicants[i].userId %>" class ="name"><%= jobApplantsNames[i] %></p>
+               <button
+              class="btn btn-md btn-primary send_interview"
+              id="send_interview"
+            >
+              Send Interview
+            </button>
+               <% } %>
+
+          
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("form").submit(function (e) {
+        e.preventDefault(e);
+        /*
+            Start update Job
+          */
+        // Create an object that will store all the details
+        var jobId = "<%=jobDetails._id %>";
+        var levelType = $("#level").val();
+        var field = $("#field").val();
+        var skills = $("#skills").val();
+        var start_date = $("#start_date").val();
+        var application_closing_date = $("#application_closing_date").val();
+        var requirements = CKEDITOR.instances.requirements.getData();
+        var functions = CKEDITOR.instances.functions.getData();
+
+        var updatedJobDetails = {
+          jobId: jobId,
+          level: levelType,
+          field: field,
+          skills: skills,
+          start_date: start_date,
+          application_closing_date: application_closing_date,
+          requirements: requirements,
+          functions: functions,
+        };
+        console.log(updatedJobDetails);
+        $.ajax({
+          method: "POST",
+          url: "/update_job_details",
+          data: { updatedJobDetails: updatedJobDetails },
+          success: function (data) {
+            // success callback function
+            alert("Success, check logs");
+            console.log(data);
+            window.location.reload(true);
+          },
+          error: function (data, status, xhr) {
+            // error callback function
+            alert("Error, CHECK LOGS");
+            console.log(data);
+          },
+        });
+      });
+      /*
+            End update Job
+          */
+
+      CKEDITOR.instances.requirements.setData(
+        "<%= JSON.stringify(jobDetails.requirements) %>"
+      );
+      CKEDITOR.instances.functions.setData(
+        "<%= JSON.stringify(jobDetails.functions) %>"
+      );
+      $("#start_date").val(
+        moment("<%= jobDetails.start_date %>").format("YYYY-MM-DD")
+      );
+      $("#application_closing_date").val(
+        moment("<%= jobDetails.application_closing_date %>").format(
+          "YYYY-MM-DD"
+        )
+      );
+
+      $(".submit_questions").click(function (e) {
+        e.preventDefault(e);
+        e.stopImmediatePropagation(e);
+
+        var questions = $("input[name='field_name[]']");
+        var types = $("input[name='the_types[]']");
+        var interviewQuestions = [];
+        var jobId = "<%=jobDetails._id %>";
+
+        types.each(function (index) {
+          interviewQuestions.push({
+            isVideo: $(this).prop("checked"),
+            question: questions[index].value,
+          });
+        });
+
+        // interviewQuestions : Data type array of objects { isVideo: boolean, question: String}
+        if (interviewQuestions.length != 0) {
+          $.ajax({
+            method: "POST",
+            url: "/save_interview_questions",
+            data: { interviewQuestions: interviewQuestions, jobId: jobId },
+            success: function (data) {
+              // success callback function
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              // error callback function
+              alert("Error, check logs");
+              console.log(data);
+            },
+          });
+        }
+      });
+    });
+  </script>
+</body>
+<%- include ('Layout/footer') %>

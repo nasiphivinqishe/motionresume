@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.js"></script>
+  </head>
+  <body>
+    <script>
+      var links = ["google.com", "youtube.com", "reddit.com", "apple.com"];
+
+      function openSite() {
+        // get a random number between 0 and the number of links
+        var randIdx = Math.random() * links.length;
+        // round it, so it can be used as array index
+        randIdx = parseInt(randIdx, 10);
+        // construct the link to be opened
+        var link = "http://" + links[randIdx];
+        return link;
+      }
+
+      document.getElementById("link").innerHTML = openSite();
+    </script>
+  </body>
+</html>

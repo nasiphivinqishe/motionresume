@@ -2,22 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <link
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
     <link
       rel="stylesheet"
       type="text/css"
       href="https://cdn.datatables.net/v/bs4/dt-1.10.24/datatables.min.css"
     />
+
+    <style>
+      .navbar {
+        border-radius: 0px !important;
+        height: 90px !important;
+      }
+
+      .navbar-item {
+        font-weight: 700;
+      }
+      .navbar-brand {
+        font-weight: 900;
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <nav class="navbar navbar-expand-sm bg-light">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/motion_resume">Motion Resume</a>
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/messages">Messages </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/notifications"> Notifications </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/my_profile"> My Profile </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/add_job"> Add Job </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout"> Log Out </a>
+        </li>
+      </ul>
+    </nav>
+  </body>
 </html>

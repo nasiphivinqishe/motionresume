@@ -1,0 +1,212 @@
+<%- include ('Layout/header') %>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+
+<body>
+  <form>
+    <div class="container">
+      <h3>Add Job</h3>
+
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="level">Level Type:</label>
+          <select class="form-control" id="level" name="level" required>
+            <option selected disabled>select here.</option>
+            <option value="1">Entry (0 yrs of Exp)</option>
+            <option value="2">Junior (0-2 yrs of Exp)</option>
+            <option value="3">Intermediate (3-5 yrs of Exp)</option>
+            <option value="4">Senior (6+ yrs of Exp)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="field">Field/ Industry:</label>
+          <input
+            class="form-control"
+            type="text"
+            id="field"
+            name="field"
+            placeholder="Enter field/ Industry"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="skills">Skills:</label>
+          <input
+            class="form-control"
+            type="text"
+            id="skills"
+            name="skills"
+            placeholder="Enter skills for this job"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="start_date">Experted Start Date:</label>
+          <input
+            class="form-control"
+            type="date"
+            id="start_date"
+            name="start_date"
+            placeholder="Enter Expected Start date"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="application_closing_date"
+            >Application Closing Date:</label
+          >
+          <input
+            class="form-control"
+            type="date"
+            id="application_closing_date"
+            name="application_closing_date"
+            placeholder="Enter closing date for this job"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5 col-md-5">
+          <label for="requirements">Job Requirements:</label>
+          <textarea
+            class="form-control"
+            rows="5"
+            id="requirements"
+            name="requirements"
+            placeholder="Enter Job Requirements"
+            required
+          >
+          </textarea>
+          <script>
+            CKEDITOR.replace("requirements");
+          </script>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-5 col-md-5">
+          <label for="functions">Job Discription and Responsibilitie:</label>
+          <textarea
+            class="form-control"
+            rows="5"
+            id="functions"
+            name="functions"
+            placeholder="Enter Job Functions"
+            required
+          >
+          </textarea>
+          <script>
+            CKEDITOR.replace("functions");
+          </script>
+        </div>
+      </div>
+
+      <input type="submit" value="Submit" class="submit" />
+    </div>
+  </form>
+
+  <script>
+    $(document).ready(function () {
+      $("form").submit(function (e) {
+        e.preventDefault(e);
+
+        var levelObject = {
+          1: [
+            "entry",
+            "graduates",
+            "internships",
+            "internship",
+            "trainee",
+            "assistant",
+          ],
+          2: ["junior"],
+          3: ["intermediate", "mid level", "mid"],
+          4: ["senior", "seasoned", "CFO"],
+        };
+
+        var level = $("#level").val();
+
+        new Promise((resolve, reject) => {
+          var newArray = [];
+          for (var k = 1; k <= 4; k++) {
+            if (k != level && k > level) {
+              for (var x = 0; x < levelObject[k].length; x++) {
+                var currentItem = levelObject[k][x];
+                newArray.push(currentItem);
+              }
+            }
+
+            if (k == 4) {
+              resolve(newArray);
+            }
+          }
+        }).then((itemsToExclude) => {
+          console.log(itemsToExclude);
+
+          new Promise((resolve, reject) => {
+            var requirements = CKEDITOR.instances.requirements.getData();
+
+            if (itemsToExclude.length === 0) {
+              resolve();
+            }
+
+            for (var i = 0; i < itemsToExclude.length; i++) {
+              if (
+                requirements
+                  .toLowerCase()
+                  .includes(itemsToExclude[i].toLowerCase())
+              ) {
+                bootbox.alert(
+                  "Hey! The job requirements you have entered does not match the seniority level you have chosen. Please chech and fix that. Thank You!"
+                );
+              } else {
+                if (i == itemsToExclude.length - 1) {
+                  resolve();
+                }
+              }
+            }
+          }).then(() => {
+            console.log("Hey");
+
+            var jobData = {
+              requirements: CKEDITOR.instances.requirements.getData(),
+              functions: CKEDITOR.instances.functions.getData(),
+              level: level,
+              field: $("#field").val(),
+              skills: $("#skills").val(),
+              start_date: $("#start_date").val(),
+              application_closing_date: $("#application_closing_date").val(),
+            };
+            console.log(jobData);
+
+            $.ajax({
+              method: "POST",
+              url: "/add_job",
+              data: { addJobDataObject: jobData },
+              // contentType: "json",
+              success: function (data, status, xhr) {
+                // Success callback function
+                alert("Success, check logs");
+                console.log(data);
+              },
+              error: function (data, status, xhr) {
+                // success callback function
+                alert("Error, check logs");
+                console.log(data);
+              },
+            });
+          });
+        });
+      });
+    });
+  </script>
+</body>
+<% - include('Layout/footer') %>

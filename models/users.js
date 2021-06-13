@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  typeOfUser: {
+    type: String,
+    required: false,
+  },
   companyName: {
     type: String,
     required: false,
@@ -67,6 +71,14 @@ const userSchema = new mongoose.Schema({
   },
   skills: {
     type: String,
+    required: false,
+  },
+  verificationLink: {
+    type: String,
+    required: false,
+  },
+  user_email_verified: {
+    type: Boolean,
     required: false,
   },
   created: {

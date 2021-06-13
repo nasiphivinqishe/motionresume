@@ -1,45 +1,81 @@
-<%- include ('Layout/header') %>
-    <form>
-      <label for="company"><b>Company name</b></label>
-      <input
-        type="text"
-        placeholder="Enter company name"
-        name="company"
-        id="company"
-        required
-      /><br />
+<%- include ('Layout/registration-header') %>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="'card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <h3 style="text-align: center">
+              <b>Please finish registration here..</b>
+            </h3>
+            <form>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="company">Company Name:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="company"
+                    name="company"
+                    placeholder="Enter your company name"
+                    required
+                  />
+                </div>
+              </div>
 
-      <label for="company_url"><b>Company URL</b></label>
-      <input
-        type="text"
-        placeholder="Enter company url"
-        name="company_url"
-        id="company_url"
-        required
-      /><br />
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="company_url">Company URL:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="company_url"
+                    name="company_url"
+                    placeholder="Enter your company URL"
+                    required
+                  />
+                </div>
+              </div>
 
-      <label for="work_email"><b>Work email</b></label>
-      <input
-        type="text"
-        placeholder="Enter work email"
-        name="work_email"
-        id="work_email"
-        required
-      /><br />
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="work_email">Work/ Company email:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="work_email"
+                    name="work_email"
+                    placeholder="Enter your company email"
+                    required
+                  />
+                </div>
+              </div>
 
-      <label>Image</label>
-      <input type="file" id="image" name="image" /><br />
+              <label>Image</label>
+              <input type="file" id="image" name="image" /><br />
 
-      <button type="submit" class="registerbtn" href="/motion_resume">
-        Finish registration
-      </button>
-    </form>
-  </body>
+              <button
+                type="submit"
+                class="btn btn-md btn-primary registerbtn"
+                href="/motion_resume"
+              >
+                Finish registration
+              </button>
+              <div class="container signin">
+                <p>Already have an account? <a href="/">Sign in</a></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
-      $(".registerbtn").click(function (e) {
-        e.preventDefault();
+      $("form").submit(function (e) {
+        e.preventDefault(e);
 
         var companyURL = $("#company_url").val();
         var getDomainDetails = function (fullyQualifiedUrl) {
@@ -153,8 +189,5 @@
       });
     });
   </script>
-
-  <div class="container signin">
-    <p>Already have an account? <a href="/">Sign in</a></p>
-  </div>
-  <% - include('Layout/footer') %>  
+</body>
+<% - include('Layout/registration-footer') %>

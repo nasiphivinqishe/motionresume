@@ -1,0 +1,47 @@
+<html>
+  <head> </head>
+  <body>
+    <h3>User will update their information</h3>
+  </body>
+</html>
+<div class="row">
+  <div class="form-group col-md-5">
+    <label for="psw">Password:</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      data-parsley-type="alphanum"
+      class="form-control"
+      data-parsley-errors-container=".errorspannewpassinput"
+      data-parsley-length="[6, 12]"
+      data-parsley-uppercase="1"
+      data-parsley-lowercase="1"
+      data-parsley-number="1"
+      placeholder="Enter your password"
+      data-parsley-required
+    />
+    <span class="errorspannewpassinput"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="form-group col-md-5">
+    <label for="pwd-repeat">Repeat Password</label>
+    <input
+      class="form-control"
+      type="password"
+      id="password-repeat"
+      name="password-repeat"
+      data-parsley-uppercase="1"
+      data-parsley-lowercase="1"
+      data-parsley-number="1"
+      data-parsley-length="[6, 12]"
+      data-parsley-errors-container=".errorspanconfirmnewpassinput"
+      placeholder="Please re-enter your password"
+      data-parsley-equalto="#password"
+      data-parsley-required
+    />
+    <span class="errorspanconfirmnewpassinput"></span>
+  </div>
+</div>

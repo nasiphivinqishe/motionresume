@@ -7,6 +7,55 @@ const session = require("express-session");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// const httpServer = require("http").createServer();
+// const io = require("socket.io")(httpServer, {
+//   cors: {
+//     origin: "http://localhost:5000",
+//   },
+// });
+// app.set("socketio", io);
+
+// io.on("connection", (socket) => {
+//   socket.on("interview_received", (data) => {
+//     io.emit(data.userId, { jobId: "jobId", notificationType: "got_interview" });
+//   });
+// });
+// socket.on("accepted", (data) => {
+//   io.emit(data.userId, {
+//     jobId: "sdee",
+//     notificationType: "offered_job",
+//   });
+// });
+
+// io.on("connection", (socket) => {
+//   socket.on("rejected", (data) => {
+//     io.emit(data.userId, {
+//       jobId: "sdee",
+//       notificationType: "not_offered_job",
+//     });
+//   });
+// });
+// socket.on("interview_answered", (data) => {
+//   io.emit(data.userId, {
+//     jobId: "sdee",
+//     notificationType: "answered_interview_questions",
+//   });
+// });
+// socket.on("user_applied_for_job", (data) => {
+//   io.emit(data.userId, {
+//     jobId: "sdee",
+//     notificationType: "applied_users",
+//   });
+// });
+
+// socket.on("global_notifications", (data) => {
+//   io.emit("global_notif", {
+//     jobId: "users",
+//     notificationType: "globalnot",
+//   });
+// });
+
+
 //database connection with the URL given on the .env
 mongoose.connect(process.env.DB_URI, {
   useNewParser: true,
