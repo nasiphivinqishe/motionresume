@@ -425,3 +425,14 @@ var newCreatedApplicants=[]
             <% for(var i=0; i < ; i++) { %>
  <p id=" jobDetails.applicants[a].userId" cl><?/p>
             <% } %>
+
+
+     <% for(var i=0; i < jobApplantsNames.length; i++) { %>
+                    <p  class ="name"><%= jobApplantsNames[i] %></p>
+                    <button
+                        class="btn btn-md btn-primary send_interview"
+                        id="<%= jobDetails.applicants[i].user_id%>" > Send Interview
+                    </button>
+               <% } %> 
+                 var applicantId = $(this).attr('id')
+        var intervieJobId = jobDetails._id
