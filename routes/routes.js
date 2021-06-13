@@ -112,9 +112,35 @@ router.get("/motion_resume", auth, (req, res) => {
   });
 });
 
+router.post("/send_applicant_an_interview", (req, res) => {
+  var applicantId= req.body.applicantId
+  var interviewJobId = req.body.intervieJobId 
+
+  Job.updateOne({_id : interviewJobId, "applicants.user_id" : applicantId}, 
+    {$set : {"applicants.$.application_progress" :"got_interview" }},
+              
+    function(err, results) {
+      if(err){
+        console.log(err)
+        console.log("Error in updating applicants")
+        res.status(500).send("Error updating")
+      }
+      else
+      {
+        console.log(results)
+        console.log("Successfully updated!")
+        // send notification
+        res.send("Updated successfully")
+        
+      }
+  })
+})
+
 router.get("/job_details", (req, res) => {
   //Get all users applied for specific job
   var jobId = req.query.jobId;
+
+
   Job.findById(jobId, function (err, jobDetails) {
     if (err) {
       console.log("Error", error);
