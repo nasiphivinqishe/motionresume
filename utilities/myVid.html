@@ -1,0 +1,122 @@
+<html>
+ <head>
+ </head>
+ <body>
+    <div class="left">
+        <div id="startButton" class="button">
+            Start
+        </div>
+        <video id="preview" width="160" height="120" autoplay muted></video>
+    </div>
+        
+    <div class="right">
+        <div id="stopButton" class="button">
+            stop
+        </div>
+        <h2>Recording</h2>
+        <video id="recording" width="160" height="120" controls></video>
+        <a id="downloadButton" class="button">Download</a>
+    </div>
+##########################Second Video#######################################
+    <div class="left">
+        <div id="startButton_one" class="button_one">
+            Start
+        </div>
+        <video id="preview_one" width="160" height="120" autoplay muted></video>
+    </div>
+        
+    <div class="right">
+        <div id="stopButton_one" class="button_one">
+            stop
+        </div>
+        <h2>Recording</h2>
+        <video id="recording_one" width="160" height="120" controls></video>
+        <a id="downloadButton_one" class="button_one">Download</a>
+    </div>
+    <div id="log"></div>
+      <script>
+        let preview = document.getElementById("preview");
+        let recording = document.getElementById("recording");
+        let startButton = document.getElementById("startButton");
+        let stopButton = document.getElementById("stopButton");
+        let downloadButton = document.getElementById("downloadButton");
+
+        let preview_one = document.getElementById("preview_one");
+        let recording_one = document.getElementById("recording_one");
+        let startButton_one = document.getElementById("startButton_one");
+        let stopButton_one = document.getElementById("stopButton_one");
+        let downloadButton_one = document.getElementById("downloadButton_one");
+
+        let logElement = document.getElementById("log");
+
+        recordingTimeMS = 5000;
+
+        function log(msg) {
+                logElement.innerHTML += msg + "\n";
+        }
+        function wait(delayInMS) {
+            return new Promise(resolve => setTimeout(resolve, delayInMS));
+        }
+
+        function startRecording(stream, lengthInMS) {
+            let recorder = new MediaRecorder(stream);
+            let data = [];
+
+            recorder.ondataavailable = event => data.push(event.data);
+            recorder.start();
+            log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+            let stopped = new Promise((resolve, reject) => {
+                recorder.onstop = resolve;
+                recorder.onerror = event => reject(event.name);
+            });
+
+            let recorded = wait(lengthInMS).then(
+                () => recorder.state == "recording" && recorder.stop()
+            );
+
+            return Promise.all([
+                stopped,
+                recorded
+            ])
+            .then(() => data);
+        }
+
+        function stop(stream) {
+             stream.getTracks().forEach(track => track.stop());
+        }
+
+        someThingName(preview, recording,startButton, stopButton, downloadButton )
+        someThingName(preview_one , recording_one, startButton_one, stopButton_one, downloadButton_one)
+        
+        function someThingName(preview, recording,startButton, stopButton, downloadButton ){
+
+            startButton.addEventListener("click", function() {
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                }).then(stream => {
+                    preview.srcObject = stream;
+                    downloadButton.href = stream;
+                    preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+                    return new Promise(resolve => preview.onplaying = resolve);
+                }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+                .then (recordedChunks => {
+                    let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                    recording.src = URL.createObjectURL(recordedBlob);
+                    downloadButton.href = recording.src;
+                    downloadButton.download = "RecordedVideo.webm";
+
+                    log("Successfully recorded " + recordedBlob.size + " bytes of " +
+                        recordedBlob.type + " media.");
+                })
+                .catch(log);
+                }, false);
+
+            stopButton.addEventListener("click", function() {
+                    stop(preview.srcObject);
+                }, false);
+        }
+      </script>
+ </body>
+</html>
