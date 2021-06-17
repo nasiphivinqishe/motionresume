@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <title>Video Rec Test</title>
+    </head>
+    <body>
+        <div class="left">
+            <div id="startButtonone" class="button">
+                Start
+            </div>
+            <video id="previewone" width="160" height="120" autoplay muted></video>
+        </div>
+        <div class="right">
+            <div id="stopButtonone" class="button">
+                stop
+            </div>
+            <h2>Recording</h2>
+            <video id="recordingone" width="160" height="120" controls></video>
+            <a id="downloadButtonone" class="button">Download</a>
+        </div>
+        <!------------------------------------------------------------------------------------------------------------->
+      
+        <!------------------------------------------------------------------------------------------------------------->
+        <div class="left">
+            <div id="startButtonthree" class="button">
+                Start
+            </div>
+            <video id="previewthree" width="160" height="120" autoplay muted></video>
+        </div>
+        <div class="right">
+            <div id="stopButtonthree" class="button">
+                stop
+            </div>
+            <h2>Recording</h2>
+            <video id="recordingthree" width="160" height="120" controls></video>
+            <a id="downloadButtonthree" class="button">Download</a>
+        </div>
+        <!------------------------------------------------------------------------------------------------------------->
+        <div id="log"></div>
+        <script>
+
+            //building answers Method 1
+            for(answersanswersv)
+            {
+                answer.push({id: is:, quetes})
+            }
+
+            //building answers Method 2
+            var answers = jobDetails.interviosd.questions
+            
+            //answers should not be hard corded
+            var answers = [
+                // {id: "one", questionText: "Hello some why is video question", isVideo: 'true', myAnswers: someblobSTream},
+                // {id: "two", isVideo: 'false'},
+                // {id: "three",isVideo: 'true'}
+            ]
+
+            for(var k = 0; k < answers.length; k++) {
+                if(answers[k].isVideo == 'true') {
+                    //I know you were having previews and all shityy video stuuf made up on html
+                    //so let me give them functionality
+                    myRecorder(answers[k].id)
+                }
+            }
+
+            for(var k = 0; k < answers.length; k++) {
+                if(answers[k].id==  querysiId) {
+                    //update with answer
+                    answers[k].myAnswers = "whatever blob or stream it is"
+                }
+            }
+
+            function log(msg) {
+                logElement.innerHTML += msg + "\n";
+            }
+            function wait(delayInMS) {
+                return new Promise(resolve => setTimeout(resolve, delayInMS));
+            }
+            let logElement = document.getElementById("log");
+            
+            recordingTimeMS = 5000;
+
+            
+
+            function myRecorder (myQuestionId) {
+                let preview = document.getElementById("preview"+ myQuestionId );
+                let recording = document.getElementById("recording"+ myQuestionId);
+                let startButton = document.getElementById("startButton"+ myQuestionId);
+                let stopButton = document.getElementById("stopButton"+ myQuestionId);
+                let downloadButton = document.getElementById("downloadButton"+ myQuestionId);
+                   
+
+                
+
+                function startRecording(stream, lengthInMS) {
+                    let recorder = new MediaRecorder(stream);
+                    let data = [];
+
+                    recorder.ondataavailable = event => data.push(event.data);
+                    recorder.start();
+                    log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+                    let stopped = new Promise((resolve, reject) => {
+                        recorder.onstop = resolve;
+                        recorder.onerror = event => reject(event.name);
+                });
+
+                let recorded = wait(lengthInMS).then(
+                    () => recorder.state == "recording" && recorder.stop()
+                );
+
+                return Promise.all([
+                    stopped,
+                    recorded
+                ])
+                .then(() => data);
+                 }
+                 function stop(stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                startButton.addEventListener("click", function() {
+                    navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: true
+                    }).then(stream => {
+                        preview.srcObject = stream;
+                        downloadButton.href = stream;
+                        preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+                        return new Promise(resolve => preview.onplaying = resolve);
+                    }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+                    .then (recordedChunks => {
+                        let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                        recording.src = URL.createObjectURL(recordedBlob);
+                        downloadButton.href = recording.src;
+                        downloadButton.download = "RecordedVideo.webm";
+
+                        log("Successfully recorded " + recordedBlob.size + " bytes of " +
+                            recordedBlob.type + " media.");
+                    })
+                    .catch(log);
+                 }, false);
+
+                stopButton.addEventListener("click", function() {
+                    stop(preview.srcObject);
+                }, false);
+            }
+
+
+           
+
+        </script>
+    </body>
+</html>

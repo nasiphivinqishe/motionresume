@@ -1,0 +1,205 @@
+<%- include ('Layout/header') %>
+<body>
+    <div class="container"></div>
+        <% var myInterviewQuestions =job.interview.questions%>
+        <% for (var i = 0; i < myInterviewQuestions.length; i++) { %>
+            <div class="card-body">
+            <div class="row">
+                <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-6">
+                    <p><%= myInterviewQuestions[i].question%></p>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <% if(myInterviewQuestions[i].isVideo == 'true'){ %>
+              <div class="left">
+                <div id="startButton<%=i%>" class="button">
+                    Start
+                </div>
+                <video id="preview<%=i%>" width="160" height="120" autoplay muted></video>
+            </div>
+            <div class="right">
+                <div id="stopButton<%=i%>" class="button">
+                    stop
+                </div>
+                <h2>Recording</h2>
+                <video id="recording<%=i%>" width="160" height="120" controls></video>
+                <a id="downloadButton<%=i%>" class="button">Download</a>
+            </div>
+            <% } else { %>  
+                <textarea class="answer" id="answer<%=[i]%>"  placeholder="Write your answer here...."></textarea>
+            <% } %>  
+            </div>
+        </div>
+        <% } %>
+        <button class="submit_interview" id="<%=jobId%>"> Submit Answers</button>
+       <div class="myJob" style="display: none;"><%= JSON.stringify(job) %></div> 
+    </div>   
+    <div id="log"></div>
+    <script>
+      //  
+
+
+        $(document).ready(function () {   
+
+          $(".answer").change(function(e){
+            // var id = "answer0" get
+            var id = $(this).attr('id')
+            var questionId = id.replace("answer","")
+
+            answers[questionId].answers = $(this).val()
+         
+
+          })
+
+          $(".submit_interview").click(function () {
+            var jobId = $(this).attr('id')
+            console.log(answers)
+           
+
+            $.ajax({
+              method: "POST",
+              url: "/submit_interview",
+              data: {answers : answers, jobId:jobId },
+              success: function (data) {
+                // success callback function
+                alert("Success, check logs");
+                // window.location.reload(true);
+                console.log(data)
+              },
+              error: function (data, status, xhr) {
+                // error callback function
+                alert("Error, check logs");
+                console.log(data)
+              },
+            });        
+          });
+          
+    
+            
+          //  = $("#job")     
+          var myJob = $(".myJob").text()
+          var job =JSON.parse(myJob)
+
+          var answers = []
+          for(var n=0; n< job.interview.questions.length; n++) {
+            answers.push(
+              {
+                question : job.interview.questions[n].question,
+                isVideo : job.interview.questions[n].isVideo
+              }
+            )
+          } 
+
+        for(var a = 0; a< job.interview.questions.length; a++) {
+          if(job.interview.questions[a].isVideo == "true") {
+            myRecorder(a) //string
+          }
+        }
+
+      
+          // Utility functions
+          function log(msg) {
+            logElement.innerHTML += msg + "\n";
+          }
+          function wait(delayInMS) {
+            return new Promise(resolve => setTimeout(resolve, delayInMS));
+          }
+          let logElement = document.getElementById("log");
+          
+          recordingTimeMS = 5000;
+
+          
+
+          function myRecorder (questionIndex) { // string
+            let preview = document.getElementById("preview"+ questionIndex);
+            let recording = document.getElementById("recording"+ questionIndex);
+            let startButton = document.getElementById("startButton"+ questionIndex);
+            let stopButton = document.getElementById("stopButton"+ questionIndex);
+            let downloadButton = document.getElementById("downloadButton"+ questionIndex);             
+
+            function startRecording(stream, lengthInMS) {
+              let recorder = new MediaRecorder(stream);
+              let data = [];
+
+              recorder.ondataavailable = event => data.push(event.data);
+              recorder.start();
+              log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+              let stopped = new Promise((resolve, reject) => {
+                  recorder.onstop = resolve;
+                  recorder.onerror = event => reject(event.name);
+            });
+
+            let recorded = wait(lengthInMS).then(
+                () => recorder.state == "recording" && recorder.stop()
+            );
+
+            return Promise.all([
+              stopped,
+                recorded
+            ])
+            .then(() => data);
+              }
+              function stop(stream) {
+                stream.getTracks().forEach(track => track.stop());
+              }
+              startButton.addEventListener("click", function() {
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+              }).then(stream => {
+                    preview.srcObject = stream;
+                    downloadButton.href = stream;
+                    preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+                    return new Promise(resolve => preview.onplaying = resolve);
+              }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+                  .then (recordedChunks => {
+                    let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                    recording.src = URL.createObjectURL(recordedBlob);
+                    downloadButton.href = recording.src;
+                    downloadButton.download = "RecordedVideo.webm";
+                   
+                    for(var k = 0; k < answers.length; k++) {
+                      
+                      if(k ==  questionIndex) {
+                        //update with answer
+                        var reader = new FileReader();
+                        reader.readAsDataURL(recordedBlob); 
+                        return new Promise(resolve => {
+                          reader.onloadend = function() {
+                            var base64data = reader.result;  
+                            resolve(base64data)                           
+                          }
+                        
+                        }).then(res => {
+                            answers[k].answer =res
+                        })
+
+
+            
+                      }
+                    }
+                  })
+                  .catch(log);
+              }, false);
+
+              stopButton.addEventListener("click", function() {
+                  stop(preview.srcObject);
+              }, false);
+          }
+
+        })
+     </script>
+  <!---------------------------------------------------------------------------------------------------->     
+</body>
+<%- include ('Layout/footer') %>
+
+<!-- var answers = [
+    {
+        answer: "",
+        questionOnTimeOfAnsering: ""
+    }
+] -->

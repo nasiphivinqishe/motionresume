@@ -1,21 +1,15 @@
-
-
+###############################################################
 //aws systanx(aws lambda function is just an ordinary router)
 exports.someFunctioName = (event, context, callback) {
 event.name
 req.name
 }
-
-
-
-
+###############################################################
 //google cloud function systanx(google function is just an ordinary router)
 exports.someFunctioName = https.functions(req, res) {
       var dataFromPost =  req.body
 }
-
 #########################MongoDB#######################
-
 db.collectionName.drop()    //To delete collection
 
 app.get('/motion_resume',(req,res,next) =>{
@@ -25,8 +19,7 @@ app.get('/motion_resume',(req,res,next) =>{
   // object of all the jobs
   res.render('motion_resume',{jobs:jobs});
 });
-
-
+###############################################################
 router.get("/motion_resume", (req, res) => {
   job.find({}, function(err, jobs) {
     if (err) {
@@ -36,8 +29,7 @@ router.get("/motion_resume", (req, res) => {
     }
   });
 });
-
-
+###############################################################
 <ul class="jobs">
     <% for (var i = 0; i < jobs.length; i++) { %>
     <li>
@@ -86,35 +78,23 @@ router.get("/motion_resume", (req, res) => {
     <button class="btn btn-md btn-primary view_applicants" id="view_applicants">Applicants</button>
   </div>
 </div>
-
+###############################################################
 
 // 19/ 05/ 2021
 
 1.1 Hide and show view applicants button(depending if person who posted it is one logged in)
 1.2 Display Applicants for specific Job
-
-
 2. Make Nice Navbar(https://materializecss.com/navbar.html# this link has nice navbars)
-
-
 3. Go Back and Make Nice Login(bootstrap and font-awesome where needed)
-
 4. Nice Registration
-
 5. Make Nice loader and notifier(alert)
-
-
 6. Host you App
-
 Post on LinkedIn on its current status and your plans,
-
 Plans would be:-
-
 Creating email verification and enforce user to first verify before login(enhance security)
 Working with files(for Motion resume upload, the profile picture upload)
 Creating a Module and Server to Manage Real-time Notifications(Socket.io or NATS.io still to decide)
 Tagging a person on Job Post
-
 ##########################1########################
 var poster = jobs.poster;
 var userId = req.session.userId
@@ -127,22 +107,12 @@ var userId = req.session.userId
         </div>
 </div>
   )
-
 else
     return null;
 <% } %>
-
-
-      <input type="radio" id="write" name="field_type[]" /><label for="write">Write</label><br /><input type="radio" id="record" name="field_type[]" /><label for="record">Record</label><br />
-
-
-
-
-
-
-
-
-    <nav class="nav-extended">
+<input type="radio" id="write" name="field_type[]" /><label for="write">Write</label><br /><input type="radio" id="record" name="field_type[]" /><label for="record">Record</label><br />
+###############################################################
+ <nav class="nav-extended">
       <div class="nav-wrapper">
         <a href="/motion_resume" class="brand-logo">Motion Resume</a>
           <li><a href="/connect_to_people">Connect To People</a></li>
@@ -153,20 +123,12 @@ else
         </ul>
       </div>
     </nav>
-
-
-
-
-
-
-
-    router.post("/update", (req, res) => {
-  //Ubpdating job of specific Id
-  var jobId = jobDetails.jobId;
-
-  console.log(jobId);
-
-  // Job.findByIdAndUpdate(
+###############################################################
+router.post("/update", (req, res) => {
+//Ubpdating job of specific Id
+var jobId = jobDetails.jobId;
+console.log(jobId);
+ // Job.findByIdAndUpdate(
   //   jobId
   //   // {
   //   levelType: req.body.level,
@@ -189,16 +151,7 @@ else
   //   }
   //);
 });  
-
- levelType
- field
- skills
- start_date
- application_closing_date
- requirements
-  functions
-
-
+###############################################################
 var applicants = jobDetails.applicants
 var users = req.querry.users
 var newCreatedApplicants=[]
@@ -208,16 +161,8 @@ var newCreatedApplicants=[]
        { $push: { newCreatedApplicants } } //storing users on newCreatedApplicants 
      }
   }
-
-
-
   <%= JSON.stringify(jobDetails.applicants) %>
-
-
-  
-
-
-  #############################Fixing Job Details#############################
+  ############################Fixing Job Details#############################
   <div class="container">
   <div class="card" style="width: 18rem;">
   <img src="..." class="card-img-top" alt="...">
@@ -436,3 +381,140 @@ var newCreatedApplicants=[]
                <% } %> 
                  var applicantId = $(this).attr('id')
         var intervieJobId = jobDetails._id
+
+
+ router.get("/notifications", auth, (req, res) => {
+   Notification.find({to : req.session.userId}, function (err, notifications) {
+      if (err) {
+      res.status(500).send(err);
+    }else {
+      var posterName = []
+      for(var a = 0; a < jobDetails.notifications.length; a++) {
+        User.findOne({_id: jobDetails.notifications[a].user_id}, function(err, data) {
+            if(err) {
+            posterName.push("Error getting names")
+            count++
+            if(count == jobDetails.notifications.lengt) {
+              resolve(posterName)
+            }
+                    else {
+            count++
+            if(data)
+            { 
+              posterNames.push(data.name)
+              if(count == jobDetails.notifications.lengt) {
+                resolve(posterName)
+              }
+            }
+
+      res.render("notifications",{notifications : notifications})
+    }
+          } 
+        })
+      }
+    }
+   })
+})
+
+<div class="w3-display-container w3-green" style="height:300px;">
+  <div class="w3-display-topleft">Top Left</div>
+  <div class="w3-display-topright">Top Right</div>
+  <div class="w3-display-bottomleft">Bottom Left</div>
+  <div class="w3-display-bottomright">Bottom Right</div>
+  <div class="w3-display-left">Left</div>
+  <div class="w3-display-right">Right</div>
+  <div class="w3-display-middle">Middle</div>
+  <div class="w3-display-topmiddle">Top Mid</div>
+  <div class="w3-display-bottommiddle">Bottom Mid</div>
+</div>
+
+
+ <% for (var i = 0; i < job.interview.length; i++) { %>
+        <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p><%= job[i].interview.question%></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <h3><b>From</b></h3>
+                  <p></p>
+                </div>
+              </div>
+            </div>
+         </div>
+        <% } %>
+
+
+
+
+         Job.updateOne({_id: jobId},
+          {$push:{answered_interview: answered_interview} },
+           function (err, data)  
+                
+            
+        Job.updateOne({_id: jobId,
+            "applicants.user_id": userId}, {
+            $set: {
+                   "applicants.$.interview_answers": interview_answers
+                  }
+            },
+##############################################################
+<% for(var i=0; i < jobApplantsNames.length; i++) { %>
+<p  class ="name"><b><%= jobApplantsNames[i] %></b></p>
+<% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
+<p>Interview Sent
+                   </p>
+<%} else{ %>
+<%}if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
+<button
+                     class="btn btn-md btn-primary answered_interview"
+                     id="abc" > Answered Interview
+                  </button>
+<%} else{ %>
+  <button
+                     class="btn btn-md btn-primary send_interview"
+                     id="<%= jobDetails.applicants[i].user_id%>" > Send Interview
+                    </button>
+<% } %>
+
+
+            <% for(var i=0; i < jobApplantsNames.length; i++) { %>
+              <p  class ="name"><b><%= jobApplantsNames[i] %></b></p>
+              <% if(jobDetails.applicants[i].application_progress == "got_interview" ){ %>
+                  <p>Interview Sent
+                   </p>
+              <% } else { %>  
+                    <button
+                     class="btn btn-md btn-primary send_interview"
+                     id="<%= jobDetails.applicants[i].user_id%>" > Send Interview
+                    </button>
+                <% } %>  
+               <% if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
+                  <button
+                     class="btn btn-md btn-primary answered_interview"
+                     id="abc" > Answered Interview
+                  </button>
+                <% } %>
+              <% } %>
+
+              <textarea id="text_answer<%=i%>" class="text_answer" onchange="updateMyValuenAnser(i)"></textarea>
+
+updateMyValuenAnser(i){
+var myElement = document.getElementById("answer"+i)
+//document.quesrySelecter("")
+answers[i].answer = $(".answer<%=i%>).val()
+}
+
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
