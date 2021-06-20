@@ -47,7 +47,7 @@
                 <textarea class="answer" id="answer<%=[i]%>"  placeholder="Write your answer here...."></textarea>
             <% } %> 
             
-            <% if(myInterviewQuestions[i].type_of_question == 'text'){ %>
+            <% if(myInterviewQuestions[i].type_of_question == 'canvas'){ %>
               Click draw to answer question.
               <br>
               <button id="<%=[i]%>" class="btnDraw">One</button><br>
@@ -67,9 +67,7 @@
             // var id = "answer0" get
             var id = $(this).attr('id')
             var questionId = id.replace("answer","")
-
-            answers[questionId].answers = $(this).val()
-         
+            answers[questionId].answer = $(this).val()        
 
           })
 
@@ -325,8 +323,7 @@
 
                 for(var k = 0; k < answers.length; k++) {
                   if(k == canvasId) {
-                    answers[canvasId].answer = dataURL
-                    console.log("answers")
+                    answers[k].answer = dataURL
                   }
                 }
             }
@@ -369,10 +366,3 @@
   <!---------------------------------------------------------------------------------------------------->     
 </body>
 <%- include ('Layout/footer') %>
-
-<!-- var answers = [
-    {
-        answer: "",
-        questionOnTimeOfAnsering: ""
-    }
-] -->

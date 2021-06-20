@@ -520,29 +520,41 @@ router.post("/update_read_notification", auth, (req, res) => {
     })
 })
 
-router.post("/submit_interview", (req, res) => {
+router.post("/submit_interview", auth,(req, res) => {
     var answers = req.body.answers
     var jobId = req.body.jobId
     var userId = req.session.userId
 
     new Promise((resolve, reject) => { 
         for(var a = 0; a< answers.length; a++ ){
-            if(answers[a].isVideo == "true") {
-                var base64Data = answers[0].answer.replace(/^data:(.*?);base64,/, "");
+            if(answers[a].type_of_question == "video") {
+                var base64Data = answers[a].answer.replace(/^data:(.*?);base64,/, "");
                 base64Data= base64Data.replace(/ /g, '+');
-                var filename= `./interview_video_answers/${new Date().getTime()}.mp4`
+                var filename= `interview_video_answers/${new Date().getTime()}.mp4`
 
-                fs.writeFile(`${filename}`, base64Data, 'base64', function(err, success) {
+                fs.writeFile(`./public/${filename}`, base64Data, 'base64', function(err, success) {
                     console.log(err);
                 });
                 // change file naming from base64 to filename
                 answers[a].answer = `${filename}`
             } 
+
+            if(answers[a].type_of_question == "canvas") {
+                var base64Data = answers[a].answer.replace(/^data:(.*?);base64,/, "");
+                base64Data= base64Data.replace(/ /g, '+');
+                var filename= `interview_drawing_answers/${new Date().getTime()}.png`
+
+                fs.writeFile(`./public/${filename}`, base64Data, 'base64', function(err, success) {
+                    console.log(err);
+                });
+                // change file naming from base64 to filename
+                answers[a].answer = `${filename}`
+            }
             resolve()
         }
     }).then(() => {
 
-   
+   console.table({userId, jobId })
    Job.updateOne({_id: jobId,
         "applicants.user_id": userId}, {
         $set:{
