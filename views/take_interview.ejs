@@ -216,6 +216,8 @@
           $(".btnDraw").click(function(e){
             e.stopImmediatePropagation();
 
+            var canvasId = $(this).attr('id')
+
             document.getElementById("canvas_div").style.display = "inline"
             document.getElementById("btnSave").removeEventListener("click", handleSaveClicked);
             document.getElementById("btnSave").addEventListener("click", handleSaveClicked)
@@ -321,7 +323,7 @@
                 document.getElementById("btnSave").removeEventListener("click", handleSaveClicked)
                 document.getElementById("canvas_div").style.display = "none"
 
-                for(var k = 0; k < answer.length; k++) {
+                for(var k = 0; k < answers.length; k++) {
                   if(k == canvasId) {
                     answers[canvasId].answer = dataURL
                     console.log("answers")
