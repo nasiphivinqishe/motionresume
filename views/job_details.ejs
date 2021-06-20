@@ -180,12 +180,12 @@
                     <%}if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
                         <button
                         class="btn btn-md btn-primary answered_interview"
-                        id="abc" > Answered Interview
+                        id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
                       </button>
                     <%} else{ %>
                         <button
                           class="btn btn-md btn-primary send_interview"
-                          id="send_interview"> Send Interview
+                          id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
                         </button>
                  <% } %> 
              <% } %>    
@@ -331,7 +331,7 @@
 
         types.each(function (index) {
           interviewQuestions.push({
-            isVideo: $(this).prop("checked"),
+            type_of_question: $(this).val(),
             question: questions[index].value,
           });
         });
@@ -355,6 +355,15 @@
           });
         }
       });
+
+      $(".answered_interview").click(function(e) {
+          var userId = $(this).attr('id')
+          var jobId = "<%=jobDetails._id %>";
+
+          console.log(userId, jobId)
+
+          window.location.href = `/view_interview_answers?userId=${userId}&jobId=${jobId}`;
+      })
     });
   </script>
 </body>
