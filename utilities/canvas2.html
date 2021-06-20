@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Animating Sprites In HTML5 Canvas | onlyWebPro.com</title>
+    <style>
+        #stack {
+    position:relative;
+    }
+#stack > canvas {
+    position:absolute;
+    left:0;
+    top:0;
+    border: 2px solid green;
+    }
+    </style>
+</head>
+<body>
+    <div id="stack">
+        <canvas id="bg" width="500" height="500"></canvas>
+        <canvas id="lc" width="500" height="500"></canvas>
+        <canvas id="rc" width="500" height="500"></canvas>
+        <canvas id="ch" width="500" height="500"></canvas>
+    <div>
+
+    <script>
+        var bg = document.getElementById('bg').getContext('2d'),
+        lc = document.getElementById('lc').getContext('2d'),
+        rc = document.getElementById('rc').getContext('2d'),
+        ch = document.getElementById('ch').getContext('2d'),
+        img = new Image();
+
+        img.onload = drawImgs;    /// set handler
+        img.src = "image.png";    /// set url
+
+        function drawImgs() {
+            /// 'this' is the loaded image
+            bg.drawImage(this, 0,0);
+            lc.drawImage(this, 64,64);
+            rc.drawImage(this, 128,128);
+            ch.drawImage(this, 192,192);
+
+            /// continue rest of code here...
+        }
+</script>
+    
+</body>
+</html>

@@ -1,0 +1,175 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div id="canvas_div" style="display: none;">
+            <canvas id="can" width="400" height="400" style="left:10%;border:2px solid;"></canvas>
+            <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
+            <div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;" id="color_pen_blue" class="example"></div>
+            <div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;"  id="color_pen_red" class="example"></div>
+            <div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;" id="yellow" onclick="color(this)"></div>
+            <div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;" id="orange" onclick="color(this)"></div>
+            <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="black" onclick="color(this)"></div>
+            <div style="position:absolute;top:20%;left:43%;">Eraser</div>
+            <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
+            <input type="button" value="save" id="btnSave" size="30" style="position:absolute;top:55%;left:10%;">
+            <input type="button" value="clear All" id="clr" size="20" style="position:absolute;top:55%;left:15%;">
+        </div>
+
+
+        <br>
+        <button id="one" onclick="myCanvasDrawer('one')">One</button><br>
+        <img id="canvasimg_one"   width="400" height="400" style="left:10%;border:2px solid;"/>
+        <br>
+        <button id="two" onclick="myCanvasDrawer('two')">Two</button><br>
+        <img id="canvasimg_two"   width="400" height="400" style="left:10%;border:2px solid;"/>
+        <br>
+        <button id="three" onclick="myCanvasDrawer('three')">Three</button><br>
+        <img id="canvasimg_three"   width="400" height="400" style="left:10%;border:2px solid;"/>
+        <br>
+   
+        <script type="text/javascript"> 
+            function myCanvasDrawer(canvasId) {
+                document.getElementById("canvas_div").style.display = "inline"
+
+                document.getElementById("btnSave").removeEventListener("click", handleSaveClicked);
+                document.getElementById("btnSave").addEventListener("click", handleSaveClicked)
+                //show canvas
+
+                var canvas, ctx, flag = false,
+                    prevX = 0,
+                    currX = 0,
+                    prevY = 0,
+                    currY = 0,
+                    dot_flag = false;
+
+                var x = "black",
+                    y = 2;
+
+
+                canvas = document.getElementById('can');
+                ctx = canvas.getContext("2d");
+                w = canvas.width;
+                h = canvas.height;
+
+                canvas.addEventListener("mousemove", function(e) {
+                    findxy('move', e)
+                }, false);
+                canvas.addEventListener("mousedown", function(e) {
+                    findxy('down', e)
+                }, false);
+                canvas.addEventListener("mouseup", function(e) {
+                    findxy('up', e)
+                }, false);
+                canvas.addEventListener("mouseout", function(e) {
+                    findxy('out', e)
+                }, false);
+
+
+                if (ctx)
+                    ctx.clearRect(0, 0, w, h);
+
+
+                document.body.onclick = function(e) {
+                    if (e.target.id.includes("color_pen")) {
+                        console.log(e.target.id);
+                    }
+                }
+
+
+                function color(obj) {
+                    switch (obj.id) {
+                        case "green":
+                            x = "green";
+                            break;
+                        case "blue":
+                            x = "blue";
+                            break;
+                        case "red":
+                            x = "red";
+                            break;
+                        case "yellow":
+                            x = "yellow";
+                            break;
+                        case "orange":
+                            x = "orange";
+                            break;
+                        case "black":
+                            x = "black";
+                            break;
+                        case "white":
+                            x = "white";
+                            break;
+                    }
+                    if (x == "white") y = 14;
+                    else y = 2;
+
+                }
+
+                function draw() {
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(currX, currY);
+                    ctx.strokeStyle = x;
+                    ctx.lineWidth = y;
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+
+                function erase() {
+                    var m = confirm("Want to clear");
+                    if (m) {
+                        ctx.clearRect(0, 0, w, h);
+                    }
+                }
+
+
+
+
+                function handleSaveClicked() {
+                    var dataURL = canvas.toDataURL();
+                    document.getElementById("canvasimg_" + canvasId).src = dataURL;
+                    //asnwers
+                    ///
+                    // canvasId.display. 
+                    document.getElementById("btnSave").removeEventListener("click", handleSaveClicked)
+                    document.getElementById("canvas_div").style.display = "none"
+                }
+
+
+
+                function findxy(res, e) {
+                    if (res == 'down') {
+                        prevX = currX;
+                        prevY = currY;
+                        currX = e.clientX - canvas.offsetLeft;
+                        currY = e.clientY - canvas.offsetTop;
+
+                        flag = true;
+                        dot_flag = true;
+                        if (dot_flag) {
+                            ctx.beginPath();
+                            ctx.fillStyle = x;
+                            ctx.fillRect(currX, currY, 2, 2);
+                            ctx.closePath();
+                            dot_flag = false;
+                        }
+                    }
+                    if (res == 'up' || res == "out") {
+                        flag = false;
+                    }
+                    if (res == 'move') {
+                        if (flag) {
+                            prevX = currX;
+                            prevY = currY;
+                            currX = e.clientX - canvas.offsetLeft;
+                            currY = e.clientY - canvas.offsetTop;
+                            draw();
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </html>

@@ -1,19 +1,32 @@
 <%- include ('Layout/header') %>
 <body>
-    <div class="container"></div>
-        <% var myInterviewQuestions =job.interview.questions%>
-        <% for (var i = 0; i < myInterviewQuestions.length; i++) { %>
-            <div class="card-body">
+    <div class="container">
+      <div id="canvas_div" style="display: none;">
+        <canvas id="can" width="400" height="400" style="left:10%;border:2px solid;"></canvas>
+        <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
+        <div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;" id="color_pen_blue"></div>
+        <div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;"  id="color_pen_red"></div>
+        <div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;" id="color_pen_yellow"></div>
+        <div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;" id="color_pen_orange"></div>
+        <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="color_pen_black"></div>
+        <div style="position:absolute;top:20%;left:43%;">Eraser</div>
+        <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="color_pen_white"></div>
+        <input type="button" value="save" id="btnSave" size="30" style="position:absolute;top:55%;left:10%;">
+        <input type="button" value="clear All" id="btnClearCanvas" size="20" style="position:absolute;top:55%;left:15%;">
+      </div>
+      <% var myInterviewQuestions =job.interview.questions%>
+      <% for (var i = 0; i < myInterviewQuestions.length; i++) { %>
+          <div class="card-body">
             <div class="row">
                 <div class="col-sm-8">
-                <div class="row">
-                    <div class="col-sm-6">
-                    <p><%= myInterviewQuestions[i].question%></p>
-                    </div>
-                </div>
+                  <div class="row">
+                      <div class="col-sm-6">
+                      <p><%= myInterviewQuestions[i].question%></p>
+                      </div>
+                  </div>
                 </div>
             </div>
-            <% if(myInterviewQuestions[i].isVideo == 'true'){ %>
+            <% if(myInterviewQuestions[i].type_of_question == 'video'){ %>
               <div class="left">
                 <div id="startButton<%=i%>" class="button">
                     Start
@@ -28,19 +41,25 @@
                 <video id="recording<%=i%>" width="160" height="120" controls></video>
                 <a id="downloadButton<%=i%>" class="button">Download</a>
             </div>
-            <% } else { %>  
-                <textarea class="answer" id="answer<%=[i]%>"  placeholder="Write your answer here...."></textarea>
             <% } %>  
-            </div>
-        </div>
-        <% } %>
-        <button class="submit_interview" id="<%=jobId%>"> Submit Answers</button>
-       <div class="myJob" style="display: none;"><%= JSON.stringify(job) %></div> 
+            
+            <% if(myInterviewQuestions[i].type_of_question == 'text'){ %>
+                <textarea class="answer" id="answer<%=[i]%>"  placeholder="Write your answer here...."></textarea>
+            <% } %> 
+            
+            <% if(myInterviewQuestions[i].type_of_question == 'text'){ %>
+              Click draw to answer question.
+              <br>
+              <button id="<%=[i]%>" class="btnDraw">One</button><br>
+              <img id="canvasimg_<%=[i]%>"   width="400" height="400" style="left:10%;border:2px solid;"/>
+              <br>
+            <% } %> 
+      <% } %>
+      <button class="submit_interview" id="<%=jobId%>"> Submit Answers</button>
+      <div class="myJob" style="display: none;"><%= JSON.stringify(job) %></div> 
     </div>   
     <div id="log"></div>
     <script>
-      //  
-
 
         $(document).ready(function () {   
 
@@ -88,13 +107,13 @@
             answers.push(
               {
                 question : job.interview.questions[n].question,
-                isVideo : job.interview.questions[n].isVideo
+                type_of_question : job.interview.questions[n].type_of_question
               }
             )
           } 
 
         for(var a = 0; a< job.interview.questions.length; a++) {
-          if(job.interview.questions[a].isVideo == "true") {
+          if(job.interview.questions[a].type_of_question == "video") {
             myRecorder(a) //string
           }
         }
@@ -191,6 +210,158 @@
               }, false);
           }
 
+          /*
+            Canvas/drawing functionality
+          */
+          $(".btnDraw").click(function(e){
+            e.stopImmediatePropagation();
+
+            document.getElementById("canvas_div").style.display = "inline"
+            document.getElementById("btnSave").removeEventListener("click", handleSaveClicked);
+            document.getElementById("btnSave").addEventListener("click", handleSaveClicked)
+            //show canvas
+
+            var canvas, ctx, flag = false,
+                prevX = 0,
+                currX = 0,
+                prevY = 0,
+                currY = 0,
+                dot_flag = false;
+
+            var x = "black",
+                y = 2;
+
+
+            canvas = document.getElementById('can');
+            ctx = canvas.getContext("2d");
+            w = canvas.width;
+            h = canvas.height;
+
+            canvas.addEventListener("mousemove", function(e) {
+                findxy('move', e)
+            }, false);
+            canvas.addEventListener("mousedown", function(e) {
+                findxy('down', e)
+            }, false);
+            canvas.addEventListener("mouseup", function(e) {
+                findxy('up', e)
+            }, false);
+            canvas.addEventListener("mouseout", function(e) {
+                findxy('out', e)
+            }, false);
+
+
+            if (ctx)
+                ctx.clearRect(0, 0, w, h);
+
+
+            document.body.onclick = function(e) {
+                if (e.target.id.includes("color_pen")) {
+                    var color = e.target.id.replace("color_pen_", "")
+                    x = color
+                }
+            }
+
+
+            function color(obj) {
+                switch (obj.id) {
+                    case "green":
+                        x = "green";
+                        break;
+                    case "blue":
+                        x = "blue";
+                        break;
+                    case "red":
+                        x = "red";
+                        break;
+                    case "yellow":
+                        x = "yellow";
+                        break;
+                    case "orange":
+                        x = "orange";
+                        break;
+                    case "black":
+                        x = "black";
+                        break;
+                    case "white":
+                        x = "white";
+                        break;
+                }
+                if (x == "white") y = 14;
+                else y = 2;
+
+            }
+
+            function draw() {
+                ctx.beginPath();
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(currX, currY);
+                ctx.strokeStyle = x;
+                ctx.lineWidth = y;
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            document.getElementById("btnClearCanvas").addEventListener("click", function(e){
+              var m = confirm("Want to clear");
+                if (m) {
+                    ctx.clearRect(0, 0, w, h);
+                }
+            })
+
+
+
+
+            function handleSaveClicked() {
+                var dataURL = canvas.toDataURL();
+                document.getElementById("canvasimg_" + canvasId).src = dataURL;
+                //asnwers
+                ///
+                // canvasId.display. 
+                document.getElementById("btnSave").removeEventListener("click", handleSaveClicked)
+                document.getElementById("canvas_div").style.display = "none"
+
+                for(var k = 0; k < answer.length; k++) {
+                  if(k == canvasId) {
+                    answers[canvasId].answer = dataURL
+                    console.log("answers")
+                  }
+                }
+            }
+
+
+
+            function findxy(res, e) {
+                if (res == 'down') {
+                    prevX = currX;
+                    prevY = currY;
+                    currX = e.clientX - canvas.offsetLeft;
+                    currY = e.clientY - canvas.offsetTop;
+
+                    flag = true;
+                    dot_flag = true;
+                    if (dot_flag) {
+                        ctx.beginPath();
+                        ctx.fillStyle = x;
+                        ctx.fillRect(currX, currY, 2, 2);
+                        ctx.closePath();
+                        dot_flag = false;
+                    }
+                }
+                if (res == 'up' || res == "out") {
+                    flag = false;
+                }
+                if (res == 'move') {
+                    if (flag) {
+                        prevX = currX;
+                        prevY = currY;
+                        currX = e.clientX - canvas.offsetLeft;
+                        currY = e.clientY - canvas.offsetTop;
+                        draw();
+                    }
+                }
+            }
+          });
         })
      </script>
   <!---------------------------------------------------------------------------------------------------->     
