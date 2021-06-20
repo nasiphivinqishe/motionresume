@@ -520,6 +520,10 @@ router.post("/update_read_notification", auth, (req, res) => {
     })
 })
 
+router.get("/messages", auth, (req, res)=> {
+    res.send("Still working on this router. Please check back again soon :)")
+})
+
 router.get("/view_interview_answers", (req, res) => {
     var {jobId, userId} = req.query
 
