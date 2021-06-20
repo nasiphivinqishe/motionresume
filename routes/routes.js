@@ -520,6 +520,35 @@ router.post("/update_read_notification", auth, (req, res) => {
     })
 })
 
+router.get("/view_interview_answers", (req, res) => {
+    var {jobId, userId} = req.query
+
+    console.log(jobId, userId)
+
+    Job.findOne({_id: jobId}, function(err, data) {
+        if(err) {
+            console.log(err)
+            res.send("Error on this route")
+        } else {
+
+            if(data) {
+                var applicants = data.applicants
+                var applicant = applicants.find((applicant)=> {
+                    return applicant.user_id == userId
+                })
+
+                res.render("interview_answers", {
+                    applicant: applicant,
+                    jobId: jobId
+                })
+
+            } else {
+                res.send("Error: this job no longer exist!")
+            }
+        }
+    })
+})
+
 router.post("/submit_interview", (req, res) => {
     var answers = req.body.answers
     var jobId = req.body.jobId
