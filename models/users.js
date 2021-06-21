@@ -73,6 +73,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  motionresume: {
+    type: String,
+    required: false,
+  },
   verificationLink: {
     type: String,
     required: false,
