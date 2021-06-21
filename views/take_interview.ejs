@@ -178,11 +178,6 @@
                     recording.src = URL.createObjectURL(recordedBlob);
                     downloadButton.href = recording.src;
                     downloadButton.download = "RecordedVideo.webm";
-                   
-                    for(var k = 0; k < answers.length; k++) {
-                      
-                      if(k ==  questionIndex) {
-                        //update with answer
                         var reader = new FileReader();
                         reader.readAsDataURL(recordedBlob); 
                         return new Promise(resolve => {
@@ -194,11 +189,7 @@
                         }).then(res => {
                             answers[k].answer =res
                         })
-
-
-            
-                      }
-                    }
+                    
                   })
                   .catch(log);
               }, false);

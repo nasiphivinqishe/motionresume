@@ -12,7 +12,7 @@
                 class="form-control"
                 id="level"
                 name="level"
-                value="<%=jobDetails.level %>"
+                value="<%=jobDetails.level%>"
                 required
               >
                 <option disabled>select here.</option>
@@ -139,12 +139,22 @@
         <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
         for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
         <div>
-          <input name="the_types[]" type="checkbox" <%=
-          jobDetails.interview.questions[a].isVideo == 'true' ? "checked" : ""
-          %> /><input
-            type="text"
-            name="field_name[]"
-            value="<%= jobDetails.interview.questions[a].question %>"
+          <label for="level">Choose type of question:</label>
+              <select
+                class="form-control"
+                name="the_types[]"
+                value="<%=jobDetails.interview.questions[a].type_of_question%>"
+                required
+              >
+                <option disabled>select here.</option>
+                <option value="video">video</option>
+                <option value="Canvas">Canvas</option>
+                <option value="Text">Text</option>
+              </select>
+            <input
+              type="text"
+              name="field_name[]"
+              value="<%= jobDetails.interview.questions[a].question %>"
           />
           <a href="javascript:void(0);" class="remove_button">Remove</a>
         </div>
@@ -173,7 +183,9 @@
             <h3><b>People Applied for this job</b></h3>
 
             <% for(var i=0; i < jobApplantsNames.length; i++) { %>
-               <p  class ="name"><b><%= jobApplantsNames[i] %></b></p>
+                <div>
+                  <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
+               </div>
                <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
                       <p>Interview Sent</p>
                 <%} else{ %>
@@ -201,7 +213,16 @@
       var addButton = $(".add_button"); //Add button selector
       var wrapper = $(".field_wrapper"); //Input field wrapper
       var fieldHTML =
-        `<div> <input name="the_types[]" type="checkbox"/>
+        `<div> <select
+                class="form-control"
+                name="the_types[]"
+                required
+              >
+                <option disabled>select here.</option>
+                <option value="1">video</option>
+                <option value="2">Canvas/ Draw</option>
+                <option value="3">Text</option>
+              </select>
         <input type="text" name="field_name[]" value=""/>
         <a href="javascript:void(0);" class="remove_button">Remove</a>
         </div>`; //New input field html
@@ -325,18 +346,23 @@
         e.stopImmediatePropagation(e);
 
         var questions = $("input[name='field_name[]']");
-        var types = $("input[name='the_types[]']");
+        var types = $("select[name='the_types[]']");
         var interviewQuestions = [];
         var jobId = "<%=jobDetails._id %>";
 
+        // console.log(types)
+        // console.log(questions)
+        // console.log(jobId)
+        
         types.each(function (index) {
           interviewQuestions.push({
-            type_of_question: $(this).val(),
+            type_of_question: types[index].value,
             question: questions[index].value,
           });
         });
 
-        // interviewQuestions : Data type array of objects { isVideo: boolean, question: String}
+        console.log(interviewQuestions)
+        return
         if (interviewQuestions.length != 0) {
           $.ajax({
             method: "POST",
@@ -356,11 +382,18 @@
         }
       });
 
+      $(".name").click(function(e) {
+          var userId = $(this).attr('id')
+          
+
+          console.log(userId)
+
+          window.location.href = `/view_profile?userId=${userId}`;
+      })
+
       $(".answered_interview").click(function(e) {
           var userId = $(this).attr('id')
           var jobId = "<%=jobDetails._id %>";
-
-          console.log(userId, jobId)
 
           window.location.href = `/view_interview_answers?userId=${userId}&jobId=${jobId}`;
       })

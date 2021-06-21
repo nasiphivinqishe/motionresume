@@ -95,10 +95,6 @@ router.get("/registration", (req, res) => {
     res.render("registration");
 });
 
-router.get("/my_profile", (req, res) => {
-    res.render("my_profile");
-});
-
 router.get("/user_information", (req, res) => {
     res.render("user_information");
 });
@@ -119,6 +115,23 @@ router.get("/motion_resume", auth, (req, res) => {
             });
         }
     });
+});
+
+router.get("/my_profile", (req, res) => {
+    var userId = req.session.userId
+    
+    User.findOne({_id:userId}, function(err, user) {
+        if(err) {
+            console.log("error")
+            res.status(500).send("Error")
+        } else {
+            res.render("my_profile", {
+                user:user,
+                userId:userId
+            }); 
+        }
+        
+    })
 });
 
 router.post("/send_applicant_an_interview", (req, res) => {
@@ -281,6 +294,21 @@ router.post("/update_job_details", (req, res) => {
     });
 });
 
+router.get("/view_profile", (req, res) => {
+    var userId= req.query.userId
+
+    User.findOne({_id: userId}, function(err, user) {
+        if(err) {
+            console.log("error")
+            res.status(500).send("Error in finding user!")
+        }
+        else {
+            console.log("Success")
+            res.render("view_profile", {user:user})
+        }
+    })
+})
+
 router.post("/save_interview_questions", (req, res) => {
     // Update jobs save innterview questions for that specific job
     var interviewQuestions = req.body.interviewQuestions; //type array
@@ -335,7 +363,7 @@ router.post("/register_recruiter", (req, res) => {
         password: userData.password,
         typeOfUser: userData.typeOfUser,
         companyName: userData.companyName,
-        companyUrl: req.body.userDataObject.companyUrl,
+        companyUrl: userData.companyUrl,
     });
     console.log(userData)
     user.save((err) => {
@@ -567,6 +595,7 @@ router.post("/submit_interview", (req, res) => {
 
                 fs.writeFile(`${filename}`, base64Data, 'base64', function(err, success) {
                     console.log(err);
+                    
                 });
                 // change file naming from base64 to filename
                 answers[a].answer = `${filename}`
@@ -599,6 +628,42 @@ router.post("/submit_interview", (req, res) => {
 
 })
 
+router.post("/save_motionresume", (req, res) => {
+    var userId = req.session.userId
+    var motionresume = req.body.motionresume
+    var base64Data =motionresume.replace(/^data:(.*?);base64,/, "");
+    base64Data= base64Data.replace(/ /g, '+');
+    var filename= `./public/motionresume/${new Date().getTime()}.mp4`
+
+    fs.writeFile(`${filename}`, base64Data, 'base64', function(err, success) {
+        console.log(err);
+        motionresume = `${filename}`
+    });
+
+   
+   User.updateOne({_id: userId}, {
+        $set:{
+                "user.$.motionresume":motionresume,
+            }
+        },
+        function (err, data) {
+            if(err){
+                console.log(err)
+                res.status(500).send(err);
+            }
+            else {
+                console.log(data)
+                console.log("Successfully submited motionresume")
+                res.send("Submited successfully")
+            }
+        }
+    )
+
+})
+
+router.get("/take_video_motionresume", (req, res) => {
+    res.render("take_video_motionresume")
+})
 
 router.get("/take_interview", (req, res) => {
     var jobId = req.query.jobId;
