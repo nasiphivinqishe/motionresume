@@ -1,33 +1,100 @@
 <%- include ('Layout/header') %>
 <body>
-    <% if(applicant && applicant.interview_answers) { %> 
-        <% for(var k = 0; k < applicant.interview_answers.length; k++) { %> 
-            <h4><b>Question</b></h4>
-            <p><%=applicant.interview_answers[k].question%></p>
-            
-            <h4><b>Answer</b></h4>
-            <% if(applicant.interview_answers[k].type_of_question == "text") { %>
-                <p>Answer: <%=applicant.interview_answers[k].answer%></p>
-            <% } %>
+    <div class="container">
+        <div class="card">
+            <div class="card-body"> 
+                <% if(applicant.application_progress == "accepted") { %> 
+                    <h4><b>Applicant Accepted for this job</b></h4>
+                <% } %>
+                <% if(applicant.application_progress == "declined") { %> 
+                    <p><b>Applicant Declined</b></p>
+                <% } %>
+                <hr>
+                <% if(applicant && applicant.interview_answers) { %> 
+                    <% for(var k = 0; k < applicant.interview_answers.length; k++) { %> 
+                        <h4><b>Question</b></h4>
+                        <p><%=applicant.interview_answers[k].question%></p>
+                        
+                        <h4><b>Answer</b></h4>
+                        <% if(applicant.interview_answers[k].type_of_question == "text") { %>
+                            <p>Answer: <%=applicant.interview_answers[k].answer%></p>
+                        <% } %>
 
-            <% if(applicant.interview_answers[k].type_of_question == "canvas") { %>
-                <p>Drawing Answer</p>
-                <p><img src="<%=applicant.interview_answers[k].answer%>"/></p>
-            <% } %>
-            
-            <% if(applicant.interview_answers[k].type_of_question == "video") { %>
-                <p>Video Answer</p>
-                <p>
-                    <video width="320" height="240" controls>
-                        <source src="<%=applicant.interview_answers[k].answer%>" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </p>
-            <% } %>            
-            <hr>
-        <% } %>
-    <% } else { %> 
-        <h3>Error: error getting interview details. Maybe it no longer exist.</h3>
-    <% } %>
+                        <% if(applicant.interview_answers[k].type_of_question == "canvas") { %>
+                            <p>Drawing Answer</p>
+                            <p><img src="<%=applicant.interview_answers[k].answer%>"/></p>
+                        <% } %>
+                        
+                        <% if(applicant.interview_answers[k].type_of_question == "video") { %>
+                            <p>Video Answer</p>
+                            <p>
+                                <video width="320" height="240" controls>
+                                    <source src="<%=applicant.interview_answers[k].answer%>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </p>
+                        <% } %>            
+                        <hr>
+                    <% } %>
+                    <% } else { %> 
+                        <h3>Error: error getting interview details. Maybe it no longer exist.</h3>
+                    <% } %>
+                    <% if(applicant.application_progress == "answered_interview") { %> 
+                        <button  class="accept_applicant" id="<%=applicant.user_id%>">
+                            Accept Applicant
+                        </button>
+                        <p><b>OR</b></p>
+                        <button class="decline_applicant" id="<%=applicant.user_id%> ">
+                            Decline Applicant
+                        </button>
+                    <% } %>
+                <hr>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".accept_applicant").click(function () {
+            var applicantId =$(this).attr('id')
+            var intervieJobId = "<%=jobId%>"
+
+            $.ajax({
+            method: "POST",
+            url: "/accept_applicant",
+            data: {applicantId:applicantId,intervieJobId:intervieJobId},
+            success: function (data) {
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              console.log("Success");
+              alert("Error, check logs");
+             
+            },
+          });
+        })
+
+        $(".decline_applicant").click(function () {
+            var applicantId =$(this).attr('id')
+            var intervieJobId = "<%=jobId%>"
+
+            $.ajax({
+            method: "POST",
+            url: "/decline_applicant",
+            data: {applicantId:applicantId,intervieJobId:intervieJobId},
+            success: function (data) {
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              console.log("Success");
+              alert("Error, check logs");
+             
+            },
+          });
+        })
+    })
+</script>
 </body>
 <%- include ('Layout/footer') %>

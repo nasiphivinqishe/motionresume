@@ -128,43 +128,61 @@
                 },
                 false
             );
+
         $(".motionresume").change(function (e) {
             e.preventDefault(e);
-                var file = event.srcElement.files[0];
-        
-                var reader = new FileReader();
-                reader.readAsBinaryString(file);
-
-                reader.onload = function() {
-                    var browsedStream =btoa(reader.result)
-                    motionresume = browsedStream
-                };
-                reader.onerror = function() {
-                    console.log('there are some problems');
-                };
-        })
+            var dummyVideo = document.createElement('video');
+            var videoDurationLimit = 180
+            var file = event.srcElement.files[0];
     
-        $(".save_motionresume").click(function (e) {
-            e.preventDefault(e);
+            var reader = new FileReader();
+            reader.readAsBinaryString(file);
 
-                $.ajax({
-                    method: "POST",
-                    url: "/save_motionresume",
-                    data: {motionresume:motionresume},
-                    success: function (data) {
-                        // success callback function
-                        alert("Success, check logs");
-                        // window.location.reload(true);
-                        console.log(data)
-                    },
-                    error: function (data, status, xhr) {
-                        // error callback function
-                        alert("Error, check logs");
-                        console.log(data)
-                    },
-                }); 
-            })
+            reader.onload = function() {
+                var browsedStream =btoa(reader.result)
+                motionresume = browsedStream
+            };
+            reader.onerror = function() {
+                console.log('there are some problems');
+            };
+
+            var fileURL = URL.createObjectURL(this.files[0]);
+            dummyVideo.src = fileURL;
+            dummyVideo.ondurationchange = function() {
+
+                if(parseInt(this.duration) > videoDurationLimit) {
+                    motionresume = ""
+                    alert("Video too long, maximum length is 3 minutes.")
+                } else {
+                    console.log(motionresume)
+                    alert("Normal")
+                }
+
+
+            };
         })
+
+            $(".save_motionresume").click(function (e) {
+                e.preventDefault(e);
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/save_motionresume",
+                        data: {motionresume:motionresume},
+                        success: function (data) {
+                            // success callback function
+                            alert("Success, check logs");
+                            // window.location.reload(true);
+                            console.log(data)
+                        },
+                        error: function (data, status, xhr) {
+                            // error callback function
+                            alert("Error, check logs");
+                            console.log(data)
+                        },
+                    }); 
+            })
+    })
 
      </script>
 </body>

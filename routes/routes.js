@@ -134,6 +134,79 @@ router.get("/my_profile", (req, res) => {
     })
 });
 
+router.post("/decline_application", (req,res) => {
+    var applicantId = req.body.applicantId
+    var interviewJobId = req.body.intervieJobId
+
+    Job.updateOne({_id:interviewJobId,"applicants.user_id":applicantId}, 
+         {
+            $set: {
+                    "applicants.$.application_progress": "application_declined"
+             }
+            }, function (err, res){
+                    if(err) {
+                        console.log(err)
+                        console.log("Error in updating applicants")
+                        res.status(500).send("Error updating")
+                    }
+                    else {
+                        console.log("Successfully updated!")
+                        console.log(res)
+                    }
+            }
+    
+        )
+})
+
+router.post("/decline_applicant", (req,res) => {
+    var applicantId = req.body.applicantId
+    var interviewJobId = req.body.intervieJobId
+
+    Job.updateOne({_id:interviewJobId,"applicants.user_id":applicantId}, 
+         {
+            $set: {
+                    "applicants.$.application_progress": "declined"
+             }
+            }, function (err, res){
+                    if(err) {
+                        console.log(err)
+                        console.log("Error in updating applicants")
+                        res.status(500).send("Error updating")
+                    }
+                    else {
+                        console.log(res)
+                        console.log("Applicant declined!")
+                    }
+            }
+    
+        )
+})
+
+router.post("/accept_applicant", (req, res) => {
+    var applicantId = req.body.applicantId
+    var interviewJobId = req.body.intervieJobId
+
+    Job.updateOne({_id: interviewJobId,"applicants.user_id": applicantId}, 
+        {
+            $set: {
+                    "applicants.$.application_progress": "accepted"
+                }
+    }, function (err, res){
+       if(err) {
+           console.log(err)
+           console.log("Error in updating applicants")
+           res.status(500).send("Error updating")
+       }
+       else {
+           console.log(res)
+           console.log("Applicant accepted!")
+       }
+   }
+
+)
+
+})
+
 router.post("/send_applicant_an_interview", (req, res) => {
     var applicantId = req.body.applicantId
     var interviewJobId = req.body.intervieJobId
@@ -399,7 +472,6 @@ router.post("/register_recruiter", (req, res) => {
     });
 });
 
-// Finding user by email + Login endpoint
 router.post("/login", (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
@@ -555,8 +627,6 @@ router.get("/messages", auth, (req, res)=> {
 router.get("/view_interview_answers", (req, res) => {
     var {jobId, userId} = req.query
 
-    console.log(jobId, userId)
-
     Job.findOne({_id: jobId}, function(err, data) {
         if(err) {
             console.log(err)
@@ -655,6 +725,7 @@ router.post("/save_motionresume", (req, res) => {
             else {
                 console.log("Successfully submited motionresume")
                 res.send("Submited successfully")
+                
             }
         }
     )

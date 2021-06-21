@@ -135,30 +135,39 @@
 
     <div class="card">
       <div class="card-body">
-        <h3><b>Hello, Please add interview questions</b></h3>
-        <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
-        for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
-        <div>
-          <label for="level">Choose type of question:</label>
-              <select
-                class="form-control"
-                name="the_types[]"
-                value="<%=jobDetails.interview.questions[a].type_of_question%>"
-                required
-              >
-                <option disabled>select here.</option>
-                <option value="video">video</option>
-                <option value="Canvas">Canvas</option>
-                <option value="Text">Text</option>
-              </select>
-            <input
-              type="text"
-              name="field_name[]"
-              value="<%= jobDetails.interview.questions[a].question %>"
-          />
-          <a href="javascript:void(0);" class="remove_button">Remove</a>
-        </div>
-        <% } %> <% } %>
+        <div class="container" style="margin: 3%;">
+          <center><h2><b><u>ENTER INTERVIEW QUESTION(S).</u></b></h2></center>
+          <form>
+              <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
+                  for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
+                    <div class="row">
+                      <div class="col-md-7">  
+                        <div class="form-group">
+                            <label for="pwd">Type</label>
+                            <select class="form-control question-type" name="the_types[]" value="<%=jobDetails.interview.questions[a].type_of_question%>">
+                                <option selected value="" disabled="true">Select type</option>
+                                <option>Text</option>
+                                <option>Video</option>
+                                <option>Canvas</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+      
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label for="usr">Question</label>
+                            <input type="text" class="form-control" placeholder="Enter question here..." value="<%= jobDetails.interview.questions[a].question %>" name="field_name[]">
+                          </div>
+                        </div> 
+                     </div>
+                  <% } %>
+              <% } %>
+          </form>
+      </div>
+  
+          <hr>
 
         <div class="field_wrapper">
           <div>
@@ -183,23 +192,31 @@
             <h3><b>People Applied for this job</b></h3>
 
             <% for(var i=0; i < jobApplantsNames.length; i++) { %>
-                <div>
-                  <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
-               </div>
-               <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
-                      <p>Interview Sent</p>
-                <%} else{ %>
-                    <%}if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
-                        <button
-                        class="btn btn-md btn-primary answered_interview"
-                        id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
-                      </button>
-                    <%} else{ %>
-                        <button
-                          class="btn btn-md btn-primary send_interview"
-                          id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
-                        </button>
-                 <% } %> 
+                  <div>
+                    <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
+                </div>
+                <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
+                  <p><b>Sent Interview</b></p>
+                <% } %> 
+                <% if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
+                  <button
+                    class="btn btn-md btn-primary answered_interview"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
+                  </button>
+                <% } %> 
+                <% if(!jobDetails.applicants[i].application_progress){ %>
+                  <button
+                    class="btn btn-md btn-primary "
+                    id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
+                  </button>
+                  <button
+                    class="btn btn-md btn-primary decline_application"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Decline Application
+                  </button>
+                <% } %>
+                <% if(jobDetails.applicants[i].application_progress=="application_declined"){ %>
+                  <p><b><%=jobApplantsNames[i]%> Declined</b></p>
+                <% } %>  
              <% } %>    
           </div>
         </div>
@@ -213,18 +230,27 @@
       var addButton = $(".add_button"); //Add button selector
       var wrapper = $(".field_wrapper"); //Input field wrapper
       var fieldHTML =
-        `<div> <select
-                class="form-control"
-                name="the_types[]"
-                required
-              >
-                <option disabled>select here.</option>
-                <option value="1">video</option>
-                <option value="2">Canvas/ Draw</option>
-                <option value="3">Text</option>
-              </select>
-        <input type="text" name="field_name[]" value=""/>
-        <a href="javascript:void(0);" class="remove_button">Remove</a>
+        `<div> <div class="row">
+                      <div class="col-md-7">  
+                        <div class="form-group">
+                            <label for="pwd">Type</label>
+                            <select class="form-control question-type" name="the_types[]">
+                                <option selected value="" disabled="true">Select type</option>
+                                <option>Text</option>
+                                <option>Video</option>
+                                <option>Canvas</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label for="usr">Question</label>
+                            <input type="text" class="form-control" placeholder="Enter question here..." name="field_name[]">
+                          </div>
+                        </div> 
+                     </div>
         </div>`; //New input field html
       var x = 1; //Initial field counter is 1
 
@@ -289,9 +315,26 @@
         });
       });
 
-      /*
-            Send interview questions to user applied
-      */
+      $(".decline_application").click(function () {
+        var applicantId = $(this).attr('id')
+        var intervieJobId = "<%= jobDetails._id%>"
+
+        $.ajax({
+            method: "POST",
+            url: "/decline_application",
+            data: {applicantId :applicantId,intervieJobId: intervieJobId},
+            success: function (data) {
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              alert("Error, check logs");
+              console.log("Success");
+            },
+          });
+
+      })
+
        $(".send_interview").click(function () {
         var applicantId = $(this).attr('id')
         var intervieJobId = "<%= jobDetails._id%>"
@@ -322,10 +365,6 @@
 
       })
 
-      /*
-        Send interview questions to user applied
-      */
-
       CKEDITOR.instances.requirements.setData(
         "<%= JSON.stringify(jobDetails.requirements) %>"
       );
@@ -349,10 +388,6 @@
         var types = $("select[name='the_types[]']");
         var interviewQuestions = [];
         var jobId = "<%=jobDetails._id %>";
-
-        // console.log(types)
-        // console.log(questions)
-        // console.log(jobId)
         
         types.each(function (index) {
           interviewQuestions.push({
@@ -384,10 +419,6 @@
 
       $(".name").click(function(e) {
           var userId = $(this).attr('id')
-          
-
-          console.log(userId)
-
           window.location.href = `/view_profile?userId=${userId}`;
       })
 
