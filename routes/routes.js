@@ -633,26 +633,26 @@ router.post("/save_motionresume", (req, res) => {
     var motionresume = req.body.motionresume
     var base64Data =motionresume.replace(/^data:(.*?);base64,/, "");
     base64Data= base64Data.replace(/ /g, '+');
-    var filename= `./public/motionresume/${new Date().getTime()}.mp4`
+    var filename= `/motionresume/${new Date().getTime()}.mp4`
 
-    fs.writeFile(`${filename}`, base64Data, 'base64', function(err, success) {
-        console.log(err);
-        motionresume = `${filename}`
+    fs.writeFile(`./public${filename}`, base64Data, 'base64', function(err, success) {
+        if(err){
+            console.log(err);
+        } 
+        else {
+            console.log(success)
+            filename = `${filename}`
+        }
+        
     });
 
    
-   User.updateOne({_id: userId}, {
-        $set:{
-                "user.$.motionresume":motionresume,
-            }
-        },
-        function (err, data) {
-            if(err){
+   User.updateOne({_id: userId},{$set:{"motionresume":filename}} ,function (err, data) {
+        if(err){
                 console.log(err)
                 res.status(500).send(err);
             }
             else {
-                console.log(data)
                 console.log("Successfully submited motionresume")
                 res.send("Submited successfully")
             }
@@ -691,7 +691,6 @@ router.get("/notifications", (req, res) => {
         if (err) {
             res.status(500).send(err);
         } else {
-            console.log(notifications)
             if (notifications.length == 0) {
                 res.render("notifications", {
                     notifications: [],
@@ -765,7 +764,6 @@ router.post("/register_jobseeker", (req, res) => {
         yearsWorked: userData.yearsWorked,
         skills: userData.skills,
     });
-    console.log(userData)
 
     user.save((err) => {
         if (err) {
