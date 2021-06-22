@@ -107,7 +107,7 @@
                         return new Promise(resolve => {
                             reader.onloadend = function() {
                                 var base64data = reader.result;  
-                                resolve(base64data)                           
+                                    resolve(base64data)                           
                             }
                         
                         }).then(res => {
@@ -129,12 +129,14 @@
                 false
             );
 
+
+
         $(".motionresume").change(function (e) {
             e.preventDefault(e);
             var dummyVideo = document.createElement('video');
             var videoDurationLimit = 180
             var file = event.srcElement.files[0];
-    
+
             var reader = new FileReader();
             reader.readAsBinaryString(file);
 
@@ -164,6 +166,9 @@
 
             $(".save_motionresume").click(function (e) {
                 e.preventDefault(e);
+
+                console.log("kjdscijipcj", motionresume)
+                return
 
                     $.ajax({
                         method: "POST",
