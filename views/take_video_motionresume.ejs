@@ -1,179 +1,181 @@
 <%- include ('Layout/header') %>
-<body>
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <p>
+
+    <body>
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <p>
                     <div class="row">
                         <div class="form-group col-md-5">
-                        <label><b>Browse for a video</b></label><br />
-                        <input type="file" id="motionresume" class="motionresume" name="motionresume"/><br />
+                            <label><b>Browse for a video</b></label><br />
+                            <input type="file" id="motionresume" class="motionresume" name="motionresume" /><br />
                         </div>
                     </div>
                     <hr>
-                </p>
-                <p><b>Record video</b></p>
-                <div class="left">
-                    <div id="startButton" class="button">Start</div>
-                    <video id="preview" width="160" height="120" autoplay muted></video>
-                </div>
-            
-                <div class="right">
-                    <div id="stopButton" class="button">Stop</div>
-                    <h2>Recording</h2>
-                    <video id="recording" width="160" height="120" controls></video>
-                    <a id="downloadButton" class="button"> Download </a>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-5">
-                        <button class="btn btn-md btn-primary save_motionresume" id="save_motionresume">Save Motionresume</button>
+                    </p>
+                    <p><b>Record video</b></p>
+                    <div class="left">
+                        <div id="startButton" class="button">Start</div>
+                        <video id="preview" width="160" height="120" autoplay muted></video>
+                    </div>
+
+                    <div class="right">
+                        <div id="stopButton" class="button">Stop</div>
+                        <h2>Recording</h2>
+                        <video id="recording" width="160" height="120" controls></video>
+                        <a id="downloadButton" class="button"> Download </a>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            <button class="btn btn-md btn-primary save_motionresume" id="save_motionresume"><i
+                                    class="fa fa-save "></i> Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-      <div id="log"></div>
-      <script>
-    $(document).ready(function () {
-            var motionresume =""
-            let logElement = document.getElementById("log");
-            let recordingTimeMS = 180001;
-            function log(msg) {
-            logElement.innerHTML += msg + "\n";
-            }
-            function wait(delayInMS) {
-            return new Promise((resolve) => setTimeout(resolve, delayInMS));
-            }
-    
-        
-    
-            let preview = document.getElementById("preview");
-            let recording = document.getElementById("recording");
-            let startButton = document.getElementById("startButton");
-            let stopButton = document.getElementById("stopButton");
-            let downloadButton = document.getElementById("downloadButton");
-    
-            function startRecording(stream, lengthInMS) {
-                let recorder = new MediaRecorder(stream);
-                let data = [];
-    
-                recorder.ondataavailable = (event) => data.push(event.data);
-                recorder.start();
-                log(recorder.state + " for " + lengthInMS / 1000 + " seconds...");
-    
-                let stopped = new Promise((resolve, reject) => {
-                recorder.onstop = resolve;
-                recorder.onerror = (event) => reject(event.name);
-                });
-    
-                let recorded = wait(lengthInMS).then(
-                () => recorder.state == "recording" && recorder.stop()
-                );
-    
-                return Promise.all([stopped, recorded]).then(() => data);
-            }
-    
-            function stop(stream) {
-                stream.getTracks().forEach((track) => track.stop());
-            }
-    
-            startButton.addEventListener(
-                "click",
-                function () {
-                navigator.mediaDevices
-                    .getUserMedia({
-                    video: true,
-                    audio: true,
-                    })
-                    .then((stream) => {
-                    preview.srcObject = stream;
-                    downloadButton.href = stream;
-                    preview.captureStream =
-                        preview.captureStream || preview.mozCaptureStream;
-                    return new Promise((resolve) => (preview.onplaying = resolve));
-                    })
-                    .then(() =>
-                    startRecording(preview.captureStream(), recordingTimeMS)
-                    )
-                    .then((recordedChunks) => {
-                    let recordedBlob = new Blob(recordedChunks, {
-                        type: "video/webm",
-                    });
-                    recording.src = URL.createObjectURL(recordedBlob);
-                    downloadButton.href = recording.src;
-                    downloadButton.download = "RecordedVideo.webm";
-                    var reader = new FileReader();
-                    reader.readAsDataURL(recordedBlob); 
-                        return new Promise(resolve => {
-                            reader.onloadend = function() {
-                                var base64data = reader.result;  
-                                    resolve(base64data)                           
-                            }
-                        
-                        }).then(res => {
-                            motionresume =res
-                            motionresume.replace("", motionresume)
-                        })
-
-                    })
-                    .catch(log);
-                },
-                false
-            );
-    
-            stopButton.addEventListener(
-                "click",
-                function () {
-                stop(preview.srcObject);
-                },
-                false
-            );
-
-
-
-        $(".motionresume").change(function (e) {
-            e.preventDefault(e);
-            var dummyVideo = document.createElement('video');
-            var videoDurationLimit = 180
-            var file = event.srcElement.files[0];
-
-            var reader = new FileReader();
-            reader.readAsBinaryString(file);
-
-            reader.onload = function() {
-                var browsedStream =btoa(reader.result)
-                motionresume = browsedStream
-            };
-            reader.onerror = function() {
-                console.log('there are some problems');
-            };
-
-            var fileURL = URL.createObjectURL(this.files[0]);
-            dummyVideo.src = fileURL;
-            dummyVideo.ondurationchange = function() {
-
-                if(parseInt(this.duration) > videoDurationLimit) {
-                    motionresume = ""
-                    alert("Video too long, maximum length is 3 minutes.")
-                } else {
-                    console.log(motionresume)
-                    alert("Normal")
+        <div id="log"></div>
+        <script>
+            $(document).ready(function () {
+                var motionresume = ""
+                let logElement = document.getElementById("log");
+                let recordingTimeMS = 180001;
+                function log(msg) {
+                    logElement.innerHTML += msg + "\n";
+                }
+                function wait(delayInMS) {
+                    return new Promise((resolve) => setTimeout(resolve, delayInMS));
                 }
 
 
-            };
-        })
 
-            $(".save_motionresume").click(function (e) {
-                e.preventDefault(e);
+                let preview = document.getElementById("preview");
+                let recording = document.getElementById("recording");
+                let startButton = document.getElementById("startButton");
+                let stopButton = document.getElementById("stopButton");
+                let downloadButton = document.getElementById("downloadButton");
 
-                console.log("kjdscijipcj", motionresume)
-                return
+                function startRecording(stream, lengthInMS) {
+                    let recorder = new MediaRecorder(stream);
+                    let data = [];
+
+                    recorder.ondataavailable = (event) => data.push(event.data);
+                    recorder.start();
+                    log(recorder.state + " for " + lengthInMS / 1000 + " seconds...");
+
+                    let stopped = new Promise((resolve, reject) => {
+                        recorder.onstop = resolve;
+                        recorder.onerror = (event) => reject(event.name);
+                    });
+
+                    let recorded = wait(lengthInMS).then(
+                        () => recorder.state == "recording" && recorder.stop()
+                    );
+
+                    return Promise.all([stopped, recorded]).then(() => data);
+                }
+
+                function stop(stream) {
+                    stream.getTracks().forEach((track) => track.stop());
+                }
+
+                startButton.addEventListener(
+                    "click",
+                    function () {
+                        navigator.mediaDevices
+                            .getUserMedia({
+                                video: true,
+                                audio: true,
+                            })
+                            .then((stream) => {
+                                preview.srcObject = stream;
+                                downloadButton.href = stream;
+                                preview.captureStream =
+                                    preview.captureStream || preview.mozCaptureStream;
+                                return new Promise((resolve) => (preview.onplaying = resolve));
+                            })
+                            .then(() =>
+                                startRecording(preview.captureStream(), recordingTimeMS)
+                            )
+                            .then((recordedChunks) => {
+                                let recordedBlob = new Blob(recordedChunks, {
+                                    type: "video/webm",
+                                });
+                                recording.src = URL.createObjectURL(recordedBlob);
+                                downloadButton.href = recording.src;
+                                downloadButton.download = "RecordedVideo.webm";
+                                var reader = new FileReader();
+                                reader.readAsDataURL(recordedBlob);
+                                return new Promise(resolve => {
+                                    reader.onloadend = function () {
+                                        var base64data = reader.result;
+                                        resolve(base64data)
+                                    }
+
+                                }).then(res => {
+                                    motionresume = res
+                                    motionresume.replace("", motionresume)
+                                })
+
+                            })
+                            .catch(log);
+                    },
+                    false
+                );
+
+                stopButton.addEventListener(
+                    "click",
+                    function () {
+                        stop(preview.srcObject);
+                    },
+                    false
+                );
+
+
+
+                $(".motionresume").change(function (e) {
+                    e.preventDefault(e);
+                    var dummyVideo = document.createElement('video');
+                    var videoDurationLimit = 180
+                    var file = event.srcElement.files[0];
+
+                    var reader = new FileReader();
+                    reader.readAsBinaryString(file);
+
+                    reader.onload = function () {
+                        var browsedStream = btoa(reader.result)
+                        motionresume = browsedStream
+                    };
+                    reader.onerror = function () {
+                        console.log('there are some problems');
+                    };
+
+                    var fileURL = URL.createObjectURL(this.files[0]);
+                    dummyVideo.src = fileURL;
+                    dummyVideo.ondurationchange = function () {
+
+                        if (parseInt(this.duration) > videoDurationLimit) {
+                            motionresume = ""
+                            alert("Video too long, maximum length is 3 minutes.")
+                        } else {
+                            console.log(motionresume)
+                            alert("Normal")
+                        }
+
+
+                    };
+                })
+
+                $(".save_motionresume").click(function (e) {
+                    e.preventDefault(e);
+
+                    console.log("kjdscijipcj", motionresume)
+                    return
 
                     $.ajax({
                         method: "POST",
                         url: "/save_motionresume",
-                        data: {motionresume:motionresume},
+                        data: { motionresume: motionresume },
                         success: function (data) {
                             // success callback function
                             alert("Success, check logs");
@@ -185,10 +187,10 @@
                             alert("Error, check logs");
                             console.log(data)
                         },
-                    }); 
+                    });
+                })
             })
-    })
 
-     </script>
-</body>
-<%- include ('Layout/footer') %>
+        </script>
+    </body>
+    <%- include ('Layout/footer') %>

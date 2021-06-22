@@ -1,113 +1,137 @@
 <%- include ('Layout/header') %>
-<link rel="stylesheet" href="ckeditor/ckeditor.js" />
-<body>
-  <div class="container">
-    <% for (var i = 0; i < jobs.length; i++) { %>
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-sm-8">
+  <link rel="stylesheet" href="ckeditor/ckeditor.js" />
+
+  <body>
+    <div class="container">
+      <% for (var i=0; i < jobs.length; i++) { %>
+        <div class="card">
+          <div class="card-body">
             <div class="row">
-              <div class="col-sm-4">
-                <img src="./logo.png" class="center" width="70%" alt="Company Logo" />
-              </div>
-              <div class="col-sm-6">
-                <h3><b>Job Level:</b></h3>
-                <p><%= levelDescriptionObj[jobs[i].level]%></p>
-                <h3><b>Field:</b></h3>
-                <p><%= jobs[i].field %></p>
+              <div class="col-sm-8">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <img src="./logo.png" class="center" width="70%" alt="Company Logo" />
+                  </div>
+                  <div class="col-sm-6">
+                    <h5><b>Job Level:</b></h5>
+                    <p>
+                      <%= levelDescriptionObj[jobs[i].level]%>
+                    </p>
+                    <h5><b>Field:</b></h5>
+                    <p>
+                      <%= jobs[i].field %>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h3><b>Requirements</b></h3>
-            <p><%- jobs[i].requirements %></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h3><b>Discription and Responsibilities</b></h3>
-            <p><%- jobs[i].functions %></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h3><b>Job Start Date:</b></h3>
-            <p><%= jobs[i].start_date%></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h3><b>Closing Date:</b></h3>
-            <p><%= jobs[i].application_closing_date%></p>
-          </div>
-        </div>
-
-        <% if(jobs[i].poster != userId ) { %>   
-          <% var alreadyApplied   = jobs[i].applicants.some((applicant)=> applicant.user_id == userId) %>
-          <% if(!alreadyApplied) { %>
             <div class="row">
               <div class="col-sm-12">
-               <button class="btn btn-md btn-primary btn-apply" id="<%=jobs[i]._id %>"><i class="fa fa-envelope-open-o" aria-hidden="true"></i> Apply</button>
+                <h5><b>Requirements</b></h5>
+                <p>
+                  <%- jobs[i].requirements %>
+                </p>
               </div>
             </div>
-          <% } else { %>
-            <span style="color: green; text-decoration: underline;">Already applied.</span>
-          <% } %>
-        <% } %>
-        
-    <% if(jobs[i].poster == userId) { %>   
-        <div class="row">
-             <div class="col-sm-12">
-              <button class="btn btn-md btn-primary job_details" id="<%=jobs[i]._id %>"> More <i class="fa fa-long-arrow-right"></i></button>
+            <div class="row">
+              <div class="col-sm-12">
+                <h5><b>Discription and Responsibilities</b></h5>
+                <p>
+                  <%- jobs[i].functions %>
+                </p>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <h5><b>Job Start Date:</b></h5>
+                <p>
+                  <%= jobs[i].start_date%>
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <h5><b>Closing Date:</b></h5>
+                <p>
+                  <%= jobs[i].application_closing_date%>
+                </p>
+              </div>
+            </div>
+            <% if(jobs[i].poster !=userId ) { %>
+              <% var alreadyApplied=jobs[i].applicants.some((applicant)=> applicant.user_id == userId) %>
+                <% if(!alreadyApplied) { %>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <button class="btn btn-md btn-primary btn-apply" id="<%=jobs[i]._id %>"><i
+                          class="fa fa-envelope-open-o" aria-hidden="true"></i> Apply</button>
+                    </div>
+                  </div>
+                  <% } else { %>
+                    <span style="color: green; text-decoration: underline;">Already applied.</span><br>
+                    <% var applicant=jobs[i].applicants.find((applicant)=> applicant.user_id == userId)%>
+                      <% if(applicant.application_progress=="got_interview" ) { %>
+                        <p><b>Status: </b> Got interview</p>
+                        <% } %>
+                          <% if(applicant.application_progress=="accepted" ) { %>
+                            <p><b>Status: </b> Accepted</p>
+                            <% } %>
+                              <% if(applicant.application_progress=="declined" ) { %>
+                                <p><b>Status: </b> Declined</p>
+                                <% } %>
+                                  <% if(applicant.application_progress=="application_declined" ) { %>
+                                    <p><b>Status: </b> Declined</p>
+                                    <% } %>
+                                      <% } %>
+                                        <% } else { %>
+                                          <div class="row">
+                                            <div class="col-sm-12">
+                                              <button class="btn btn-md btn-primary job_details" id="<%=jobs[i]._id %>">
+                                                More <i class="fa fa-long-arrow-right"></i></button>
+                                            </div>
+                                          </div>
+                                          <% } %>
+          </div>
         </div>
-    <% } %>
-    <hr />
-  <% } %>
+        <% } %>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
 
+      $(document).ready(function () {
+        $(".btn-apply").click(function () {
+          var jobId = $(this).attr('id')
+          var poster = " <%=jobs.poster%>"
+          console.log(jobId)
+          console.log("Heyyy")
+          console.log(poster)
 
-  </div> 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
+          $.ajax({
+            method: "POST",
+            url: "/apply_for_job",
+            data: { jobId: jobId, poster: poster },
+            success: function (data) {
+              // success callback function
+              alert("Success, check logs");
+              console.log(data)
+            },
+            error: function (data, status, xhr) {
+              // error callback function
+              alert("Error, check logs");
+              console.log(data)
+            },
+          });
 
-    $(document).ready(function () {
-      $(".btn-apply").click(function () {
-        var jobId = $(this).attr('id')
-        var poster =" <%=jobs.poster%>"
-        console.log(jobId)
-        console.log("Heyyy")
-        console.log(poster)
-
-        $.ajax({
-          method: "POST",
-          url: "/apply_for_job",
-          data: { jobId: jobId, poster:poster},
-          success: function (data) {
-            // success callback function
-            alert("Success, check logs");
-            console.log(data)
-          },
-          error: function (data, status, xhr) {
-            // error callback function
-            alert("Error, check logs");
-            console.log(data)
-          },
         });
-        
-    });
 
-    $(".job_details").click(function () {
-      var jobId = $(this).attr('id')
-      location.replace(`/job_details?jobId=${jobId}`);
-      
-    })
-  });
-  </script>
+        $(".job_details").click(function () {
+          var jobId = $(this).attr('id')
+          location.replace(`/job_details?jobId=${jobId}`);
 
-</script>
+        })
+      });
+    </script>
 
-</body>
-<%- include ('Layout/footer') %>
+    </script>
+
+  </body>
+  <%- include ('Layout/footer') %>
