@@ -2,207 +2,225 @@
 <body>
   <div class="container">
     <div class="card">
-      <div class="card-body">
-        <form id="update_job">
-          <div class="row">
-            <div class="form-group col-md-5">
-              <h3><b>Update Job here..</b></h3>
-              <label for="level">Level Type:</label>
-              <select
-                class="form-control"
-                id="level"
-                name="level"
-                value="<%=jobDetails.level%>"
-                required
-              >
-                <option disabled>select here.</option>
-                <option value="1">Entry (0 yrs of Exp)</option>
-                <option value="2">Junior (0-2 yrs of Exp)</option>
-                <option value="3">Intermediate (3-5 yrs of Exp)</option>
-                <option value="4">Senior (6+ yrs of Exp)</option>
-              </select>
-            </div>
-          </div>
+        <div class="card-body">
+          <center><h2><b><u>Update Job here..</u></b></h2></center>
+            <form id="update_job">
+              <div class="row">
+                <div class="form-group col-md-5"> 
+                  <label for="level">Level Type:</label>
+                  <select
+                    class="form-control"
+                    id="level"
+                    name="level"
+                    value="<%=jobDetails.level%>"
+                    required
+                  >
+                    <option disabled>select here.</option>
+                    <option value="1">Entry (0 yrs of Exp)</option>
+                    <option value="2">Junior (0-2 yrs of Exp)</option>
+                    <option value="3">Intermediate (3-5 yrs of Exp)</option>
+                    <option value="4">Senior (6+ yrs of Exp)</option>
+                  </select>
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="form-group col-md-5">
-              <label for="field">Field/ Industry:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="field"
-                name="field"
-                value="<%= jobDetails.field %>"
-                placeholder="Enter field/ Industry"
-                required
-              />
-            </div>
-          </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="field">Field/ Industry:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="field"
+                    name="field"
+                    value="<%= jobDetails.field %>"
+                    placeholder="Enter field/ Industry"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="form-group col-md-5">
-              <label for="skills">Skills Needed:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="skills"
-                name="skills"
-                value="<%= jobDetails.skills %>"
-                placeholder="Enter Skills needed"
-                required
-              />
-            </div>
-          </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="skills">Skills Needed:</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="skills"
+                    name="skills"
+                    value="<%= jobDetails.skills %>"
+                    placeholder="Enter Skills needed"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="form-group col-md-5">
-              <label for="start_date">Experted Start Date:</label>
-              <input
-                class="form-control"
-                type="date"
-                id="start_date"
-                name="start_date"
-                placeholder="Enter Expected Start date"
-                required
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-5">
-              <label for="application_closing_date"
-                >Application Closing Date:</label
-              >
-              <input
-                class="form-control"
-                type="date"
-                id="application_closing_date"
-                name="application_closing_date"
-                placeholder="Enter closing date for this job"
-                required
-              />
-            </div>
-          </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="start_date">Experted Start Date:</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    placeholder="Enter Expected Start date"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label for="application_closing_date"
+                    >Application Closing Date:</label
+                  >
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="application_closing_date"
+                    name="application_closing_date"
+                    placeholder="Enter closing date for this job"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="form-group col-md-5 col-md-5">
-              <label for="requirements">Job Requirements:</label>
-              <textarea
-                class="form-control"
-                rows="5"
-                id="requirements"
-                name="requirements"
-                style="visibility: hidden"
-                placeholder="Enter Job Requirements"
-                required
-              >
-              </textarea>
-              <script>
-                CKEDITOR.replace("requirements");
-              </script>
-            </div>
-          </div>
+              <div class="row">
+                <div class="form-group col-md-5 col-md-5">
+                  <label for="requirements">Job Requirements:</label>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    id="requirements"
+                    name="requirements"
+                    style="visibility: hidden"
+                    placeholder="Enter Job Requirements"
+                    required
+                  >
+                  </textarea>
+                  <script>
+                    CKEDITOR.replace("requirements");
+                  </script>
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="form-group col-md-5 col-md-5">
-              <label for="functions"
-                >Job Discription and Responsibilitie:</label
+              <div class="row">
+                <div class="form-group col-md-5 col-md-5">
+                  <label for="functions"
+                    >Job Discription and Responsibilitie:</label
+                  >
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    id="functions"
+                    name="functions"
+                    style="visibility: hidden"
+                    value="<%= jobDetails.field %>"
+                    placeholder="Enter Job Functions"
+                    required
+                  >
+                  </textarea>
+                  <script>
+                    CKEDITOR.replace("functions");
+                  </script>
+                </div>
+              </div>
+              <button
+                class="btn btn-md btn-primary save_updated_job"
+                id="save_updated_job"
               >
-              <textarea
-                class="form-control"
-                rows="5"
-                id="functions"
-                name="functions"
-                style="visibility: hidden"
-                value="<%= jobDetails.field %>"
-                placeholder="Enter Job Functions"
-                required
-              >
-              </textarea>
-              <script>
-                CKEDITOR.replace("functions");
-              </script>
-            </div>
-          </div>
-          <button
-            class="btn btn-md btn-primary save_updated_job"
-            id="save_updated_job"
-          >
-            Save Updated Job
-          </button>
-        </form>
+                Save Updated Job
+              </button>
+            </form>
+          <hr>
+        
+          <div class="container" style="margin: 3%;">
+            <center><h2><b><u>ENTER INTERVIEW QUESTION(S).</u></b></h2></center>
+            <form>
+                <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
+                    for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
+                      <div class="row">
+                        <div class="col-md-7">  
+                          <div class="form-group">
+                              <label for="pwd">Type</label>
+                              <select class="form-control question-type" name="the_types[]" value="<%=jobDetails.interview.questions[a].type_of_question%>">
+                                  <option value="" disabled="true">Select type</option>
+                                  <option value="text">Text</option>
+                                  <option value="video">Video</option>
+                                  <option value="canvas">Canvas</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+        
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-md-7">
+                              <label for="usr">Question</label>
+                              <input type="text" class="form-control" placeholder="Enter question here..." value="<%= jobDetails.interview.questions[a].question %>" name="field_name[]">
+                            </div>
+                          </div> 
+                      </div>
+                          <hr>
+                      
+                    <% } %>
+                <% } %>
+                <div class="field_wrapper">
+                  <div>
+                    <a href="javascript:void(0);" class="add_button" title="Add field"
+                    ><i class="fa fa-plus" aria-hidden="true"></i></a>
+                  </div>
+                </div>
+                <button
+                class="btn btn-md btn-primary submit_questions"
+                id="submit_questions"
+                >
+                    Submit questions
+                </button>
+            
+         </form>
       </div>
-    </div>
+      <hr>
 
-    <div class="card">
-      <div class="card-body">
-        <h3><b>Hello, Please add interview questions</b></h3>
-        <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
-        for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
-        <div>
-          <label for="level">Choose type of question:</label>
-              <select
-                class="form-control"
-                name="the_types[]"
-                value="<%=jobDetails.interview.questions[a].type_of_question%>"
-                required
-              >
-                <option disabled>select here.</option>
-                <option value="video">video</option>
-                <option value="Canvas">Canvas</option>
-                <option value="Text">Text</option>
-              </select>
-            <input
-              type="text"
-              name="field_name[]"
-              value="<%= jobDetails.interview.questions[a].question %>"
-          />
-          <a href="javascript:void(0);" class="remove_button">Remove</a>
-        </div>
-        <% } %> <% } %>
-
-        <div class="field_wrapper">
-          <div>
-            <a href="javascript:void(0);" class="add_button" title="Add field"
-              >Add</a>
-          </div>
-        </div>
-      
-        <button
-          class="btn btn-md btn-primary submit_questions"
-          id="submit_questions"
-        >
-          Submit questions
-        </button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-body">
         <div class="row my-4">
           <div class="col-lg-12">
-            <h3><b>People Applied for this job</b></h3>
+            <center><h3><b><u>People Applied for this job</u></b></h3></center>
 
             <% for(var i=0; i < jobApplantsNames.length; i++) { %>
-                <div>
-                  <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
-               </div>
-               <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
-                      <p>Interview Sent</p>
-                <%} else{ %>
-                    <%}if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
-                        <button
-                        class="btn btn-md btn-primary answered_interview"
-                        id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
-                      </button>
-                    <%} else{ %>
-                        <button
-                          class="btn btn-md btn-primary send_interview"
-                          id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
-                        </button>
-                 <% } %> 
-             <% } %>    
+                  <div>
+                    <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
+                </div>
+                <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
+                  <p><b>Sent Interview</b></p>
+                <% } %> 
+                <% if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
+                  <button
+                    class="btn btn-md btn-primary answered_interview"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
+                  </button>
+                <% } %> 
+                <% if(!jobDetails.applicants[i].application_progress){ %>
+                  <button
+                    class="btn btn-md btn-primary send_interview"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
+                  </button>
+                  <button
+                    class="btn btn-md btn-primary decline_application"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Decline Application
+                  </button>
+                <% } %>
+                <% if(jobDetails.applicants[i].application_progress=="application_declined"){ %>
+                  <p><b> Declined</b></p>
+                <% } %>  
+                <% if(jobDetails.applicants[i].application_progress=="accepted"){ %>
+                  <p><b>Accepted</b></p>
+                  <button
+                    class="btn btn-md btn-primary answered_interview"
+                    id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
+                  </button>
+                <% } %>  
+            <% } %>    
           </div>
         </div>
+        <hr>
       </div>
     </div>
   </div>
@@ -213,18 +231,27 @@
       var addButton = $(".add_button"); //Add button selector
       var wrapper = $(".field_wrapper"); //Input field wrapper
       var fieldHTML =
-        `<div> <select
-                class="form-control"
-                name="the_types[]"
-                required
-              >
-                <option disabled>select here.</option>
-                <option value="1">video</option>
-                <option value="2">Canvas/ Draw</option>
-                <option value="3">Text</option>
-              </select>
-        <input type="text" name="field_name[]" value=""/>
-        <a href="javascript:void(0);" class="remove_button">Remove</a>
+        `<div> <div class="row">
+                      <div class="col-md-7">  
+                        <div class="form-group">
+                            <label for="pwd">Type</label>
+                            <select class="form-control question-type" name="the_types[]">
+                                <option selected value="" disabled="true">Select type</option>
+                                <option>Text</option>
+                                <option>Video</option>
+                                <option>Canvas</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label for="usr">Question</label>
+                            <input type="text" class="form-control" placeholder="Enter question here..." name="field_name[]">
+                          </div>
+                        </div> 
+                     </div><a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus" aria-hidden="true"></i></a></div>
         </div>`; //New input field html
       var x = 1; //Initial field counter is 1
 
@@ -289,9 +316,26 @@
         });
       });
 
-      /*
-            Send interview questions to user applied
-      */
+      $(".decline_application").click(function () {
+        var applicantId = $(this).attr('id')
+        var intervieJobId = "<%= jobDetails._id%>"
+
+        $.ajax({
+            method: "POST",
+            url: "/decline_application",
+            data: {applicantId :applicantId,intervieJobId: intervieJobId},
+            success: function (data) {
+              alert("Success, check logs");
+              console.log(data);
+            },
+            error: function (data, status, xhr) {
+              alert("Error, check logs");
+              console.log("Success");
+            },
+          });
+
+      })
+
        $(".send_interview").click(function () {
         var applicantId = $(this).attr('id')
         var intervieJobId = "<%= jobDetails._id%>"
@@ -322,10 +366,6 @@
 
       })
 
-      /*
-        Send interview questions to user applied
-      */
-
       CKEDITOR.instances.requirements.setData(
         "<%= JSON.stringify(jobDetails.requirements) %>"
       );
@@ -349,10 +389,6 @@
         var types = $("select[name='the_types[]']");
         var interviewQuestions = [];
         var jobId = "<%=jobDetails._id %>";
-
-        // console.log(types)
-        // console.log(questions)
-        // console.log(jobId)
         
         types.each(function (index) {
           interviewQuestions.push({
@@ -360,9 +396,7 @@
             question: questions[index].value,
           });
         });
-
-        console.log(interviewQuestions)
-        return
+      
         if (interviewQuestions.length != 0) {
           $.ajax({
             method: "POST",
@@ -384,10 +418,6 @@
 
       $(".name").click(function(e) {
           var userId = $(this).attr('id')
-          
-
-          console.log(userId)
-
           window.location.href = `/view_profile?userId=${userId}`;
       })
 
