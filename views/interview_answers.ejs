@@ -3,8 +3,9 @@
     <div class="container">
         <div class="card">
             <div class="card-body"> 
+
                 <% if(applicant.application_progress == "accepted") { %> 
-                    <h4><b>Applicant Accepted for this job</b></h4>
+                    <h4><b>Applicant accepted for this job</b></h4>
                 <% } %>
                 <% if(applicant.application_progress == "declined") { %> 
                     <p><b>Applicant Declined</b></p>

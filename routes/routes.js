@@ -7,7 +7,14 @@ const Notification = require("../models/notifications");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 var uuid = require("node-uuid");
-const { resolve } = require("path");
+const SendEmail = require("./send_email")
+
+// const sendEmailService = new SendEmail()
+
+// sendEmailService
+// .sendMail("relevant")
+// .then(())
+// .catch(())
 
 var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -25,10 +32,10 @@ const levelDescriptionObj = {
 };
 
 var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, "./public");
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
     },
 });
@@ -38,14 +45,14 @@ var upload = multer({
 }).single("image");
 
 // // Authentication and Authorization Middleware
-var auth = function(req, res, next) {
+var auth = function (req, res, next) {
     if (req.session && req.session.userId && req.session.isLoggedIn)
         return next();
     else return res.send("You are not authorized!");
 };
 
 // Type of user middleware
-var isRecruiter = function(req, res, next) {
+var isRecruiter = function (req, res, next) {
     if (req.session && req.session.isRecruiter) {
         return next();
     } else {
@@ -57,7 +64,7 @@ router.get("/add_job", isRecruiter, (req, res) => {
     res.render("add_job");
 });
 
-router.post("/add_job", isRecruiter, function(req, res) {
+router.post("/add_job", isRecruiter, function (req, res) {
     var jobDataObject = req.body.addJobDataObject;
     console.log(jobDataObject);
 
@@ -104,7 +111,7 @@ router.get("/available_jobs", (req, res) => {
 });
 
 router.get("/motion_resume", auth, (req, res) => {
-    Job.find({}, function(err, jobs) {
+    Job.find({}, function (err, jobs) {
         if (err) {
             res.send(err);
         } else {
@@ -119,91 +126,127 @@ router.get("/motion_resume", auth, (req, res) => {
 
 router.get("/my_profile", (req, res) => {
     var userId = req.session.userId
-    
-    User.findOne({_id:userId}, function(err, user) {
-        if(err) {
+
+    User.findOne({ _id: userId }, function (err, user) {
+        if (err) {
             console.log("error")
             res.status(500).send("Error")
         } else {
             res.render("my_profile", {
-                user:user,
-                userId:userId
-            }); 
+                user: user,
+                userId: userId
+            });
         }
-        
+
     })
 });
 
-router.post("/decline_application", (req,res) => {
+router.post("/decline_application", (req, res) => {
     var applicantId = req.body.applicantId
     var interviewJobId = req.body.intervieJobId
 
-    Job.updateOne({_id:interviewJobId,"applicants.user_id":applicantId}, 
-         {
+    Job.updateOne({ _id: interviewJobId, "applicants.user_id": applicantId },
+        {
             $set: {
-                    "applicants.$.application_progress": "application_declined"
-             }
-            }, function (err, res){
-                    if(err) {
-                        console.log(err)
-                        console.log("Error in updating applicants")
-                        res.status(500).send("Error updating")
-                    }
-                    else {
-                        console.log("Successfully updated!")
-                        console.log(res)
-                    }
+                "applicants.$.application_progress": "application_declined"
             }
-    
-        )
+        }, function (err, res) {
+            if (err) {
+                console.log(err)
+                console.log("Error in updating applicants")
+                res.status(500).send("Error updating")
+            }
+            else {
+                console.log("Successfully updated!")
+                console.log(res)
+            }
+        }
+
+    )
 })
 
-router.post("/decline_applicant", (req,res) => {
+router.post("/decline_applicant", (req, res) => {
     var applicantId = req.body.applicantId
     var interviewJobId = req.body.intervieJobId
+    var poster = req.session.userId
 
-    Job.updateOne({_id:interviewJobId,"applicants.user_id":applicantId}, 
-         {
+    console.log(poster)
+
+    Job.updateOne({ _id: interviewJobId, "applicants.user_id": applicantId },
+        {
             $set: {
-                    "applicants.$.application_progress": "declined"
-             }
-            }, function (err, res){
-                    if(err) {
-                        console.log(err)
-                        console.log("Error in updating applicants")
-                        res.status(500).send("Error updating")
-                    }
-                    else {
-                        console.log(res)
-                        console.log("Applicant declined!")
-                    }
+                "applicants.$.application_progress": "declined"
             }
-    
-        )
+        }, function (err, res) {
+            if (err) {
+                console.log(err)
+                console.log("Error in updating applicants")
+                res.status(500).send("Error updating")
+            }
+            else {
+                console.log(res)
+                console.log("Applicant declined!")
+
+                const notification = new Notification({
+                    from: poster,
+                    to: applicantId,
+                    notificationType: "Declined"
+                })
+
+                notification.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send(err)
+                    } else {
+                        console.log("Success saved notification")
+                    }
+                });
+            }
+        }
+
+    )
 })
 
 router.post("/accept_applicant", (req, res) => {
     var applicantId = req.body.applicantId
     var interviewJobId = req.body.intervieJobId
+    var poster = req.session.userId
 
-    Job.updateOne({_id: interviewJobId,"applicants.user_id": applicantId}, 
+    console.log(poster)
+
+    Job.updateOne({ _id: interviewJobId, "applicants.user_id": applicantId },
         {
             $set: {
-                    "applicants.$.application_progress": "accepted"
-                }
-    }, function (err, res){
-       if(err) {
-           console.log(err)
-           console.log("Error in updating applicants")
-           res.status(500).send("Error updating")
-       }
-       else {
-           console.log(res)
-           console.log("Applicant accepted!")
-       }
-   }
+                "applicants.$.application_progress": "accepted"
+            }
+        }, function (err, res) {
+            if (err) {
+                console.log(err)
+                console.log("Error in updating applicants")
+                res.status(500).send("Error updating")
+            }
+            else {
+                console.log(res)
+                console.log("Applicant accepted!")
 
-)
+                const notification = new Notification({
+                    from: poster,
+                    to: applicantId,
+                    notificationType: "Accepted"
+                })
+
+                notification.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send(err)
+                    } else {
+                        console.log("Success saved notification")
+                    }
+                });
+            }
+        }
+
+    )
 
 })
 
@@ -212,15 +255,15 @@ router.post("/send_applicant_an_interview", (req, res) => {
     var interviewJobId = req.body.intervieJobId
 
     Job.updateOne({
-            _id: interviewJobId,
-            "applicants.user_id": applicantId
-        }, {
-            $set: {
-                "applicants.$.application_progress": "got_interview"
-            }
-        },
+        _id: interviewJobId,
+        "applicants.user_id": applicantId
+    }, {
+        $set: {
+            "applicants.$.application_progress": "got_interview"
+        }
+    },
 
-        function(err, results) {
+        function (err, results) {
             if (err) {
                 console.log(err)
                 console.log("Error in updating applicants")
@@ -255,16 +298,16 @@ router.get("/job_details", (req, res) => {
     //Get all users applied for specific job
     var jobId = req.query.jobId;
 
-    Job.findById(jobId, function(err, jobDetails) {
+    Job.findById(jobId, function (err, jobDetails) {
         if (err) {
             console.log("Error", error);
             res.status(500).send("Error in viewing job details");
         } else {
-            if(!jobDetails) {
+            if (!jobDetails) {
                 //such job doesn't exist
                 res.send("Job no longer exist");
                 // res.render("job_details");
-            } else if(jobDetails.applicants && jobDetails.applicants.length > 0) {
+            } else if (jobDetails.applicants && jobDetails.applicants.length > 0) {
                 //jb with applicants
                 new Promise((resolve, reject) => {
                     var count = 0
@@ -273,7 +316,7 @@ router.get("/job_details", (req, res) => {
 
                         User.findOne({
                             _id: jobDetails.applicants[a].user_id
-                        }, function(err, data) {
+                        }, function (err, data) {
 
                             if (err) {
                                 jobApplantsNames.push("Error getting names")
@@ -307,10 +350,10 @@ router.get("/job_details", (req, res) => {
                         userId: req.session.userId,
                     });
                 })
-                .catch(error => {
-                    console.log(error)
-                    res.status(500).send(error)
-                })
+                    .catch(error => {
+                        console.log(error)
+                        res.status(500).send(error)
+                    })
             } else {
                 //job exist but no applicants
                 res.render("job_details", {
@@ -327,25 +370,42 @@ router.get("/job_details", (req, res) => {
 router.post("/apply_for_job", auth, (req, res) => {
     var jobId = req.body.jobId;
     var userId = req.session.userId;
+    var poster = req.body.poster
     var applicant = {
         user_id: userId,
         date_applied: new Date()
     };
 
     Job.updateOne({
-            _id: jobId
-        }, {
-            $push: {
-                applicants: applicant
-            }
-        },
-        function(err, result) {
+        _id: jobId
+    }, {
+        $push: {
+            applicants: applicant
+        }
+    },
+        function (err, result) {
             if (err) {
                 console.log(err);
                 res.send("Error in saving questions");
             } else {
                 console.log("success");
-                res.send("success");
+                const notification = new Notification({
+                    notificationType: "job_application",
+                    from: userId,
+                    to: poster,
+                    isRead: "false",
+                    jobId: jobId,
+                })
+
+                notification.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send(err)
+                    } else {
+                        console.log("Success saved notification")
+                        res.send("Notification sent successfully")
+                    }
+                });
             }
         }
     );
@@ -357,7 +417,7 @@ router.post("/update_job_details", (req, res) => {
 
     Job.updateOne({
         _id: jobId
-    }, updatedJobDetails, function(err, results) {
+    }, updatedJobDetails, function (err, results) {
         if (err) {
             console.log("Error", err);
             res.status(500).send("Error in updating!");
@@ -368,16 +428,16 @@ router.post("/update_job_details", (req, res) => {
 });
 
 router.get("/view_profile", (req, res) => {
-    var userId= req.query.userId
+    var userId = req.query.userId
 
-    User.findOne({_id: userId}, function(err, user) {
-        if(err) {
+    User.findOne({ _id: userId }, function (err, user) {
+        if (err) {
             console.log("error")
             res.status(500).send("Error in finding user!")
         }
         else {
             console.log("Success")
-            res.render("view_profile", {user:user})
+            res.render("view_profile", { user: user })
         }
     })
 })
@@ -388,23 +448,23 @@ router.post("/save_interview_questions", (req, res) => {
     var jobId = req.body.jobId;
 
     Job.updateOne({
-         _id: jobId
-        }, {
-            $set: {
-                interview: {
-                    questions: interviewQuestions,
-                    date_added: new Date(),
-                },
+        _id: jobId
+    }, {
+        $set: {
+            interview: {
+                questions: interviewQuestions,
+                date_added: new Date(),
             },
         },
+    },
 
-        function(err, results) {
+        function (err, results) {
             if (err) {
                 console.log(err);
                 res.send("error");
             } else {
                 console.log("success");
-
+                console.log(results)
                 res.send("success");
             }
         }
@@ -459,7 +519,7 @@ router.post("/register_recruiter", (req, res) => {
               `,
             };
 
-            transporter.sendMail(mailOptions, function(error, info) {
+            transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     res.send(
                         "Error in sending email"
@@ -478,7 +538,7 @@ router.post("/login", (req, res) => {
 
     User.findOne({
         email: email
-    }, function(err, userResults) {
+    }, function (err, userResults) {
         if (err) {
             console.log("Error", err);
             res.send("Error in finding email.");
@@ -523,7 +583,7 @@ router.get("/verify_email", (req, res) => {
 
     User.findOne({
         verificationLink: verificationToken
-    }, function(err, data) {
+    }, function (err, data) {
         if (err) {
             console.log(error);
             res.send("error on server", error);
@@ -532,22 +592,22 @@ router.get("/verify_email", (req, res) => {
                 res.send("The link has expired or doesn't exist");
             } else {
                 User.updateOne({
-                        _id: data._id,
-                    }, {
-                        user_email_verified: true
-                    },
-                    function(err, response) {
+                    _id: data._id,
+                }, {
+                    user_email_verified: true
+                },
+                    function (err, response) {
                         if (err) {
                             res.send("Error ");
                         } else {
                             User.updateOne({
-                                    _id: data._id
-                                }, {
-                                    $unset: {
-                                        verificationLink: 1
-                                    },
+                                _id: data._id
+                            }, {
+                                $unset: {
+                                    verificationLink: 1
                                 },
-                                function(err, data) {
+                            },
+                                function (err, data) {
                                     if (err) {
                                         console.log(error);
                                         res.send("error on server", error);
@@ -591,7 +651,7 @@ router.post("/delete_notification", auth, (req, res) => {
 
     Notification.deleteOne({
         _id: notificationId
-    }, function(err, data) {
+    }, function (err, data) {
         if (err) {
             console.log(err);
             res.send("error");
@@ -609,7 +669,7 @@ router.post("/update_read_notification", auth, (req, res) => {
         jobId: jobId
     }, {
         isRead: true
-    }, function(err, data) {
+    }, function (err, data) {
         if (err) {
             console.log(err);
             res.send("error");
@@ -620,22 +680,22 @@ router.post("/update_read_notification", auth, (req, res) => {
     })
 })
 
-router.get("/messages", auth, (req, res)=> {
+router.get("/messages", auth, (req, res) => {
     res.send("Still working on this router. Please check back again soon :)")
 })
 
 router.get("/view_interview_answers", (req, res) => {
-    var {jobId, userId} = req.query
+    var { jobId, userId } = req.query
 
-    Job.findOne({_id: jobId}, function(err, data) {
-        if(err) {
+    Job.findOne({ _id: jobId }, function (err, data) {
+        if (err) {
             console.log(err)
             res.send("Error on this route")
         } else {
 
-            if(data) {
+            if (data) {
                 var applicants = data.applicants
-                var applicant = applicants.find((applicant)=> {
+                var applicant = applicants.find((applicant) => {
                     return applicant.user_id == userId
                 })
 
@@ -656,44 +716,46 @@ router.post("/submit_interview", (req, res) => {
     var jobId = req.body.jobId
     var userId = req.session.userId
 
-    new Promise((resolve, reject) => { 
-        for(var a = 0; a< answers.length; a++ ){
-            if(answers[a].isVideo == "true") {
+    new Promise((resolve, reject) => {
+        for (var a = 0; a < answers.length; a++) {
+            if (answers[a].isVideo == "true") {
                 var base64Data = answers[0].answer.replace(/^data:(.*?);base64,/, "");
-                base64Data= base64Data.replace(/ /g, '+');
-                var filename= `./interview_video_answers/${new Date().getTime()}.mp4`
+                base64Data = base64Data.replace(/ /g, '+');
+                var filename = `./interview_video_answers/${new Date().getTime()}.mp4`
 
-                fs.writeFile(`${filename}`, base64Data, 'base64', function(err, success) {
+                fs.writeFile(`${filename}`, base64Data, 'base64', function (err, success) {
                     console.log(err);
-                    
+
                 });
                 // change file naming from base64 to filename
                 answers[a].answer = `${filename}`
-            } 
+            }
             resolve()
         }
     }).then(() => {
 
-   
-   Job.updateOne({_id: jobId,
-        "applicants.user_id": userId}, {
-        $set:{
-            "applicants.$.interview_answers": answers,
-            "applicants.$.application_progress": "answered_interview",
+
+        Job.updateOne({
+            _id: jobId,
+            "applicants.user_id": userId
+        }, {
+            $set: {
+                "applicants.$.interview_answers": answers,
+                "applicants.$.application_progress": "answered_interview",
             }
         },
-        function (err, data) {
-            if(err){
-                console.log(err)
-                res.status(500).send(err);
+            function (err, data) {
+                if (err) {
+                    console.log(err)
+                    res.status(500).send(err);
+                }
+                else {
+                    console.log(data)
+                    console.log("Successfully submited answered interview")
+                    res.send("Submited successfully")
+                }
             }
-            else {
-                console.log(data)
-                console.log("Successfully submited answered interview")
-                res.send("Submited successfully")
-            }
-        }
-    )
+        )
     })
 
 })
@@ -701,33 +763,33 @@ router.post("/submit_interview", (req, res) => {
 router.post("/save_motionresume", (req, res) => {
     var userId = req.session.userId
     var motionresume = req.body.motionresume
-    var base64Data =motionresume.replace(/^data:(.*?);base64,/, "");
-    base64Data= base64Data.replace(/ /g, '+');
-    var filename= `/motionresume/${new Date().getTime()}.mp4`
+    var base64Data = motionresume.replace(/^data:(.*?);base64,/, "");
+    base64Data = base64Data.replace(/ /g, '+');
+    var filename = `/motionresume/${new Date().getTime()}.mp4`
 
-    fs.writeFile(`./public${filename}`, base64Data, 'base64', function(err, success) {
-        if(err){
+    fs.writeFile(`./public${filename}`, base64Data, 'base64', function (err, success) {
+        if (err) {
             console.log(err);
-        } 
+        }
         else {
             console.log(success)
             filename = `${filename}`
         }
-        
+
     });
 
-   
-   User.updateOne({_id: userId},{$set:{"motionresume":filename}} ,function (err, data) {
-        if(err){
-                console.log(err)
-                res.status(500).send(err);
-            }
-            else {
-                console.log("Successfully submited motionresume")
-                res.send("Submited successfully")
-                
-            }
+
+    User.updateOne({ _id: userId }, { $set: { "motionresume": filename } }, function (err, data) {
+        if (err) {
+            console.log(err)
+            res.status(500).send(err);
         }
+        else {
+            console.log("Successfully submited motionresume")
+            res.send("Submited successfully")
+
+        }
+    }
     )
 
 })
@@ -741,14 +803,14 @@ router.get("/take_interview", (req, res) => {
 
     Job.findById({
         _id: jobId
-    }, function(err, job) {
+    }, function (err, job) {
         if (err) {
             console.log(err)
             res.status(500).send(err);
-        } else {          
+        } else {
             res.render("take_interview", {
                 job: job,
-                jobId:jobId
+                jobId: jobId
             })
         }
     })
@@ -758,7 +820,7 @@ router.get("/take_interview", (req, res) => {
 router.get("/notifications", (req, res) => {
     Notification.find({
         to: req.session.userId
-    }, function(err, notifications) {
+    }, function (err, notifications) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -778,7 +840,7 @@ router.get("/notifications", (req, res) => {
 
                         User.findOne({
                             _id: notifications[a].from
-                        }, function(err, data) {
+                        }, function (err, data) {
                             if (err) {
                                 posterNames.push("Error getting names")
                                 count++
@@ -856,7 +918,7 @@ router.post("/register_jobseeker", (req, res) => {
               `,
             };
 
-            transporter.sendMail(mailOptions, function(error, info) {
+            transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);
                     res.send(
