@@ -1,71 +1,73 @@
 <%- include ('Layout/header') %>
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-       
-        <a class="user_profile" href="/my_profile"><h3><b><%=user.name%></b></h3></a>    
 
-        <% if(user.typeOfUser == 'jobseeker' && !user.motionresume) { %>   
-          <button class="motionresume_video" id="<%=user._id%>">Motionresume</button>
-        <% } %>
-        <% if(user.motionresume) { %>
-          <p>
-              <video width="320" height="240" controls>
-                  <source src="<%=user.motionresume%>" type="video/mp4">
-                  Your browser does not support the video tag.
-              </video>
-          </p>
-      <% } %>  
-        <div class="row">
-          <div class="col-sm-12">
-            <h4><b>Contact Details:</b></h4>
-            <p>Email address: <%=user.email%></p>
-            <p>Cellphone number: 0<%=user.phone%></p>
-          </div>
+  <body>
+    <br>
+    <div class="container" style="margin: 0 auto; width:60%">
+      <div class=" card">
+        <div class="card-body">
+
+          <a class="user_profile" href="/my_profile" style="color: #805b23 !important;">
+            <h3><b>
+                <%=user.name%>
+              </b></h3>
+          </a>
+
+          <% if(user.typeOfUser=='jobseeker' && !user.motionresume) { %>
+            <button class="btn btn-md motionresume_video" id="<%=user._id%>">motionresume <i class="fa fa-video-camera"
+                aria-hidden="true"></i></button>
+            <% } %>
+              <% if(user.motionresume) { %>
+                <p>
+                  <video width="320" height="240" controls>
+                    <source src="<%=user.motionresume%>" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </p>
+                <% } %>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <h4 style="color: #805b23 !important;"><b>Contact Details:</b></h4>
+                      <p>Email address: <%=user.email%>
+                      </p>
+                      <p>Cellphone number: 0<%=user.phone%>
+                      </p>
+                    </div>
+                  </div>
+
+
+                  <% if(user.typeOfUser=='jobseeker' ) { %>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <h4 style="color: #805b23 !important;"><b>Educational Details:</b></h4>
+                        <p>University Attended: <%=user.universityName%>
+                        </p>
+                        <p>Qualification: <%=user.qualification%>
+                        </p>
+                        <p>Year Obtained: <%=user.yearObtained%>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <h4 style="color: #805b23 !important;"><b>Experience:</b></h4>
+                        <p>Company worked for: <%=user.company%>
+                        </p>
+                        <p>Years Worked: <%=user.yearsWorked%>
+                        </p>
+                      </div>
+                    </div>
+                    <% } %>
+                      <hr>
         </div>
-
-
-        <% if(user.typeOfUser == 'jobseeker') { %>   
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Educational Details:</b></h4>
-              <p>University Attended: <%=user.universityName%></p>
-              <p>Qualification: <%=user.qualification%></p>
-              <p>Year Obtained: <%=user.yearObtained%></p>
-            </div>
-          </div>
-  
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Experience:</b></h4>
-              <p>Company worked for: <%=user.company%></p>
-              <p>Years Worked: <%=user.yearsWorked%></p>
-            </div>
-          </div>
-        <% } %>
-        <% if(user.typeOfUser == 'recruiter') { %>   
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Company Details:</b></h4>
-              <p>Company name: <%=user.companyName%></p>
-              <p>Company URL: <%=user.companyUrl%></p>
-            </div>
-          </div>
-            <a class="nav-link" href="/add_job"><b><i class="fa fa-plus" aria-hidden="true"></i> Job </b></a>
-        <% } %>
-          <a class="nav-link" href="/logout"><b><i class="fa fa-sign-out" aria-hidden="true"></i></b> </a>
-        
       </div>
     </div>
-  </div>
+    <script>
+      $(".motionresume_video").click(function (e) {
+        var userId = $(this).attr('id')
 
-  <script>
-          $(".motionresume_video").click(function(e) {
-          var userId = $(this).attr('id')
-
-          window.location.href = `/take_video_motionresume?userId=${userId}`;
+        window.location.href = `/take_video_motionresume?userId=${userId}`;
       })
-  </script>
-</body>
-<%- include ('Layout/footer') %>
+    </script>
+  </body>
+  <%- include ('Layout/footer') %>

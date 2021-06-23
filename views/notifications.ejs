@@ -1,68 +1,76 @@
 <%- include ('Layout/header') %>
 
   <body>
-    <% if(notifications.length==0 ){ %>
-      <p><b>No Notifications, thank you</b></p>
-      <% } %>
-        <% for (var i=0; i < notifications.length; i++) { %>
-          <div class="card">
-            <div class="card-body">
-              <div class="w3-display-topright">
-                <i class="fa fa-trash fa-2x delete_notification" id="<%= notifications[i]._id %>"></i> <br>
-              </div>
-              <div class="row">
-                <div class="col-sm-8">
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <h3><b>Notification type:</b></h3>
-                      <p>
-                        <%= notifications[i].notificationType%>
-                      </p>
+    <br>
+    <div class="container" style="margin: 0 auto; width:65% ">
+      <div class="card">
+        <div class="card-body">
+          <% if(notifications.length==0 ){ %>
+            <p><b>No Notifications, thank you</b></p>
+            <% } %>
+              <% for (var i=0; i < notifications.length; i++) { %>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="w3-display-topright">
+                      <i class="fa fa-trash fa-2x delete_notification" id="<%= notifications[i]._id %>"></i> <br>
                     </div>
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <h3 style="color: #805b23 !important;"><b>Notification type:</b></h3>
+                            <p>
+                              <%= notifications[i].notificationType%>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <h3 style="color: #805b23 !important;"><b>From</b></h3>
+                        <p>
+                          <%- posterNames[i] %>
+                        </p>
+                      </div>
+                    </div>
+                    <button class="btn btn-md take_interview" style="background-color: #e6e1da !important;"
+                      id="<%= notifications[i].jobId %>">Take Interview</button>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <h3><b>From</b></h3>
-                  <p>
-                    <%- posterNames[i] %>
-                  </p>
-                </div>
-              </div>
-              <button class="take_interview" id="<%= notifications[i].jobId %>">Take Interview</button>
-            </div>
-          </div>
-          <% } %>
-            <script>
-              $(document).ready(function () {
-                $(".take_interview").click(function () {
-                  var jobId = $(this).attr('id')
-                  location.replace(`/take_interview?jobId=${jobId}`)
-                });
+                <% } %>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $(".take_interview").click(function () {
+          var jobId = $(this).attr('id')
+          location.replace(`/take_interview?jobId=${jobId}`)
+        });
 
-                $(".delete_notification").click(function () {
-                  var notificationId = $(this).attr('id')
+        $(".delete_notification").click(function () {
+          var notificationId = $(this).attr('id')
 
-                  console.log(notificationId)
-                  $.ajax({
-                    method: "POST",
-                    url: "/delete_notification",
-                    data: { notificationId: notificationId },
-                    success: function (data) {
-                      // success callback function
-                      alert("Success, check logs");
-                      window.location.reload(true);
-                      console.log(data)
-                    },
-                    error: function (data, status, xhr) {
-                      // error callback function
-                      alert("Error, check logs");
-                      console.log(data)
-                    },
-                  });
-                });
-              })
-            </script>
+          console.log(notificationId)
+          $.ajax({
+            method: "POST",
+            url: "/delete_notification",
+            data: { notificationId: notificationId },
+            success: function (data) {
+              // success callback function
+              alert("Success, check logs");
+              window.location.reload(true);
+              console.log(data)
+            },
+            error: function (data, status, xhr) {
+              // error callback function
+              alert("Error, check logs");
+              console.log(data)
+            },
+          });
+        });
+      })
+    </script>
   </body>
   <%- include ('Layout/footer') %>

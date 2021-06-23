@@ -1,183 +1,132 @@
 <%- include ('Layout/registration-header') %>
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.js"></script>
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <form id="registration-form" data-parsley-validate>
-              <h3 style="text-align: center"><b>Registration</b></h3>
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.js"></script>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="name">Full Name:</label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Enter your name and surname"
-                    required
-                  />
+  <body>
+    <br>
+    <div class="container" style="margin: 0 auto; width:55% ">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <form id="registration-form" data-parsley-validate>
+                <h3 style="text-align: center; color: #805b23 !important;"><b>Registration</b></h3>
+
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="name" style="color: #805b23 !important;"><b>Full Name:</b></label>
+                    <input class="form-control" type="text" id="name" name="name"
+                      placeholder="Enter your name and surname" required />
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="email">Email:</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    id="email"
-                    data-parsley-trigger="change"
-                    placeholder="Enter your email"
-                    required=""
-                  />
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="email" style="color: #805b23 !important;"><b>Email:</b></label>
+                    <input type="email" class="form-control" name="email" id="email" data-parsley-trigger="change"
+                      placeholder="Enter your email" required="" />
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="phone">Phone Number:</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    name="phone"
-                    id="phone"
-                    minlength="10"
-                    maxlength="10"
-                    data-parsley-trigger="change"
-                    placeholder="Enter your your phone"
-                    required=""
-                  />
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="phone" style="color: #805b23 !important;"><b>Phone Number:</b></label>
+                    <input type="number" class="form-control" name="phone" id="phone" minlength="10" maxlength="10"
+                      data-parsley-trigger="change" placeholder="Enter your your phone" required="" />
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="psw">Password:</label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    data-parsley-type="alphanum"
-                    class="form-control"
-                    data-parsley-errors-container=".errorspannewpassinput"
-                    data-parsley-length="[6, 12]"
-                    data-parsley-uppercase="1"
-                    data-parsley-lowercase="1"
-                    data-parsley-number="1"
-                    data-parsley-iff-message=""
-                    placeholder="Enter your password"
-                    data-parsley-required
-                  />
-                  <span class="errorspannewpassinput"></span>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="psw" style="color: #805b23 !important;"><b>Password:</b></label>
+                    <input id="password" name="password" type="password" data-parsley-type="alphanum"
+                      class="form-control" data-parsley-errors-container=".errorspannewpassinput"
+                      data-parsley-length="[6, 12]" data-parsley-uppercase="1" data-parsley-lowercase="1"
+                      data-parsley-number="1" data-parsley-iff-message="" placeholder="Enter your password"
+                      data-parsley-required />
+                    <span class="errorspannewpassinput"></span>
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="pwd-repeat">Repeat Password</label>
-                  <input
-                    class="form-control"
-                    type="password"
-                    id="password-repeat"
-                    name="password-repeat"
-                    data-parsley-uppercase="1"
-                    data-parsley-lowercase="1"
-                    data-parsley-number="1"
-                    data-parsley-length="[6, 12]"
-                    data-parsley-errors-container=".errorspanconfirmnewpassinput"
-                    placeholder="Please re-enter your password"
-                    data-parsley-equalto="#password"
-                    data-parsley-iff-message="Passwords must match."
-                    data-parsley-required
-                  />
-                  <span class="errorspanconfirmnewpassinput"></span>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="pwd-repeat" style="color: #805b23 !important;"><b>Confirm Password:</b></label>
+                    <input class="form-control" type="password" id="password-repeat" name="password-repeat"
+                      data-parsley-uppercase="1" data-parsley-lowercase="1" data-parsley-number="1"
+                      data-parsley-length="[6, 12]" data-parsley-errors-container=".errorspanconfirmnewpassinput"
+                      placeholder="Please re-enter your password" data-parsley-equalto="#password"
+                      data-parsley-iff-message="Passwords must match." data-parsley-required />
+                    <span class="errorspanconfirmnewpassinput"></span>
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <input
-                    type="radio"
-                    id="recruiter"
-                    name="typeOfUser"
-                    value="recruiter"
-                  />
-                  <label for="recruiuter">I am a recruiter</label> <br />
-                  <input
-                    type="radio"
-                    id="jobseeker"
-                    name="typeOfUser"
-                    value="jobseeker"
-                    required
-                  />
-                  <label for="jobseeker">I am a jobseeker</label>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <input type="radio" id="recruiter" name="typeOfUser" value="recruiter" />
+                    <label for="recruiuter" style="color: #805b23 !important;"><b>I am a recruiter</b></label> <br />
+                    <input type="radio" id="jobseeker" name="typeOfUser" value="jobseeker" required />
+                    <label for="jobseeker" style="color: #805b23 !important;"><b>I am a jobseeker</b></label>
+                  </div>
                 </div>
-              </div>
 
-              <p>
-                By creating an account you agree to our
-                <a href="/ts_n_cs">Terms & Privacy</a>.
-              </p>
+                <p>
+                  By creating an account you agree to our
+                  <a href="/ts_n_cs">Terms & Privacy</a>.
+                </p>
 
-              <button type="submit" class="btn btn-md btn-primary btnNext">
-                Next
-              </button>
+                <button type="submit" class="btn btn-md  btnNext" style="background-color: #e6e1da !important;">
+                  Next <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
 
-              <div class="container signin" style="text-align: left">
-                <p>Already have an account? <a href="/">Sign in</a></p>
-              </div>
-            </form>
+                <div class="container signin" style="text-align: left">
+                  <p>Already have an account? <a href="/">Sign in</a></p>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $("form").submit(function (e) {
-        e.preventDefault(e);
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("form").submit(function (e) {
+          e.preventDefault(e);
 
-        var phoneNumber = $("#phone").val();
-        if (phoneNumber.toString().charAt(0) != 0) {
-          bootbox.alert("The phone number must start with 0!");
-          return false;
-        }
-
-        var password = $("#password").val();
-        var confirmPassword = $("#password-repeat").val();
-        if (password === confirmPassword) {
-          var userObject = {
-            name: $("#name").val(),
-            email: $("#email").val(),
-            phone: $("#phone").val(),
-            password: password,
-            typeOfUser: $("input[name=typeOfUser]:checked").val(),
-          };
-          console.log(userObject);
-
-          localStorage.setItem("userObjectString", JSON.stringify(userObject)); //Keeping user data for later use
-
-          if ($("input[name=typeOfUser]:checked").val() === "recruiter") {
-            window.location.replace("/registration_next_recruiter");
-          } else {
-            window.location.replace("/registration_next_jobseeker");
+          var phoneNumber = $("#phone").val();
+          if (phoneNumber.toString().charAt(0) != 0) {
+            bootbox.alert("The phone number must start with 0!");
+            return false;
           }
-        } else {
-          alert("Password does not match");
-          console.log(password);
-          console.log(confirmPassword);
-        }
-        console.log(name);
+
+          var password = $("#password").val();
+          var confirmPassword = $("#password-repeat").val();
+          if (password === confirmPassword) {
+            var userObject = {
+              name: $("#name").val(),
+              email: $("#email").val(),
+              phone: $("#phone").val(),
+              password: password,
+              typeOfUser: $("input[name=typeOfUser]:checked").val(),
+            };
+            console.log(userObject);
+
+            localStorage.setItem("userObjectString", JSON.stringify(userObject)); //Keeping user data for later use
+
+            if ($("input[name=typeOfUser]:checked").val() === "recruiter") {
+              window.location.replace("/registration_next_recruiter");
+            } else {
+              window.location.replace("/registration_next_jobseeker");
+            }
+          } else {
+            alert("Password does not match");
+            console.log(password);
+            console.log(confirmPassword);
+          }
+          console.log(name);
+        });
       });
-    });
-  </script>
-</body>
-<% - include('Layout/registration-footer') %>
+    </script>
+  </body>
+  <% - include('Layout/registration-footer') %>

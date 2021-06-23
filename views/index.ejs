@@ -1,36 +1,37 @@
 <%- include ('Layout/registration-header') %>
-  <div class="container">
+  <br>
+  <div class="container" style="margin: 0 auto; width:50% ">
     <div class="card">
       <div class="card-body">
         <div class="row">
           <div class="col-sm-12">
             <form action="/login" method="POST">
               <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="email">Email:</label>
+                <div class="form-group col-md-12">
+                  <label for="email" style="color: #805b23 !important;"><b>Email:</b></label>
                   <input class="form-control" type="text" id="email" name="email" placeholder="Enter email address"
                     required />
                 </div>
               </div>
 
               <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="psw">Password:</label>
+                <div class="form-group col-md-12">
+                  <label for="psw" style="color: #805b23 !important;"><b>Password:</b></label>
                   <input class="form-control" type="password" id="password" name="password"
                     placeholder="Enter your password" required />
                 </div>
               </div>
 
               <div class="row">
-                <div class="form-group col-md-5">
-                  <button type="submit" class="btn btn-md btn-primary">
+                <div class="form-group col-md-12">
+                  <button type="submit" class="btn btn-md" style="background-color: #e6e1da !important;">
                     Login <i class="fa fa-long-arrow-right"></i>
                   </button>
                 </div>
               </div>
 
               <div class="row">
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-12">
                   <a href="/registration">
                     Don't have an account? Click to register</a>
                 </div>
@@ -41,5 +42,3 @@
       </div>
     </div>
   </div>
-
-  <% include ('layout/registration-footer') %>

@@ -1,193 +1,177 @@
 <%- include ('Layout/registration-header') %>
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="'card-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <h3 style="text-align: center">
-              <b>Please finish registration here..</b>
-            </h3>
-            <form>
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="company">Company Name:</label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="company"
-                    name="company"
-                    placeholder="Enter your company name"
-                    required
-                  />
+
+  <body>
+    <br>
+    <div class="container" style="margin: 0 auto; width:55% ">
+      <div class="card">
+        <div class="card-body" style="padding: 3%;">
+          <div class="row">
+            <div class="col-sm-12">
+              <h3 style="text-align: center; color: #805b23 !important;">
+                <b>Please finish registration</b>
+              </h3>
+              <form>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="company" style="color: #805b23 !important;"><b>Company Name:</b></label>
+                    <input class="form-control" type="text" id="company" name="company"
+                      placeholder="Enter your company name" required />
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="company_url">Company URL:</label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="company_url"
-                    name="company_url"
-                    placeholder="Enter your company URL"
-                    required
-                  />
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="company_url" style="color: #805b23 !important;"><b>Company URL:</b></label>
+                    <input class="form-control" type="text" id="company_url" name="company_url"
+                      placeholder="Enter your company URL" required />
+                  </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="form-group col-md-5">
-                  <label for="work_email">Work/ Company email:</label>
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="work_email"
-                    name="work_email"
-                    placeholder="Enter your company email"
-                    required
-                  />
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <label for="work_email" style="color: #805b23 !important;"><b>Work/ Company email:</b></label>
+                    <input class="form-control" type="text" id="work_email" name="work_email"
+                      placeholder="Enter your company email" required />
+                  </div>
                 </div>
-              </div>
 
-              <label>Image</label>
-              <input type="file" id="image" name="image" /><br />
-
-              <button
-                type="submit"
-                class="btn btn-md btn-primary registerbtn"
-                href="/motion_resume"
-              >
-                Finish registration
-              </button>
-              <div class="container signin">
-                <p>Already have an account? <a href="/">Sign in</a></p>
-              </div>
-            </form>
+                <label style="color: #805b23 !important;"><b>Image: </b></label>
+                <input type="file" id="image" name="image" />
+                <br>
+                <br>
+                <button type="submit" class="btn btn-md  registerbtn" style="background-color: #e6e1da !important;"
+                  href="/motion_resume">
+                  Register <i class="fa fa-long-arrow-right"></i>
+                </button>
+                <br>
+                <br>
+                <div class="container signin">
+                  <p>Already have an account? <a href="/">Sign in</a></p>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $("form").submit(function (e) {
-        e.preventDefault(e);
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("form").submit(function (e) {
+          e.preventDefault(e);
 
-        var companyURL = $("#company_url").val();
-        var getDomainDetails = function (fullyQualifiedUrl) {
-          var url = {},
-            tempProtocol;
-          var a = document.createElement("a");
-          // if doesn't start with something like https:// it's not a url, but try to work around that
-          if (fullyQualifiedUrl.indexOf("://") == -1) {
-            tempProtocol = "https://";
-            a.href = tempProtocol + fullyQualifiedUrl;
-          } else a.href = fullyQualifiedUrl;
-          var parts = a.hostname.split(".");
-          url.origin = tempProtocol ? "" : a.origin;
-          url.domain = a.hostname;
-          url.subdomain = parts[0];
-          url.domainroot = "";
-          url.domainpath = "";
-          url.tld = "." + parts[parts.length - 1];
-          url.path = a.pathname.substring(1);
-          url.query = a.search.substr(1);
-          url.protocol = tempProtocol
-            ? ""
-            : a.protocol.substr(0, a.protocol.length - 1);
-          url.port = tempProtocol
-            ? ""
-            : a.port
-            ? a.port
-            : a.protocol === "http:"
-            ? 80
-            : a.protocol === "https:"
-            ? 443
-            : a.port;
-          url.parts = parts;
-          url.segments =
-            a.pathname === "/" ? [] : a.pathname.split("/").slice(1);
-          url.params = url.query === "" ? [] : url.query.split("&");
-          for (var j = 0; j < url.params.length; j++) {
-            var param = url.params[j];
-            var keyval = param.split("=");
-            url.params[j] = {
-              key: keyval[0],
-              val: keyval[1],
-            };
-          }
-          // domainroot
-          if (parts.length > 2) {
-            url.domainroot =
-              parts[parts.length - 2] + "." + parts[parts.length - 1];
-            // check for country code top level domain
-            if (
-              parts[parts.length - 1].length == 2 &&
-              parts[parts.length - 1].length == 2
-            )
-              url.domainroot = parts[parts.length - 3] + "." + url.domainroot;
-          }
-          // domainpath (domain+path without filenames)
-          if (url.segments.length > 0) {
-            var lastSegment = url.segments[url.segments.length - 1];
-            var endsWithFile = lastSegment.indexOf(".") != -1;
-            if (endsWithFile) {
-              var fileSegment = url.path.indexOf(lastSegment);
-              var pathNoFile = url.path.substr(0, fileSegment - 1);
-              url.domainpath = url.domain;
-              if (pathNoFile)
-                url.domainpath = url.domainpath + "/" + pathNoFile;
-            } else url.domainpath = url.domain + "/" + url.path;
-          } else url.domainpath = url.domain;
-          return url;
-        };
-        //console.log(getRootDomain(companyURL).domainroot);
-        var domainroot = getDomainDetails(companyURL).domainroot;
-        var blackListedEmailDomains = ["gmail.com", "yahoo.com"];
-        var workEmail = $("#work_email").val();
-        var emailDomain = workEmail.substring(workEmail.lastIndexOf("@") + 1);
+          var companyURL = $("#company_url").val();
+          var getDomainDetails = function (fullyQualifiedUrl) {
+            var url = {},
+              tempProtocol;
+            var a = document.createElement("a");
+            // if doesn't start with something like https:// it's not a url, but try to work around that
+            if (fullyQualifiedUrl.indexOf("://") == -1) {
+              tempProtocol = "https://";
+              a.href = tempProtocol + fullyQualifiedUrl;
+            } else a.href = fullyQualifiedUrl;
+            var parts = a.hostname.split(".");
+            url.origin = tempProtocol ? "" : a.origin;
+            url.domain = a.hostname;
+            url.subdomain = parts[0];
+            url.domainroot = "";
+            url.domainpath = "";
+            url.tld = "." + parts[parts.length - 1];
+            url.path = a.pathname.substring(1);
+            url.query = a.search.substr(1);
+            url.protocol = tempProtocol
+              ? ""
+              : a.protocol.substr(0, a.protocol.length - 1);
+            url.port = tempProtocol
+              ? ""
+              : a.port
+                ? a.port
+                : a.protocol === "http:"
+                  ? 80
+                  : a.protocol === "https:"
+                    ? 443
+                    : a.port;
+            url.parts = parts;
+            url.segments =
+              a.pathname === "/" ? [] : a.pathname.split("/").slice(1);
+            url.params = url.query === "" ? [] : url.query.split("&");
+            for (var j = 0; j < url.params.length; j++) {
+              var param = url.params[j];
+              var keyval = param.split("=");
+              url.params[j] = {
+                key: keyval[0],
+                val: keyval[1],
+              };
+            }
+            // domainroot
+            if (parts.length > 2) {
+              url.domainroot =
+                parts[parts.length - 2] + "." + parts[parts.length - 1];
+              // check for country code top level domain
+              if (
+                parts[parts.length - 1].length == 2 &&
+                parts[parts.length - 1].length == 2
+              )
+                url.domainroot = parts[parts.length - 3] + "." + url.domainroot;
+            }
+            // domainpath (domain+path without filenames)
+            if (url.segments.length > 0) {
+              var lastSegment = url.segments[url.segments.length - 1];
+              var endsWithFile = lastSegment.indexOf(".") != -1;
+              if (endsWithFile) {
+                var fileSegment = url.path.indexOf(lastSegment);
+                var pathNoFile = url.path.substr(0, fileSegment - 1);
+                url.domainpath = url.domain;
+                if (pathNoFile)
+                  url.domainpath = url.domainpath + "/" + pathNoFile;
+              } else url.domainpath = url.domain + "/" + url.path;
+            } else url.domainpath = url.domain;
+            return url;
+          };
+          //console.log(getRootDomain(companyURL).domainroot);
+          var domainroot = getDomainDetails(companyURL).domainroot;
+          var blackListedEmailDomains = ["gmail.com", "yahoo.com"];
+          var workEmail = $("#work_email").val();
+          var emailDomain = workEmail.substring(workEmail.lastIndexOf("@") + 1);
 
-        if (emailDomain != domainroot) {
-          alert("Please provide your work email to continue with registration");
-        } else if (blackListedEmailDomains.indexOf(emailDomain) != -1) {
-          alert("Please provide work email!");
-        } else {
-          //continue witgh registration
-          var previousUserString = localStorage.getItem("userObjectString");
-
-          if (!previousUserString) {
-            //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
+          if (emailDomain != domainroot) {
+            alert("Please provide your work email to continue with registration");
+          } else if (blackListedEmailDomains.indexOf(emailDomain) != -1) {
+            alert("Please provide work email!");
           } else {
-            var previousUserObject = JSON.parse(previousUserString);
-            previousUserObject.companyName = $("#company").val();
-            previousUserObject.companyURL = $("#company_url").val();
-            previousUserObject.companyEmail = $("#work_email").val();
-            delete previousUserObject.email;
-            console.log(previousUserObject);
-            $.ajax({
-              method: "POST",
-              url: "/register_recruiter",
-              data: { userDataObject: previousUserObject },
-              // contentType: "json",
-              success: function (data, status, xhr) {
-                // Success callback function
-                alert("Success, check logs");
-                console.log(data);
-              },
-              error: function (data, status, xhr) {
-                // success callback function
-                alert("Error, check logs");
-                console.log(data);
-              },
-            });
+            //continue witgh registration
+            var previousUserString = localStorage.getItem("userObjectString");
+
+            if (!previousUserString) {
+              //ALERT SOME MESSAGE AND REDIRECT TO FIRST STEP
+            } else {
+              var previousUserObject = JSON.parse(previousUserString);
+              previousUserObject.companyName = $("#company").val();
+              previousUserObject.companyURL = $("#company_url").val();
+              previousUserObject.companyEmail = $("#work_email").val();
+              delete previousUserObject.email;
+              console.log(previousUserObject);
+              $.ajax({
+                method: "POST",
+                url: "/register_recruiter",
+                data: { userDataObject: previousUserObject },
+                // contentType: "json",
+                success: function (data, status, xhr) {
+                  // Success callback function
+                  alert("Success, check logs");
+                  console.log(data);
+                },
+                error: function (data, status, xhr) {
+                  // success callback function
+                  alert("Error, check logs");
+                  console.log(data);
+                },
+              });
+            }
           }
-        }
+        });
       });
-    });
-  </script>
-</body>
-<% - include('Layout/registration-footer') %>
+    </script>
+  </body>
+  <% - include('Layout/registration-footer') %>
