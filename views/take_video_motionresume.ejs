@@ -8,21 +8,23 @@
                     <div class="row">
                         <div class="form-group col-md-5">
                             <label style="color: #805b23 !important;"><b>Browse for Motion Resume</b></label><br />
-                            <input type="file" id="motionresume" class="motionresume" name="motionresume" /><br />
+                            <input type="file" id="motionresume" class="motionresume" name="motionresume"
+                                accept="video/mp4,video/x-m4v,video/" /><br />
                         </div>
                     </div>
                     <hr>
                     <p style="color: #805b23 !important;"><b>Record Motion Resume</b></p>
                     <div class="row">
                         <div class="buttonStart col-sm-3">
-                            <span id="startButton" class="btn btn-md btn-light">Start <i class="fa fa-video-camera"></i>
+                            <span id="startButton" style="background-color: #e6e1da !important;"
+                                class="btn btn-md btn-light">Start <i class="fa fa-video-camera"></i>
                             </span>
                         </div>
-                        <div style="clear: both;"></div>
+                        <!-- <div style="clear: both;"></div> -->
                         <br>
                         <div class="col-sm-3 buttonStopDiv" style="display: none;">
-                            <span id="stopButton" class="btn btn-md btn-light">Stop <i class="fa fa-stop"
-                                    aria-hidden="true"></i>
+                            <span id="stopButton" style="background-color: #e6e1da !important;"
+                                class="btn btn-md btn-light">Stop <i class="fa fa-stop" aria-hidden="true"></i>
                             </span>
                         </div>
 
@@ -185,7 +187,8 @@
 
                         if (parseInt(this.duration) > videoDurationLimit) {
                             motionresume = ""
-                            bootbox.alert("Video too long, maximum length is 3 minutes.")
+                            alert("Video too long, maximum length is 3 minutes.")
+                            document.getElementById("motionresume").value = null;
                         } else {
                             $(".save_motionresume").show()
                         }

@@ -1,47 +1,396 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Animating Sprites In HTML5 Canvas | onlyWebPro.com</title>
-    <style>
-        #stack {
-    position:relative;
-    }
-#stack > canvas {
-    position:absolute;
-    left:0;
-    top:0;
-    border: 2px solid green;
-    }
-    </style>
-</head>
-<body>
-    <div id="stack">
-        <canvas id="bg" width="500" height="500"></canvas>
-        <canvas id="lc" width="500" height="500"></canvas>
-        <canvas id="rc" width="500" height="500"></canvas>
-        <canvas id="ch" width="500" height="500"></canvas>
-    <div>
+<%- include ('Layout/header') %>
 
-    <script>
-        var bg = document.getElementById('bg').getContext('2d'),
-        lc = document.getElementById('lc').getContext('2d'),
-        rc = document.getElementById('rc').getContext('2d'),
-        ch = document.getElementById('ch').getContext('2d'),
-        img = new Image();
+    <body>
+        <br>
+        <div class="container" style="margin: 0 auto; width:60% ">
+            <div class="card">
+                <div class="card-body">
+                    <div id="canvas_div" style="display: none;">
+                        <canvas id="can" width="400" height="400" style="left:10%;border:2px solid;"></canvas>
+                        <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
+                        <div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;"
+                            id="color_pen_blue">
+                        </div>
+                        <div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;"
+                            id="color_pen_red">
+                        </div>
+                        <div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;"
+                            id="color_pen_yellow">
+                        </div>
+                        <div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;"
+                            id="color_pen_orange">
+                        </div>
+                        <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;"
+                            id="color_pen_black">
+                        </div>
+                        <div style="position:absolute;top:20%;left:43%;">Eraser</div>
+                        <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;"
+                            id="color_pen_white"></div>
+                        <input type="button" value="save" id="btnSave" size="30"
+                            style="position:absolute;top:55%;left:10%;">
+                        <input type="button" value="clear All" id="btnClearCanvas" size="20"
+                            style="position:absolute;top:55%;left:15%;">
+                    </div>
+                    <% var myInterviewQuestions=job.interview.questions%>
+                        <% for (var i=0; i < myInterviewQuestions.length; i++) { %>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p><b>Question: </b>
+                                        <%= myInterviewQuestions[i].question%>
+                                    </p>
+                                </div>
+                            </div>
+                            <% if(myInterviewQuestions[i].type_of_question=='video' ){ %>
+                                <div class="left">
+                                    <div id="startButton<%=i%>" class="buttonStart">
+                                        Start <i class="fa fa-video-camera"></i>
+                                    </div>
+                                    <video id="preview<%=i%>" class="preview" width="160" height="120" autoplay muted
+                                        style="display: none;"></video>
+                                </div>
+                                <div class="right">
+                                    <div id="stopButton<%=i%>" class="buttonStop" style="display: none;">
+                                        stop <i class="fa fa-stop" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="recordingDiv" style="display: none;">
+                                        <h2>Motion Resume</h2>
+                                        <video id="recording<%=i%>" width="460" height="320" controls></video>
+                                    </div>
 
-        img.onload = drawImgs;    /// set handler
-        img.src = "image.png";    /// set url
+                                </div>
+                                <% } %>
 
-        function drawImgs() {
-            /// 'this' is the loaded image
-            bg.drawImage(this, 0,0);
-            lc.drawImage(this, 64,64);
-            rc.drawImage(this, 128,128);
-            ch.drawImage(this, 192,192);
+                                    <% if(myInterviewQuestions[i].type_of_question=='text' ){ %>
+                                        <textarea class="answer" id="answer<%=[i]%>"
+                                            placeholder="Write your answer here...."></textarea>
+                                        <% } %>
 
-            /// continue rest of code here...
-        }
-</script>
-    
-</body>
-</html>
+                                            <% if(myInterviewQuestions[i].type_of_question=='canvas' ){ %>
+                                                <br>
+                                                <button id="<%=[i]%>" class="btnDraw">Draw <i
+                                                        class='fas fa-draw-polygon'></i></button><br><br>
+                                                <img id="canvasimg_<%=[i]%>" width="400" height="400"
+                                                    style="left:10%;border:2px solid;" />
+                                                <br>
+                                                <% } %>
+                                                    <hr>
+                                                    <% } %>
+
+                                                        <button class="submit_interview" id="<%=jobId%>"> Submit
+                                                            Answers</button>
+                                                        <div class="myJob" style="display: none;">
+                                                            <%= JSON.stringify(job) %>
+                                                        </div>
+                </div>
+            </div>
+        </div>
+        <div id="log"></div>
+        <script>
+
+            $(document).ready(function () {
+
+                $(".answer").change(function (e) {
+                    // var id = "answer0" get
+                    var id = $(this).attr('id')
+                    var questionId = id.replace("answer", "")
+                    answers[questionId].answer = $(this).val()
+
+                })
+
+                $(".buttonStart").click(function () {
+                    $(".buttonStop").show()
+                    $(".preview").show()
+                    $(".recordingDiv").hide()
+                })
+
+                $(".buttonStop").click(function () {
+                    $(".buttonStop").hide()
+                    document.getElementById("preview").style.display = "none"
+                    $(".recordingDiv").show()
+                })
+
+                $(".submit_interview").click(function () {
+                    var jobId = $(this).attr('id')
+                    console.log(answers)
+
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/submit_interview",
+                        data: { answers: answers, jobId: jobId },
+                        success: function (data) {
+                            // success callback function
+                            alert("Success, check logs");
+                            // window.location.reload(true);
+                            console.log(data)
+                        },
+                        error: function (data, status, xhr) {
+                            // error callback function
+                            alert("Error, check logs");
+                            console.log(data)
+                        },
+                    });
+                });
+
+
+
+                //  = $("#job")     
+                var myJob = $(".myJob").text()
+                var job = JSON.parse(myJob)
+
+                var answers = []
+                for (var n = 0; n < job.interview.questions.length; n++) {
+                    answers.push(
+                        {
+                            question: job.interview.questions[n].question,
+                            type_of_question: job.interview.questions[n].type_of_question
+                        }
+                    )
+                }
+
+                for (var a = 0; a < job.interview.questions.length; a++) {
+                    if (job.interview.questions[a].type_of_question == "video") {
+                        myRecorder(a) //string
+                    }
+                }
+
+
+                // Utility functions
+                function log(msg) {
+                    logElement.innerHTML += msg + "\n";
+                }
+                function wait(delayInMS) {
+                    return new Promise(resolve => setTimeout(resolve, delayInMS));
+                }
+                let logElement = document.getElementById("log");
+
+                recordingTimeMS = 5000;
+
+
+
+                function myRecorder(questionIndex) { // string
+                    let preview = document.getElementById("preview" + questionIndex);
+                    let recording = document.getElementById("recording" + questionIndex);
+                    let startButton = document.getElementById("startButton" + questionIndex);
+                    let stopButton = document.getElementById("stopButton" + questionIndex);
+                    let downloadButton = document.getElementById("downloadButton" + questionIndex);
+
+                    function startRecording(stream, lengthInMS) {
+                        let recorder = new MediaRecorder(stream);
+                        let data = [];
+
+                        recorder.ondataavailable = event => data.push(event.data);
+                        recorder.start();
+                        log(recorder.state + " for " + (lengthInMS / 1000) + " seconds...");
+
+                        let stopped = new Promise((resolve, reject) => {
+                            recorder.onstop = resolve;
+                            recorder.onerror = event => reject(event.name);
+                        });
+
+                        let recorded = wait(lengthInMS).then(
+                            () => recorder.state == "recording" && recorder.stop()
+                        );
+
+                        return Promise.all([
+                            stopped,
+                            recorded
+                        ])
+                            .then(() => data);
+                    }
+                    function stop(stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    startButton.addEventListener("click", function () {
+                        navigator.mediaDevices.getUserMedia({
+                            video: true,
+                            audio: true
+                        }).then(stream => {
+                            preview.srcObject = stream;
+                            downloadButton.href = stream;
+                            preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+                            return new Promise(resolve => preview.onplaying = resolve);
+                        }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+                            .then(recordedChunks => {
+                                let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                                recording.src = URL.createObjectURL(recordedBlob);
+                                downloadButton.href = recording.src;
+                                downloadButton.download = "RecordedVideo.webm";
+                                var reader = new FileReader();
+                                reader.readAsDataURL(recordedBlob);
+                                return new Promise(resolve => {
+                                    reader.onloadend = function () {
+                                        var base64data = reader.result;
+                                        resolve(base64data)
+                                    }
+
+                                }).then(res => {
+                                    answers[k].answer = res
+                                })
+
+                            })
+                            .catch(log);
+                    }, false);
+
+                    stopButton.addEventListener("click", function () {
+                        stop(preview.srcObject);
+                    }, false);
+                }
+
+                /*
+                  Canvas/drawing functionality
+                */
+                $(".btnDraw").click(function (e) {
+                    e.stopImmediatePropagation();
+
+                    var canvasId = $(this).attr('id')
+
+                    document.getElementById("canvas_div").style.display = "inline"
+                    document.getElementById("btnSave").removeEventListener("click", handleSaveClicked);
+                    document.getElementById("btnSave").addEventListener("click", handleSaveClicked)
+                    //show canvas
+
+                    var canvas, ctx, flag = false,
+                        prevX = 0,
+                        currX = 0,
+                        prevY = 0,
+                        currY = 0,
+                        dot_flag = false;
+
+                    var x = "black",
+                        y = 2;
+
+
+                    canvas = document.getElementById('can');
+                    ctx = canvas.getContext("2d");
+                    w = canvas.width;
+                    h = canvas.height;
+
+                    canvas.addEventListener("mousemove", function (e) {
+                        findxy('move', e)
+                    }, false);
+                    canvas.addEventListener("mousedown", function (e) {
+                        findxy('down', e)
+                    }, false);
+                    canvas.addEventListener("mouseup", function (e) {
+                        findxy('up', e)
+                    }, false);
+                    canvas.addEventListener("mouseout", function (e) {
+                        findxy('out', e)
+                    }, false);
+
+
+                    if (ctx)
+                        ctx.clearRect(0, 0, w, h);
+
+
+                    document.body.onclick = function (e) {
+                        if (e.target.id.includes("color_pen")) {
+                            var color = e.target.id.replace("color_pen_", "")
+                            x = color
+                        }
+                    }
+
+
+                    function color(obj) {
+                        switch (obj.id) {
+                            case "green":
+                                x = "green";
+                                break;
+                            case "blue":
+                                x = "blue";
+                                break;
+                            case "red":
+                                x = "red";
+                                break;
+                            case "yellow":
+                                x = "yellow";
+                                break;
+                            case "orange":
+                                x = "orange";
+                                break;
+                            case "black":
+                                x = "black";
+                                break;
+                            case "white":
+                                x = "white";
+                                break;
+                        }
+                        if (x == "white") y = 14;
+                        else y = 2;
+
+                    }
+
+                    function draw() {
+                        ctx.beginPath();
+                        ctx.moveTo(prevX, prevY);
+                        ctx.lineTo(currX, currY);
+                        ctx.strokeStyle = x;
+                        ctx.lineWidth = y;
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+
+                    document.getElementById("btnClearCanvas").addEventListener("click", function (e) {
+                        var m = confirm("Want to clear");
+                        if (m) {
+                            ctx.clearRect(0, 0, w, h);
+                        }
+                    })
+
+
+
+
+                    function handleSaveClicked() {
+                        var dataURL = canvas.toDataURL();
+                        document.getElementById("canvasimg_" + canvasId).src = dataURL;
+                        //asnwers
+                        ///
+                        // canvasId.display. 
+                        document.getElementById("btnSave").removeEventListener("click", handleSaveClicked)
+                        document.getElementById("canvas_div").style.display = "none"
+
+                        for (var k = 0; k < answers.length; k++) {
+                            if (k == canvasId) {
+                                answers[k].answer = dataURL
+                            }
+                        }
+                    }
+
+
+
+                    function findxy(res, e) {
+                        if (res == 'down') {
+                            prevX = currX;
+                            prevY = currY;
+                            currX = e.clientX - canvas.offsetLeft;
+                            currY = e.clientY - canvas.offsetTop;
+
+                            flag = true;
+                            dot_flag = true;
+                            if (dot_flag) {
+                                ctx.beginPath();
+                                ctx.fillStyle = x;
+                                ctx.fillRect(currX, currY, 2, 2);
+                                ctx.closePath();
+                                dot_flag = false;
+                            }
+                        }
+                        if (res == 'up' || res == "out") {
+                            flag = false;
+                        }
+                        if (res == 'move') {
+                            if (flag) {
+                                prevX = currX;
+                                prevY = currY;
+                                currX = e.clientX - canvas.offsetLeft;
+                                currY = e.clientY - canvas.offsetTop;
+                                draw();
+                            }
+                        }
+                    }
+                });
+            })
+        </script>
+    </body>
+    <%- include ('Layout/footer') %>
