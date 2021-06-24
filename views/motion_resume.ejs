@@ -14,11 +14,11 @@
                     <img src="./logo.png" class="center" width="70%" alt="Company Logo" />
                   </div>
                   <div class="col-sm-6">
-                    <h5><b>Job Level:</b></h5>
+                    <h5 style="color: #805b23 !important;"><b>Job Level:</b></h5>
                     <p>
                       <%= levelDescriptionObj[jobs[i].level]%>
                     </p>
-                    <h5><b>Field:</b></h5>
+                    <h5 style="color: #805b23 !important;"><b>Field:</b></h5>
                     <p>
                       <%= jobs[i].field %>
                     </p>
@@ -28,7 +28,7 @@
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <h5><b>Requirements</b></h5>
+                <h5 style="color: #805b23 !important;"><b>Requirements</b></h5>
                 <p>
                   <%- jobs[i].requirements %>
                 </p>
@@ -36,7 +36,7 @@
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <h5><b>Discription and Responsibilities</b></h5>
+                <h5 style="color: #805b23 !important;"><b>Discription and Responsibilities</b></h5>
                 <p>
                   <%- jobs[i].functions %>
                 </p>
@@ -44,7 +44,7 @@
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <h5><b>Job Start Date:</b></h5>
+                <h5 style="color: #805b23 !important;"><b>Job Start Date:</b></h5>
                 <p>
                   <%= jobs[i].start_date%>
                 </p>
@@ -52,7 +52,7 @@
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <h5><b>Closing Date:</b></h5>
+                <h5 style="color: #805b23 !important;"><b>Closing Date:</b></h5>
                 <p>
                   <%= jobs[i].application_closing_date%>
                 </p>
@@ -63,8 +63,10 @@
                 <% if(!alreadyApplied) { %>
                   <div class="row">
                     <div class="col-sm-12">
-                      <button class="btn btn-md btn-primary btn-apply" id="<%=jobs[i]._id %>"><i
-                          class="fa fa-envelope-open-o" aria-hidden="true"></i> Apply</button>
+                      <button class="btn btn-md btn-primary btn-apply" id="<%=jobs[i]._id %>"
+                        style="background-color: #e6e1da !important;"> Apply <i class="fa fa-envelope-open-o"
+                          aria-hidden="true"></i>
+                      </button>
                     </div>
                   </div>
                   <% } else { %>
@@ -87,7 +89,8 @@
                                         <% } else { %>
                                           <div class="row">
                                             <div class="col-sm-12">
-                                              <button class="btn btn-md btn-primary job_details" id="<%=jobs[i]._id %>">
+                                              <button class="btn btn-md btn-primary job_details" id="<%=jobs[i]._id %>"
+                                                style="background-color: #dbd1c2 !important;">
                                                 More <i class="fa fa-long-arrow-right"></i></button>
                                             </div>
                                           </div>

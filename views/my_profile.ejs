@@ -58,7 +58,18 @@
                       </div>
                     </div>
                     <% } %>
-                      <hr>
+                      <% if(user.typeOfUser=='recruiter' ) { %>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <h4 style="color: #805b23 !important;"><b>Company Details:</b></h4>
+                            <p>Company working for: <%=user.companyName%>
+                            </p>
+                            <p>Company URL: <%=user.companyUrl%>
+                            </p>
+                          </div>
+                        </div>
+                        <% } %>
+                          <hr>
         </div>
       </div>
     </div>

@@ -1,59 +1,71 @@
 <%- include ('Layout/header') %>
-<body>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-       
-        <h3><b><%=user.name%>'s profile</b></h3>
-        <% if(user.typeOfUser == 'jobseeker' && !user.motionresume) { %>   
-          <button class="motionresume_video" id="<%=user._id%>">No motionresume</button>
-        <% } %>
-        <% if(user.typeOfUser == 'jobseeker' && user.motionresume) { %>   
-          <p>
-            <video width="320" height="240" controls>
-                <source src="<%=user.motionresume%>" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </p>
-        <% } %>
-        <div class="row">
-          <div class="col-sm-12">
-            <h4><b>Contact Details:</b></h4>
-            <p>Email address: <%=user.email%></p>
-            <p>Cellphone number: 0<%=user.phone%></p>
-          </div>
+
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+
+          <h3 style="color: #805b23 !important;"><b>
+              <%=user.name%>'s profile
+            </b></h3>
+          <% if(user.typeOfUser=='jobseeker' && !user.motionresume) { %>
+            <button class="btn btn-md motionresume_video" id="<%=user._id%>">No motionresume</button>
+            <% } %>
+              <% if(user.typeOfUser=='jobseeker' && user.motionresume) { %>
+                <p>
+                  <video width="320" height="240" controls>
+                    <source src="<%=user.motionresume%>" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </p>
+                <% } %>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <h4 style="color: #805b23 !important;"><b>Contact Details:</b></h4>
+                      <p>Email address: <%=user.email%>
+                      </p>
+                      <p>Cellphone number: 0<%=user.phone%>
+                      </p>
+                    </div>
+                  </div>
+
+
+                  <% if(user.typeOfUser=='jobseeker' ) { %>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <h4 style="color: #805b23 !important;"><b>Educational Details:</b></h4>
+                        <p>University Attended: <%=user.universityName%>
+                        </p>
+                        <p>Qualification: <%=user.qualification%>
+                        </p>
+                        <p>Year Obtained: <%=user.yearObtained%>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <h4 style="color: #805b23 !important;"><b>Experience:</b></h4>
+                        <p>Company worked for: <%=user.company%>
+                        </p>
+                        <p>Years Worked: <%=user.yearsWorked%>
+                        </p>
+                      </div>
+                    </div>
+                    <% } %>
+                      <% if(user.typeOfUser=='recruiter' ) { %>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <h4><b>Company Details:</b></h4>
+                            <p>Company name: <%=user.companyName%>
+                            </p>
+                            <p>Company URL: <%=user.companyUrl%>
+                            </p>
+                          </div>
+                        </div>
+                        <% } %>
         </div>
-
-
-        <% if(user.typeOfUser == 'jobseeker') { %>   
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Educational Details:</b></h4>
-              <p>University Attended: <%=user.universityName%></p>
-              <p>Qualification: <%=user.qualification%></p>
-              <p>Year Obtained: <%=user.yearObtained%></p>
-            </div>
-          </div>
-  
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Experience:</b></h4>
-              <p>Company worked for: <%=user.company%></p>
-              <p>Years Worked: <%=user.yearsWorked%></p>
-            </div>
-          </div>
-        <% } %>
-        <% if(user.typeOfUser == 'recruiter') { %>   
-          <div class="row">
-            <div class="col-sm-12">
-              <h4><b>Company Details:</b></h4>
-              <p>Company name: <%=user.companyName%></p>
-              <p>Company URL: <%=user.companyUrl%></p>
-            </div>
-          </div>
-        <% } %>
       </div>
     </div>
-  </div>
-</body>
-<%- include ('Layout/footer') %>
+  </body>
+  <%- include ('Layout/footer') %>

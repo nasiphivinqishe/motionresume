@@ -1,20 +1,18 @@
 <%- include ('Layout/header') %>
-<body>
-  <div class="container">
-    <div class="card">
+
+  <body>
+    <br>
+    <div class="container">
+      <div class="card">
         <div class="card-body">
-          <centre><h2><b><u>Update Job here..</u></b></h2></centre>
+          <centre>
+            <h2 style="color: #805b23 !important;"><b><u>Update Job here..</u></b></h2>
+          </centre>
           <form id="update_job">
             <div class="row">
-              <div class="form-group col-md-5"> 
-                <label for="level">Level Type:</label>
-                <select
-                  class="form-control"
-                  id="level"
-                  name="level"
-                  value="<%=jobDetails.level%>"
-                  required
-                >
+              <div class="form-group col-md-5">
+                <label for="level" style="color: #805b23 !important;">Level Type:</label>
+                <select class="form-control" id="level" name="level" value="<%=jobDetails.level%>" required>
                   <option disabled>select here.</option>
                   <option value="1">Entry (0 yrs of Exp)</option>
                   <option value="2">Junior (0-2 yrs of Exp)</option>
@@ -26,75 +24,41 @@
 
             <div class="row">
               <div class="form-group col-md-5">
-                <label for="field">Field/ Industry:</label>
-                <input
-                  class="form-control"
-                  type="text"
-                  id="field"
-                  name="field"
-                  value="<%= jobDetails.field %>"
-                  placeholder="Enter field/ Industry"
-                  required
-                />
+                <label for="field" style="color: #805b23 !important;">Field/ Industry:</label>
+                <input class="form-control" type="text" id="field" name="field" value="<%= jobDetails.field %>"
+                  placeholder="Enter field/ Industry" required />
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-md-5">
-                <label for="skills">Skills Needed:</label>
-                <input
-                  class="form-control"
-                  type="text"
-                  id="skills"
-                  name="skills"
-                  value="<%= jobDetails.skills %>"
-                  placeholder="Enter Skills needed"
-                  required
-                />
+                <label for="skills" style="color: #805b23 !important;">Skills Needed:</label>
+                <input class="form-control" type="text" id="skills" name="skills" value="<%= jobDetails.skills %>"
+                  placeholder="Enter Skills needed" required />
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-md-5">
-                <label for="start_date">Experted Start Date:</label>
-                <input
-                  class="form-control"
-                  type="date"
-                  id="start_date"
-                  name="start_date"
-                  placeholder="Enter Expected Start date"
-                  required
-                />
+                <label for="start_date" style="color: #805b23 !important;">Experted Start Date:</label>
+                <input class="form-control" type="date" id="start_date" name="start_date"
+                  placeholder="Enter Expected Start date" required />
               </div>
             </div>
             <div class="row">
               <div class="form-group col-md-5">
-                <label for="application_closing_date"
-                  >Application Closing Date:</label
-                >
-                <input
-                  class="form-control"
-                  type="date"
-                  id="application_closing_date"
-                  name="application_closing_date"
-                  placeholder="Enter closing date for this job"
-                  required
-                />
+                <label for="application_closing_date" style="color: #805b23 !important;">Application Closing
+                  Date:</label>
+                <input class="form-control" type="date" id="application_closing_date" name="application_closing_date"
+                  placeholder="Enter closing date for this job" required />
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-md-5 col-md-5">
-                <label for="requirements">Job Requirements:</label>
-                <textarea
-                  class="form-control"
-                  rows="5"
-                  id="requirements"
-                  name="requirements"
-                  style="visibility: hidden"
-                  placeholder="Enter Job Requirements"
-                  required
-                >
+                <label for="requirements" style="color: #805b23 !important;">Job Requirements:</label>
+                <textarea class="form-control" rows="5" id="requirements" name="requirements" style="visibility: hidden"
+                  placeholder="Enter Job Requirements" required>
                 </textarea>
                 <script>
                   CKEDITOR.replace("requirements");
@@ -104,134 +68,126 @@
 
             <div class="row">
               <div class="form-group col-md-5 col-md-5">
-                <label for="functions"
-                  >Job Discription and Responsibilitie:</label
-                >
-                <textarea
-                  class="form-control"
-                  rows="5"
-                  id="functions"
-                  name="functions"
-                  style="visibility: hidden"
-                  value="<%= jobDetails.field %>"
-                  placeholder="Enter Job Functions"
-                  required
-                >
+                <label for="functions" style="color: #805b23 !important;">Job Discription and Responsibilitie:</label>
+                <textarea class="form-control" rows="5" id="functions" name="functions" style="visibility: hidden"
+                  value="<%= jobDetails.field %>" placeholder="Enter Job Functions" required>
                 </textarea>
                 <script>
                   CKEDITOR.replace("functions");
                 </script>
               </div>
             </div>
-            <button
-              class="btn btn-md btn-primary save_updated_job"
-              id="save_updated_job"
-            >
-            <i class="fa fa-refresh" aria-hidden="true"></i>
+            <button class="btn btn-md btn-primary save_updated_job" id="save_updated_job"
+              style="background-color: #e6e1da !important;">
+              Update <i class="fa fa-refresh" aria-hidden="true"></i>
             </button>
           </form>
           <hr>
-      
+
           <div class="container" style="margin: 3%;">
-            <centre><h2><b><u>ENTER INTERVIEW QUESTION(S).</u></b></h2></centre>
+            <centre>
+              <h2 style="color: #805b23 !important;"><b><u>ENTER INTERVIEW QUESTION(S).</u></b></h2>
+            </centre>
             <form>
-                <% if(jobDetails.interview && jobDetails.interview.questions) { %> <%
-                    for(var a = 0; a < jobDetails.interview.questions.length; a++) { %>
-                      <div class="row">
-                        <div class="col-md-7">  
-                          <div class="form-group">
-                              <label for="pwd">Type</label>
-                              <select class="form-control question-type" name="the_types[]" value="<%=jobDetails.interview.questions[a].type_of_question%>">
-                                  <option value="" disabled="true">Select type</option>
-                                  <option value="text">Text</option>
-                                  <option value="video">Video</option>
-                                  <option value="canvas">Canvas</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-        
-                        <div class="form-group">
-                          <div class="row">
-                            <div class="col-md-7">
-                              <label for="usr">Question</label>
-                              <input type="text" class="form-control" placeholder="Enter question here..." value="<%= jobDetails.interview.questions[a].question %>" name="field_name[]">
-                              <a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus" aria-hidden="true"></i></a>
-                              </div>
-                          </div> 
+              <% if(jobDetails.interview && jobDetails.interview.questions) { %>
+                <% for(var a=0; a < jobDetails.interview.questions.length; a++) { %>
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group">
+                        <label for="the_types" style="color: #805b23 !important;">Type</label>
+                        <select class="form-control question-type" name="the_types[]"
+                          value="<%=jobDetails.interview.questions[a].type_of_question%>">
+                          <option value="" disabled="true">Select type</option>
+                          <option value="text">Text</option>
+                          <option value="video">Video</option>
+                          <option value="canvas">Canvas</option>
+                        </select>
                       </div>
-                          <hr>
-                    <% } %>
-                <% } %>
-                <div class="field_wrapper">
-                  <div>
-                    <a href="javascript:void(0);" class="add_button" title="Add field"
-                    ><i class="fa fa-plus" aria-hidden="true"></i></a>
+                    </div>
                   </div>
-                </div>
-                <button
-                class="btn btn-md btn-primary submit_questions"
-                id="submit_questions"
-                ><i class="fa fa-floppy-o" aria-hidden="true"></i>
-                    Submit 
-                </button>
-            
+
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <label for="usr" style="color: #805b23 !important;">Question</label>
+                        <input type="text" class="form-control" placeholder="Enter question here..."
+                          value="<%= jobDetails.interview.questions[a].question %>" name="field_name[]">
+                        <a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus"
+                            aria-hidden="true"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <% } %>
+                    <% } %>
+                      <div class="field_wrapper">
+                        <div>
+                          <a href="javascript:void(0);" class="add_button" title="Add field"><i class="fa fa-plus"
+                              aria-hidden="true"></i></a>
+                        </div>
+                      </div>
+                      <button class="btn btn-md btn-primary submit_questions" id="submit_questions"
+                        style="background-color: #e6e1da !important;"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+                        Submit
+                      </button>
+
             </form>
           </div>
           <hr>
 
           <div class="row my-4">
             <div class="col-lg-12">
-              <center><h3><b><u>People Applied for this job</u></b></h3></center>
+              <center>
+                <h3 style="color: #805b23 !important;"><b><u>Applicants for this job</u></b></h3>
+              </center>
 
               <% for(var i=0; i < jobApplantsNames.length; i++) { %>
-                    <div>
-                      <a title="view_profile" class ="name" id="<%= jobDetails.applicants[i].user_id %>"><b><%= jobApplantsNames[i] %></b></a>
-                  </div>
-                  <% if(jobDetails.applicants[i].application_progress == "got_interview" ) { %>
-                    <p><b>Sent Interview</b></p>
-                  <% } %> 
-                  <% if(jobDetails.applicants[i].application_progress == "answered_interview" ){ %>
-                    <button
-                      class="btn btn-md btn-primary answered_interview"
-                      id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
-                    </button>
-                  <% } %> 
-                  <% if(!jobDetails.applicants[i].application_progress){ %>
-                    <button
-                      class="btn btn-md btn-primary send_interview"
-                      id="<%= jobDetails.applicants[i].user_id %>" > Send Interview
-                    </button>
-                    <button
-                      class="btn btn-md btn-primary decline_application"
-                      id="<%= jobDetails.applicants[i].user_id %>" > Decline Application
-                    </button>
+                <div>
+                  <a title="view_profile" class="name" id="<%= jobDetails.applicants[i].user_id %>"
+                    style="color: #805b23 !important;"><b>
+                      <%= jobApplantsNames[i] %>
+                    </b></a>
+                </div>
+                <% if(jobDetails.applicants[i].application_progress=="got_interview" ) { %>
+                  <p><b>Sent Interview</b></p>
                   <% } %>
-                  <% if(jobDetails.applicants[i].application_progress=="application_declined"){ %>
-                    <p><b> Declined</b></p>
-                  <% } %>  
-                  <% if(jobDetails.applicants[i].application_progress=="accepted"){ %>
-                    <p><b>Accepted</b></p>
-                    <button
-                      class="btn btn-md btn-primary answered_interview"
-                      id="<%= jobDetails.applicants[i].user_id %>" > Answered Interview
-                    </button>
-                  <% } %>  
-              <% } %>    
+                    <% if(jobDetails.applicants[i].application_progress=="answered_interview" ){ %>
+                      <button class="btn btn-md btn-primary answered_interview"
+                        id="<%= jobDetails.applicants[i].user_id %>"> Answered Interview
+                      </button>
+                      <% } %>
+                        <% if(!jobDetails.applicants[i].application_progress){ %>
+                          <button class="btn btn-md btn-primary send_interview"
+                            id="<%= jobDetails.applicants[i].user_id %>"> Send Interview
+                          </button>
+                          <button class="btn btn-md btn-primary decline_application"
+                            id="<%= jobDetails.applicants[i].user_id %>"> Decline Application
+                          </button>
+                          <% } %>
+                            <% if(jobDetails.applicants[i].application_progress=="application_declined" ){ %>
+                              <p><b> Declined</b></p>
+                              <% } %>
+                                <% if(jobDetails.applicants[i].application_progress=="accepted" ){ %>
+                                  <p><b>Accepted</b></p>
+                                  <button class="btn btn-md btn-primary answered_interview"
+                                    id="<%= jobDetails.applicants[i].user_id %>"> Answered Interview
+                                  </button>
+                                  <% } %>
+                                    <% } %>
             </div>
           </div>
           <hr>
         </div>
+      </div>
     </div>
-  </div>
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      var maxField = 10; //Input fields increment limitation
-      var addButton = $(".add_button"); //Add button selector
-      var wrapper = $(".field_wrapper"); //Input field wrapper
-      var fieldHTML =
-        `<div> <div class="row">
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var maxField = 10; //Input fields increment limitation
+        var addButton = $(".add_button"); //Add button selector
+        var wrapper = $(".field_wrapper"); //Input field wrapper
+        var fieldHTML =
+          `<div> <div class="row">
                       <div class="col-md-7">  
                         <div class="form-group">
                             <label for="pwd">Type</label>
@@ -253,77 +209,77 @@
                         </div> 
                      </div><a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus" aria-hidden="true"></i></a></div>
         </div>`; //New input field html
-      var x = 1; //Initial field counter is 1
+        var x = 1; //Initial field counter is 1
 
-      //Once add button is clicked
-      $(addButton).click(function () {
-        //Check maximum number of input fields
-        if (x < maxField) {
-          x++; //Increment field counter
-          $(wrapper).append(fieldHTML); //Add field html
-        }
-      });
+        //Once add button is clicked
+        $(addButton).click(function () {
+          //Check maximum number of input fields
+          if (x < maxField) {
+            x++; //Increment field counter
+            $(wrapper).append(fieldHTML); //Add field html
+          }
+        });
 
-      //Once remove button is clicked
-      $(wrapper).on("click", ".remove_button", function (e) {
-        e.preventDefault();
-        $(this).parent("div").remove(); //Remove field html
-        x--; //Decrement field counter
-      });
-                   
-      $("form").submit(function (e) {
-        e.preventDefault(e);
+        //Once remove button is clicked
+        $(wrapper).on("click", ".remove_button", function (e) {
+          e.preventDefault();
+          $(this).parent("div").remove(); //Remove field html
+          x--; //Decrement field counter
+        });
+
+        $("form").submit(function (e) {
+          e.preventDefault(e);
           /*
             Start update Job
           */
-        // Create an object that will store all the details
-        var jobId = "<%=jobDetails._id %>";
-        var levelType = $("#level").val();
-        var field = $("#field").val();
-        var skills = $("#skills").val();
-        var start_date = $("#start_date").val();
-        var application_closing_date = $("#application_closing_date").val();
-        var requirements = CKEDITOR.instances.requirements.getData();
-        var functions = CKEDITOR.instances.functions.getData();
+          // Create an object that will store all the details
+          var jobId = "<%=jobDetails._id %>";
+          var levelType = $("#level").val();
+          var field = $("#field").val();
+          var skills = $("#skills").val();
+          var start_date = $("#start_date").val();
+          var application_closing_date = $("#application_closing_date").val();
+          var requirements = CKEDITOR.instances.requirements.getData();
+          var functions = CKEDITOR.instances.functions.getData();
 
-        var updatedJobDetails = {
-          jobId: jobId,
-          level: levelType,
-          field: field,
-          skills: skills,
-          start_date: start_date,
-          application_closing_date: application_closing_date,
-          requirements: requirements,
-          functions: functions,
-        };
+          var updatedJobDetails = {
+            jobId: jobId,
+            level: levelType,
+            field: field,
+            skills: skills,
+            start_date: start_date,
+            application_closing_date: application_closing_date,
+            requirements: requirements,
+            functions: functions,
+          };
 
-        console.log(updatedJobDetails);
-        $.ajax({
-          method: "POST",
-          url: "/update_job_details",
-          data: { updatedJobDetails: updatedJobDetails },
-          success: function (data) {
-            // success callback function
-            alert("Success, check logs");
-            console.log(data);
-            window.location.reload(true);
-          },
-          error: function (data, status, xhr) {
-            // error callback function
-            alert("Error, CHECK LOGS");
-            console.log(data);
-          },
+          console.log(updatedJobDetails);
+          $.ajax({
+            method: "POST",
+            url: "/update_job_details",
+            data: { updatedJobDetails: updatedJobDetails },
+            success: function (data) {
+              // success callback function
+              alert("Success, check logs");
+              console.log(data);
+              window.location.reload(true);
+            },
+            error: function (data, status, xhr) {
+              // error callback function
+              alert("Error, CHECK LOGS");
+              console.log(data);
+            },
+          });
         });
-      });
 
-      $(".decline_application").click(function () {
-        var applicantId = $(this).attr('id')
-        var intervieJobId = "<%= jobDetails._id%>"
+        $(".decline_application").click(function () {
+          var applicantId = $(this).attr('id')
+          var intervieJobId = "<%= jobDetails._id%>"
 
-        $.ajax({
+          $.ajax({
             method: "POST",
             url: "/decline_application",
-            data: {applicantId :applicantId,intervieJobId: intervieJobId},
+            data: { applicantId: applicantId, intervieJobId: intervieJobId },
             success: function (data) {
               alert("Success, check logs");
               console.log(data);
@@ -334,24 +290,24 @@
             },
           });
 
-      })
+        })
 
-       $(".send_interview").click(function () {
-        var applicantId = $(this).attr('id')
-        var intervieJobId = "<%= jobDetails._id%>"
-        var poster = "<%= jobDetails.poster %>"
-        
-        var notificationObj = {
-          notificationType : "received_interview",
-          from : poster,
-          to : applicantId,
-          isRead : false,
-          jobId : intervieJobId ,
-        }
+        $(".send_interview").click(function () {
+          var applicantId = $(this).attr('id')
+          var intervieJobId = "<%= jobDetails._id%>"
+          var poster = "<%= jobDetails.poster %>"
+
+          var notificationObj = {
+            notificationType: "received_interview",
+            from: poster,
+            to: applicantId,
+            isRead: false,
+            jobId: intervieJobId,
+          }
           $.ajax({
             method: "POST",
             url: "/send_applicant_an_interview",
-            data: {notificationObj:notificationObj, applicantId :applicantId, intervieJobId: intervieJobId },
+            data: { notificationObj: notificationObj, applicantId: applicantId, intervieJobId: intervieJobId },
             success: function (data) {
               // success callback function
               alert("Success, check logs");
@@ -364,70 +320,70 @@
             },
           });
 
-      })
+        })
 
-      CKEDITOR.instances.requirements.setData(
-        "<%= JSON.stringify(jobDetails.requirements) %>"
-      );
-      CKEDITOR.instances.functions.setData(
-        "<%= JSON.stringify(jobDetails.functions) %>"
-      );
-      $("#start_date").val(
-        moment("<%= jobDetails.start_date %>").format("YYYY-MM-DD")
-      );
-      $("#application_closing_date").val(
-        moment("<%= jobDetails.application_closing_date %>").format(
-          "YYYY-MM-DD"
-        )
-      );
+        CKEDITOR.instances.requirements.setData(
+          "<%= JSON.stringify(jobDetails.requirements) %>"
+        );
+        CKEDITOR.instances.functions.setData(
+          "<%= JSON.stringify(jobDetails.functions) %>"
+        );
+        $("#start_date").val(
+          moment("<%= jobDetails.start_date %>").format("YYYY-MM-DD")
+        );
+        $("#application_closing_date").val(
+          moment("<%= jobDetails.application_closing_date %>").format(
+            "YYYY-MM-DD"
+          )
+        );
 
-      $(".submit_questions").click(function (e) {
-        e.preventDefault(e);
-        e.stopImmediatePropagation(e);
+        $(".submit_questions").click(function (e) {
+          e.preventDefault(e);
+          e.stopImmediatePropagation(e);
 
-        var questions = $("input[name='field_name[]']");
-        var types = $("select[name='the_types[]']");
-        var interviewQuestions = [];
-        var jobId = "<%=jobDetails._id %>";
-        
-        types.each(function (index) {
-          interviewQuestions.push({
-            type_of_question: types[index].value,
-            question: questions[index].value,
+          var questions = $("input[name='field_name[]']");
+          var types = $("select[name='the_types[]']");
+          var interviewQuestions = [];
+          var jobId = "<%=jobDetails._id %>";
+
+          types.each(function (index) {
+            interviewQuestions.push({
+              type_of_question: types[index].value,
+              question: questions[index].value,
+            });
           });
+
+          if (interviewQuestions.length != 0) {
+            $.ajax({
+              method: "POST",
+              url: "/save_interview_questions",
+              data: { interviewQuestions: interviewQuestions, jobId: jobId },
+              success: function (data) {
+                // success callback function
+                alert("Success, check logs");
+                console.log(data);
+              },
+              error: function (data, status, xhr) {
+                // error callback function
+                alert("Error, check logs");
+                console.log(data);
+              },
+            });
+          }
         });
-      
-        if (interviewQuestions.length != 0) {
-          $.ajax({
-            method: "POST",
-            url: "/save_interview_questions",
-            data: { interviewQuestions: interviewQuestions, jobId: jobId },
-            success: function (data) {
-              // success callback function
-              alert("Success, check logs");
-              console.log(data);
-            },
-            error: function (data, status, xhr) {
-              // error callback function
-              alert("Error, check logs");
-              console.log(data);
-            },
-          });
-        }
-      });
 
-      $(".name").click(function(e) {
+        $(".name").click(function (e) {
           var userId = $(this).attr('id')
           window.location.href = `/view_profile?userId=${userId}`;
-      })
+        })
 
-      $(".answered_interview").click(function(e) {
+        $(".answered_interview").click(function (e) {
           var userId = $(this).attr('id')
           var jobId = "<%=jobDetails._id %>";
 
           window.location.href = `/view_interview_answers?userId=${userId}&jobId=${jobId}`;
-      })
-    });
-  </script>
-</body>
-<%- include ('Layout/footer') %>
+        })
+      });
+    </script>
+  </body>
+  <%- include ('Layout/footer') %>

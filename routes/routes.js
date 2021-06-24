@@ -486,7 +486,7 @@ router.get("/registration_next_jobseeker", (req, res) => {
 router.post("/register_recruiter", (req, res) => {
     var userData = req.body.userDataObject;
     var verificationToken = uuid.v4();
-
+    var email = userData.companyEmail
 
     const user = new User({
         verificationLink: verificationToken,
@@ -498,38 +498,56 @@ router.post("/register_recruiter", (req, res) => {
         companyName: userData.companyName,
         companyUrl: userData.companyUrl,
     });
-    console.log(userData)
-    user.save((err) => {
+    User.findOne({ email: email }, function (err, results) {
         if (err) {
             console.log(err);
-            res.send("error");
-        } else {
-
-            console.log("success");
-            var mailOptions = {
-                from: "nassiphivinqishe@gmail.com",
-                to: "nasiphivinqishe@gmail.com",
-                subject: "Verify Email.",
-                html: `
-                  <h1>Welcome</h1>
-                  <p>This was sent to verify email</p>
-                  <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
-                  <h4>Thank you,</h4>
-                  <h4><b>Motion Resume Team</b></h4>
-              `,
-            };
-
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    res.send(
-                        "Error in sending email"
-                    );
-                } else {
-                    res.send("Successfully registered, check your email for verification");
-                }
-            });
+            res.status(500).send("Error");
         }
-    });
+        else {
+            console.log(results)
+            if (results.email == email) {
+                console.log("Email already exists")
+                res.send("Email already exists")
+            }
+            else {
+                user.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send("Error");;
+                    } else {
+
+                        console.log("successsfully created user");
+                        var mailOptions = {
+                            from: "nassiphivinqishe@gmail.com",
+                            to: userData.companyEmail,
+                            subject: "Verify Email.",
+                            html: `
+                              <h1>Welcome</h1>
+                              <p>This was sent to verify email</p>
+                              <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
+                              <h4>Thank you,</h4>
+                              <h4><b>Motion Resume Team</b></h4>
+                          `,
+                        };
+
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                res.status(500).send(
+                                    "Error in sending email"
+                                );
+                            } else {
+
+                                // Alert("Check your email for veri ")
+                                res.send("Successfully registered, check your email for verification")
+                                res.render("/")
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    })
+
 });
 
 router.post("/login", (req, res) => {
@@ -681,7 +699,7 @@ router.post("/update_read_notification", auth, (req, res) => {
 })
 
 router.get("/messages", auth, (req, res) => {
-    res.send("Still working on this router. Please check back again soon :)")
+    res.render("response")
 })
 
 router.get("/view_interview_answers", (req, res) => {
@@ -876,7 +894,7 @@ router.get("/notifications", (req, res) => {
 
 router.post("/register_jobseeker", (req, res) => {
     var userData = req.body.userDataObject;
-
+    var email = userData.email
     var verificationToken = uuid.v4();
 
     const user = new User({
@@ -898,38 +916,56 @@ router.post("/register_jobseeker", (req, res) => {
         skills: userData.skills,
     });
 
-    user.save((err) => {
-        if (err) {
-            console.log(err);
-            res.send("error in saving user");
-        } else {
-            console.log("success")
-            //send email with verifac
-            var mailOptions = {
-                from: "nassiphivinqishe@gmail.com",
-                to: userData.email,
-                subject: "Verify Email.",
-                html: `
-                  <h1>Welcome</h1>
-                  <p>This was sent to verify email</p>
-                  <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
-                  <h4>Thank you,</h4>
-                  <h4><b>Motion Resume Team</b></h4>
-              `,
-            };
-
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                    res.send(
-                        "Error in sending email"
-                    );
-                } else {
-                    res.send("Successfully registered, check your email for verification");
-                }
-            });
+    User.findOne({ email: email }, function (error, results) {
+        if (error) {
+            res.status(500).send("User with this email already exists")
         }
-    });
+        else {
+            if (results.email == email) {
+                console.log("User with this email already exists")
+                res.send("User with this email already exists")
+            }
+            else {
+                user.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500)
+                        res.send("error in saving user");
+                    } else {
+                        console.log("success")
+                        //send email with verifac
+
+                        var mailOptions = {
+                            from: "nassiphivinqishe@gmail.com",
+                            to: userData.email,
+                            subject: "Verify Email.",
+                            html: `
+                              <h1>Welcome</h1>
+                              <p>This was sent to verify email</p>
+                              <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
+                              <h4>Thank you,</h4>
+                              <h4><b>Motion Resume Team</b></h4>
+                          `,
+                        };
+
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                console.log(error);
+                                console.log(error)
+                                res.status(500).send(
+                                    "Error in sending email"
+                                );
+                            } else {
+                                res.send("Successfully registered, check your email for verification");
+                                res.render("/")
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    })
+
 });
 
 module.exports = router;
