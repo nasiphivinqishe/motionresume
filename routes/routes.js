@@ -496,54 +496,54 @@ router.post("/register_recruiter", (req, res) => {
         password: userData.password,
         typeOfUser: userData.typeOfUser,
         companyName: userData.companyName,
-        companyUrl: userData.companyUrl,
+        companyUrl: userData.companyURL,
     });
-    User.findOne({ email: email }, function (err, results) {
-        if (err) {
-            console.log(err);
-            res.status(500).send("Error");
+    User.findOne({ email: email }, function (error, results) {
+        if (error) {
+            res.status(500).send("User with this email already exists")
         }
         else {
-            console.log(results)
-            if (results.email == email) {
-                console.log("Email already exists")
-                res.send("Email already exists")
-            }
-            else {
+            if (!results) {
                 user.save((err) => {
                     if (err) {
                         console.log(err);
-                        res.status(500).send("Error");;
+                        res.status(500)
+                        res.send("error in saving user");
                     } else {
+                        console.log("success")
+                        //send email with verifac
 
-                        console.log("successsfully created user");
                         var mailOptions = {
                             from: "nassiphivinqishe@gmail.com",
-                            to: userData.companyEmail,
+                            to: userData.email,
                             subject: "Verify Email.",
                             html: `
-                              <h1>Welcome</h1>
-                              <p>This was sent to verify email</p>
-                              <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
-                              <h4>Thank you,</h4>
-                              <h4><b>Motion Resume Team</b></h4>
-                          `,
+                                      <h1>Welcome</h1>
+                                      <p>This was sent to verify email</p>
+                                      <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
+                                      <h4>Thank you,</h4>
+                                      <h4><b>Motion Resume Team</b></h4>
+                                  `,
                         };
 
                         transporter.sendMail(mailOptions, function (error, info) {
                             if (error) {
+                                console.log(error);
+                                console.log(error)
                                 res.status(500).send(
                                     "Error in sending email"
                                 );
                             } else {
-
-                                // Alert("Check your email for veri ")
-                                res.send("Successfully registered, check your email for verification")
-                                res.render("/")
+                                res.send("Successfully registered, check your email for verification");
+                                res.render("index")
                             }
                         });
                     }
                 });
+            }
+            else {
+                console.log("User with this email already exists")
+                res.send("User with this email already exists")
             }
         }
     })
@@ -921,11 +921,7 @@ router.post("/register_jobseeker", (req, res) => {
             res.status(500).send("User with this email already exists")
         }
         else {
-            if (results.email == email) {
-                console.log("User with this email already exists")
-                res.send("User with this email already exists")
-            }
-            else {
+            if (!results) {
                 user.save((err) => {
                     if (err) {
                         console.log(err);
@@ -940,12 +936,12 @@ router.post("/register_jobseeker", (req, res) => {
                             to: userData.email,
                             subject: "Verify Email.",
                             html: `
-                              <h1>Welcome</h1>
-                              <p>This was sent to verify email</p>
-                              <p>Click here to verify <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}">Yes</a></p>
-                              <h4>Thank you,</h4>
-                              <h4><b>Motion Resume Team</b></h4>
-                          `,
+                                      <h1>Welcome</h1>
+                                      <p>This was sent to verify email</p>
+                                      <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
+                                      <h4>Thank you,</h4>
+                                      <h4><b>Motion Resume Team</b></h4>
+                                  `,
                         };
 
                         transporter.sendMail(mailOptions, function (error, info) {
@@ -957,11 +953,15 @@ router.post("/register_jobseeker", (req, res) => {
                                 );
                             } else {
                                 res.send("Successfully registered, check your email for verification");
-                                res.render("/")
+                                res.render("index")
                             }
                         });
                     }
                 });
+            }
+            else {
+                console.log("User with this email already exists")
+                res.send("User with this email already exists")
             }
         }
     })
