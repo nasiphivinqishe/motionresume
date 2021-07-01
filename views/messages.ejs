@@ -1,0 +1,99 @@
+<%- include ('Layout/header') %>
+
+    <body>
+        <br>
+        <center>
+            <h4><b>Messages</b></h4>
+        </center>
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group rounded">
+                                <input type="search" class="form-control rounded" placeholder="Search"
+                                    aria-label="Search" aria-describedby="search-addon" />
+                                <span class="input-group-text border-0" id="search-addon">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <br>
+                            <% for(var i=0; i < chatter.length; i++) { %>
+                                <% if(chatter[i] !=null) { %>
+                                    <span class="personToChatWith" id="<%= chatter[i]._id%>">
+                                        <%= chatter[i].name%>
+                                    </span>
+                                    <br>
+                                    <% } %>
+
+                                        <% } %>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="container" sty>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="messages-container" style="display: none;">
+                                            <div class="my_messages_place" id="my_messages_place"></div>
+                                            <textarea class="message" id="message"
+                                                placeholder="Type a message"></textarea><button
+                                                class="btn btn-md send_message" id="send_message">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="messages_keeper" style="display: none;">
+            <%=JSON.stringify(messages)%>
+        </div>
+
+
+        <script>
+            $(document).ready(function () {
+                $(".personToChatWith").click(function () {
+                    var personToChatWith = $(this).attr('id')
+                    var allMessages = $("#messages_keeper").text()
+
+                    var messagToDisplay = JSON.parse(allMessages).map(message => {
+                        if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
+                            return `<p style='background-color: #f2f2f2; padding: 1%;'>${message.text}</p>`
+                        }
+                    })
+
+                    $(".my_messages_place").html(messagToDisplay)
+
+                    // $(".my_messages_place").after(``); append()
+                    // .before  vs prepend()
+
+                    $(".messages-container").show() //js style.display = "inline" or jquery .css("display":"inline")
+
+
+                    $(".send_message").click(function () {
+                        var message = $("#message").val();
+                        $(".my_messages_place").append(message)
+                        $("#message").val('');
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/save_messages",
+                            data: { message: message, personToChatWith: personToChatWith },
+                            success: function (data) {
+                                alert("Success, check logs");
+                                console.log(data);
+                            },
+                            error: function (data, status, xhr) {
+                                alert("Error, check logs");
+                                console.log(data);
+                            },
+                        });
+                    })
+                })
+            })
+        </script>
+    </body>
+    <%- include ('Layout/footer') %>

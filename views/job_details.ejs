@@ -188,26 +188,26 @@
         var wrapper = $(".field_wrapper"); //Input field wrapper
         var fieldHTML =
           `<div> <div class="row">
-                      <div class="col-md-7">  
-                        <div class="form-group">
-                            <label for="pwd">Type</label>
-                            <select class="form-control question-type" name="the_types[]">
-                                <option selected value="" disabled="true">Select type</option>
-                                <option>Text</option>
-                                <option>Video</option>
-                                <option>Canvas</option>
-                            </select>
+          <div class="col-md-7">
+            <div class="form-group">
+              <label for="pwd">Type</label>
+              <select class="form-control question-type" name="the_types[]">
+                <option selected value="" disabled="true">Select type</option>
+                <option>Text</option>
+                <option>Video</option>
+                <option>Canvas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-7">
+                <label for="usr">Question</label>
+                <input type="text" class="form-control" placeholder="Enter question here..." name="field_name[]">
                           </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="row">
-                          <div class="col-md-7">
-                            <label for="usr">Question</label>
-                            <input type="text" class="form-control" placeholder="Enter question here..." name="field_name[]">
-                          </div>
-                        </div> 
-                     </div><a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus" aria-hidden="true"></i></a></div>
+              </div>
+            </div><a href="javascript:void(0);" class="remove_button"><i class="fa fa-minus" aria-hidden="true"></i></a></div>
         </div>`; //New input field html
         var x = 1; //Initial field counter is 1
 
