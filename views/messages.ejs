@@ -71,9 +71,9 @@
 
                 var socket = io();
                 var loggedInUserId = "<%=loggedInUserId%>"
+
                 socket.on(loggedInUserId, (data) => {
-                    //update dom
-                    console.log(data)
+                    $(".my_messages_place").append(`<p>${data.message}</p>`)
                 })
 
                 $(".searchBar").keyup(function () {
@@ -129,7 +129,7 @@
                                                 alert("Success, check logs");
 
                                                 socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
-                                                $(".my_messages_place").append(message)
+
                                                 console.log(data);
                                             },
                                             error: function (data, status, xhr) {
@@ -180,7 +180,6 @@
                             success: function (data) {
                                 alert("Success, check logs");
                                 socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
-                                $(".my_messages_place").append(message)
                                 console.log(data);
                             },
                             error: function (data, status, xhr) {
