@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const User = require("../models/users");
 const Job = require("../models/jobs");
-const Notification = require("../models/notifications");
+const Message = require("../models/messages");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 var uuid = require("node-uuid");
@@ -698,8 +698,97 @@ router.post("/update_read_notification", auth, (req, res) => {
     })
 })
 
-router.get("/messages", auth, (req, res) => {
-    res.render("response")
+/***********************FROM HERE*****************/
+router.get("/messages", (req, res) => {
+
+    Message.find({ $or: [{ to: req.session.userId }, { from: req.session.userId }] }, function (err, messages) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (messages.length == 0) {
+                res.render("messages", { messages: [], chatter: [] })
+            } else {
+                var userIds = messages.map((message) => {
+                    var userId = message.from != req.session.userId ? message.from : message.to
+                    return userId
+                })
+
+                var mySet = new Set(userIds);
+                var userIdsUnique = [...mySet];
+
+                var getUserDetailsPromises = []
+                userIdsUnique.forEach(userId => {//for loop
+                    getUserDetailsPromises.push(
+                        User.findOne({
+                            _id: userId
+                        })
+                            .then(result => Promise.resolve(result))
+                            .catch(error => Promise.reject(error))
+                    )
+                })
+
+                return Promise.all(getUserDetailsPromises) //here execute
+                    .then(usersResults => {
+
+                        res.render("messages", {
+                            messages: messages,
+                            chatter: usersResults,
+                            loggedInUserId: req.session.userId,
+                        })
+                    })
+                    .catch(error => res.render("messages", {
+                        error: error,
+                        messages: [],
+                        loggedInUserId: req.session.userId,
+                        chatter: [],
+                    }))
+            }
+        }
+    })
+})
+
+
+// Save messages
+router.post("/save_messages", (req, res) => {
+    var text = req.body.message
+    var to = req.body.personToChatWith
+
+    try {
+        const message = new Message({
+            text: text,
+            to: to,
+            from: req.session.userId,
+            isRead: "false",
+        })
+
+        return message.save()
+            .then((result) => {
+                res.status(200).send("ok")
+            })
+            .catch(error => {
+                console.error(error);
+                res.status(500).send({ "error": error });
+            })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ "error": error });
+    }
+})
+
+//################### Delete messages
+router.post("/delete_message", auth, (req, res) => {
+    var messageId = req.body.messageId
+
+    return Message.deleteOne({ id: messageId })
+        .then((results) => {
+            console.log("Successssfully deleted message")
+            res.status(200).send("ok")
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).send({ "error": error });
+        })
 })
 
 router.get("/view_interview_answers", (req, res) => {
