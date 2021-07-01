@@ -427,6 +427,21 @@ router.post("/update_job_details", (req, res) => {
     });
 });
 
+router.get("/search_user", (req, res) => {
+    var search = req.query.search
+
+    User.find({ name: search }, 'name _id', function (err, users) {
+        if (err) {
+            console.log("error")
+            res.status(500).send("Error in finding users!")
+        }
+        else {
+            console.log(users)
+            res.send({ users: users })
+        }
+    })
+})
+
 router.get("/view_profile", (req, res) => {
     var userId = req.query.userId
 
