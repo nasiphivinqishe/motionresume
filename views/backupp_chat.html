@@ -1,0 +1,516 @@
+<%- include ('Layout/header') %>
+    <style>
+        #searchResults {
+            z-index: 1;
+            position: absolute;
+            display: none;
+            width: 200px;
+            height: 200px;
+            left: 80px;
+            top: 15px;
+            background-color: #f2f2f2;
+        }
+
+        .chatDiv {
+            height: 75vh;
+            width: 80vw;
+            /* background-color: green; */
+            margin-top: 2%;
+        }
+
+        .nav {
+            height: 90px;
+            text-align: center !important;
+        }
+
+        .leftBar {
+            height: 69vh;
+        }
+
+        .searchChat {
+            height: 20%;
+            margin: 0 auto;
+            padding: 8% 0 8% 0;
+        }
+
+        .chatHistoryDiv {
+            margin-top: 0;
+            height: 88.5%;
+            overflow-y: scroll;
+        }
+
+        .defaultChatHolderBoxParent {
+            position: relative;
+            height: 69vh;
+            display: none;
+        }
+
+        .defaultChatHolderBoxChild {
+            width: 70%;
+            position: absolute;
+            top: 50%;
+            left: 35%;
+            margin: -25px 0 0 -25px;
+        }
+
+
+        /* .chatBox {
+        display: ;
+    } */
+        .nameOfUser {
+            height: 15%;
+            margin: 0 auto;
+            padding-left: 5px;
+            padding-top: 30px;
+        }
+
+        .messageInputDiv {
+            position: absolute;
+            bottom: 0;
+            height: 15%;
+            width: 100%;
+            padding-left: 5px;
+            padding-top: 15px;
+            float: right;
+            overflow: hidden;
+            padding-right: .5em;
+            text-indent: 10%;
+        }
+
+        .chatsDiv {
+            height: 74%;
+            overflow-y: scroll;
+        }
+
+        .container {
+            max-width: 1170px;
+            margin: auto
+        }
+
+        img {
+            max-width: 100%
+        }
+
+        .inbox_msg {
+            border: 1px solid #c4c4c4;
+            clear: both;
+            overflow: hidden
+        }
+
+        .top_spac {
+            margin: 20px 0 0
+        }
+
+        .incoming_msg_img {
+            display: inline-block;
+            width: 6%
+        }
+
+        .received_msg {
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%
+        }
+
+        .received_withd_msg p {
+            background: #ebebeb none repeat scroll 0 0;
+            border-radius: 3px;
+            color: #646464;
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 10px 5px 12px;
+            width: 100%
+        }
+
+        .time_date {
+            color: #747474;
+            display: block;
+            font-size: 12px;
+            margin: 8px 0 0
+        }
+
+        .received_withd_msg {
+            width: 57%
+        }
+
+        .mesgs {
+            float: left;
+            padding: 30px 15px 0 25px;
+            /* width: 60% */
+        }
+
+        .sent_msg p {
+            background: #05728f none repeat scroll 0 0;
+            border-radius: 3px;
+            font-size: 14px;
+            margin: 0;
+            color: #fff;
+            padding: 5px 10px 5px 12px;
+            width: 100%
+        }
+
+        .outgoing_msg {
+            overflow: hidden;
+            margin: 26px 0 26px
+        }
+
+        .sent_msg {
+            float: right;
+            width: 46%
+        }
+
+        .input_msg_write input {
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            border: medium none;
+            color: #4c4c4c;
+            font-size: 15px;
+            min-height: 48px;
+            width: 47vw;
+            text-indent: 20px;
+        }
+
+        .type_msg {
+            border-top: 1px solid #c4c4c4;
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .msg_send_btn {
+            background: #05728f none repeat scroll 0 0;
+            border: medium none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 17px;
+            height: 33px;
+            position: absolute;
+            right: 0;
+            top: 11px;
+            width: 33px
+        }
+
+        .messaging {
+            padding: 0 0 50px 0
+        }
+
+        .msg_history {
+            height: 30%;
+            width: 47vw;
+            overflow-y: auto
+        }
+    </style>
+
+    <body>
+        <br>
+
+
+
+        <div class="row container chatDiv  w3-card" style="padding: 0px !important">
+            <div class="leftBar col-sm-4">
+                <div class="row searchChat" style="margin-right: -15px;;margin-left: -15px;border: 1px solid #e3e3e3">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control searchBar" id="searchBar"
+                            placeholder="Search or start new chat" />
+                    </div>
+                </div>
+
+
+
+                <div class="row chatHistoryDiv">
+                    <div class="col-sm-12">
+                        <div class="searchResults" id="searchResults"></div>
+                        <% for(var i=0; i < chatter.length; i++) { %>
+                            <% if(chatter[i] !=null) { %>
+                                <ul class="list-group"
+                                    style="margin-right: -15px;margin-left: -15px; border-radius: 0px !important;">
+                                    <li class="list-group-item personToChatWith" id="<%= chatter[i]._id%>">
+                                        <img src="/img/default.jpg" width="35" height="35" class="rounded-circle">
+                                        <b>
+                                            <%= chatter[i].name%>
+                                        </b>
+                                    </li>
+                                </ul>
+                                <% } %>
+
+                                    <% } %>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="rightBar col-sm-8">
+                <div class="defaultChatHolderBoxParent">
+                    <div class="defaultChatHolderBoxChild">
+                        <h3><b>Click user to open chat...</b></h3>
+                    </div>
+                </div>
+
+                <div class="chatBox">
+                    <div class="row"
+                        style="height: 16% !important;  border: 1px solid #e3e3e3; border-left: none !important;">
+                        <div class="col-sm-12 nameOfUser">
+                            <p><b>Name Name</b> <img src="img/default.jpg" style="margin-bottom: 15px;" width="35"
+                                    height="35" class="rounded-circle float-right"></p>
+                        </div>
+                    </div>
+
+                    <div class="row mesgs" style="height: 71% !important; overflow-y: scroll;">
+
+                        <div class="msg_history">
+                            <div class="incoming_msg">
+                                <div class="incoming_msg_img"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>Test which is a new approach to have all
+                                            solutions
+                                        </p>
+                                        <span class="time_date"> 11:01 AM | June 9</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions
+                                    </p>
+                                    <span class="time_date"> 11:01 AM | June 9</span>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions
+                                    </p>
+                                    <span class="time_date"> 11:01 AM | June 9</span>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions
+                                    </p>
+                                    <span class="time_date"> 11:01 AM | June 9</span>
+                                </div>
+                            </div>
+                            <div class="outgoing_msg">
+                                <div class="sent_msg">
+                                    <p>Test which is a new approach to have all
+                                        solutions
+                                    </p>
+                                    <span class="time_date"> 11:01 AM | June 9</span>
+                                </div>
+                            </div>
+                            <div class="incoming_msg">
+                                <div class="incoming_msg_img"> </div>
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>Test, which is a new approach to have</p>
+                                        <span class="time_date"> 11:01 AM | Yesterday</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row type_msg" style="height: 13% !important; border: 1px solid #e3e3e3">
+                        <div class="input_msg_write">
+                            <input type="text" class="write_msg" placeholder="Type a message" />
+                            <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+
+
+
+
+
+
+
+
+        <!-- <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group rounded">
+                                <div id="search">
+                                    <input class="searchBar" type="text" name="searchBar" id="searchBar"
+                                        placeholder="search/ start new chat" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="searchResults" id="searchResults"></div>
+                            <% for(var i=0; i < chatter.length; i++) { %>
+                                <% if(chatter[i] !=null) { %>
+                                    <span class="personToChatWith" id="<%= chatter[i]._id%>">
+                                        <%= chatter[i].name%>
+                                    </span>
+                                    <br>
+                                    <% } %>
+
+                                        <% } %>
+
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="container" sty>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="messages-container" style="display: none;">
+                                            <div class="my_messages_place" id="my_messages_place"></div>
+                                            <textarea class="message" id="message"
+                                                placeholder="Type a message"></textarea><button
+                                                class="btn btn-md send_message" id="send_message">Send</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div id="messages_keeper" style="display: none;">
+            <%=JSON.stringify(messages)%>
+        </div>
+
+        <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                var socket = io();
+                var loggedInUserId = "<%=loggedInUserId%>"
+
+                socket.on(loggedInUserId, (data) => {
+                    $(".my_messages_place").append(`<p>${data.message}</p>`)
+                })
+
+                $(".searchBar").keyup(function () {
+                    var search = $("#searchBar").val();
+                    $("#searchResults").show();
+
+                    $.ajax({
+                        method: "GET",
+                        url: "/search_user",
+                        data: { search: search },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.length != 0) {
+
+                                var usersResults = data.users.map(user => {
+                                    return `<li class='personToChatWithOnList list-group-item' id='${user._id}'>${user.name}</li>`
+                                })
+
+                                $(".searchResults").html(`<ul class='list-group'>${usersResults}</ul>`)
+                                $(".personToChatWithOnList").click(function (e) {
+                                    $(".searchResults").hide()
+                                    $(".searchBar").val("")
+                                    var personToChatWith = $(this).attr('id')
+
+                                    var allMessages = $("#messages_keeper").text()
+                                    var messagToDisplay = JSON.parse(allMessages).map(message => {
+                                        if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
+                                            return `<p style='background-color: #f2f2f2; padding: 1%;'>${message.text}</p>`
+                                        }
+                                    })
+
+                                    $(".my_messages_place").html(messagToDisplay)
+
+                                    // $(".my_messages_place").after(``); append()
+                                    // .before  vs prepend()
+
+                                    $(".messages-container").show() //js style.display = "inline" or jquery .css("display":"inline")
+
+
+                                    $(".send_message").click(function (e) {
+                                        e.preventDefault()
+                                        e.stopImmediatePropagation()
+
+                                        var message = $("#message").val();
+                                        $(".my_messages_place").append(message)
+                                        $("#message").val('');
+
+                                        $.ajax({
+                                            method: "POST",
+                                            url: "/save_messages",
+                                            data: { message: message, personToChatWith: personToChatWith },
+                                            success: function (data) {
+                                                alert("Success, check logs");
+
+                                                socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
+
+                                                console.log(data);
+                                            },
+                                            error: function (data, status, xhr) {
+                                                alert("Error, check logs");
+                                                console.log(data);
+                                            },
+                                        });
+                                    })
+                                })
+                            }
+                        },
+                        error: function (data, status, xhr) {
+                            alert("Error, check logs");
+                            console.log(data);
+                        },
+                    });
+                })
+
+
+                $(".personToChatWith").click(function () {
+                    var personToChatWith = $(this).attr('id')
+
+
+                    var allMessages = $("#messages_keeper").text()
+                    var messagToDisplay = JSON.parse(allMessages).map(message => {
+                        if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
+                            return `<p style='background-color: #f2f2f2; padding: 1%;'>${message.text}</p>`
+                        }
+                    })
+
+                    $(".my_messages_place").html(messagToDisplay)
+
+                    // $(".my_messages_place").after(``); append()
+                    // .before  vs prepend()
+
+                    $(".messages-container").show() //js style.display = "inline" or jquery .css("display":"inline")
+
+
+                    $(".send_message").click(function () {
+                        var message = $("#message").val();
+                        $(".my_messages_place").append(message)
+                        $("#message").val('');
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/save_messages",
+                            data: { message: message, personToChatWith: personToChatWith },
+                            success: function (data) {
+                                alert("Success, check logs");
+                                socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
+                                console.log(data);
+                            },
+                            error: function (data, status, xhr) {
+                                alert("Error, check logs");
+                                console.log(data);
+                            },
+                        });
+                    })
+                })
+            })
+        </script>
+    </body>
+    <%- include ('Layout/footer') %>

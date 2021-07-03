@@ -25,9 +25,11 @@ const PORT = process.env.PORT || 4000;
 io.on("connection", (socket) => {
   console.log("some client connected")
 
+
+
   socket.on("messages", (data) => {
     console.log(data)
-    io.emit(data.receiver, { message: data.message, sender: data.sender })
+    io.emit(data.receiver, { message: data.message, sender: data.sender, receiver: data.receiver })
   })
 });
 

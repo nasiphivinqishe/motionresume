@@ -1,57 +1,115 @@
+<html>
+
+<head>
+    <title>Chat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+</head>
+<style>
+    .chatDiv {
+        height: 75vh;
+        width: 80vw;
+        background-color: green;
+        margin-top: 2%;
+    }
+
+    .nav {
+        height: 90px;
+        background-color: red;
+        text-align: center !important;
+    }
+
+    .personToChatWithDiv {
+        background-color: yellow;
+        border-right: 5px solid black;
+        margin: top 0;
+        height: 72vh;
+        width: 80vw
+    }
+
+    .placeToChat {
+        display: flex;
+
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    .searcBarDiv {
+        background-color: blue;
+        border-bottom: 5px solid black;
+        height: 93px;
+        width: 10vw
+    }
+
+    .usersToChatTo {
+        background-color: purple;
+        height: 50vh;
+        width: 24vw
+    }
+</style>
+
 <body>
-
-    <div class="container">
-        <h1>&#x2728;Harry Potter Characters &#x2728;</h1>
-        <div id="searchWrapper">
-            <input type="text" name="searchBar" id="searchBar" placeholder="search for a character" />
-        </div>
-        <ul id="charactersList"></ul>
+    <div class="nav">
+        <center>
+            <h4><b>Messages</b></h4>
+        </center>
     </div>
-    <script src="app.js"></script>
-    <script>
-        const charactersList = document.getElementById('charactersList');
-        const searchBar = document.getElementById('searchBar');
-        let hpCharacters = [];
+    <div class="container card chatDiv">
+        <div class="card-body">
+            <div class="row">
+                <div class="personToChatWithDiv col-sm-4">
+                    <div class="input-group rounded">
+                        <div class="searcBarDiv col-sm-12" id="search">
+                            <br>
+                            <input class="searchBar" type="text" name="searchBar" id="searchBar"
+                                placeholder="search/ start new chat" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="searchResults" id="searchResults">
+                    </div>
+                    <div class="usersToChatTo">
+                        <span class="personToChatWith" id="<%= chatter[i]._id%>">
+                            <ul class="list-group">
+                                <li class="list-group-item">Nas</li>
+                                <li class="list-group-item">Lov</li>
+                                <li class="list-group-item">Warn</li>
+                            </ul>
+                        </span>
+                    </div>
 
-        searchBar.addEventListener('keyup', (e) => {
-            const searchString = e.target.value.toLowerCase();
+                </div>
+                <div class="col-sm-8">
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="placeToChat"><b>Select a person to start a chat...</b></p>
+                                <div class="messages-container" style="display: none;">
+                                    <div class="my_messages_place" id="my_messages_place">
+                                    </div>
+                                    <textarea class="message" id="message" placeholder="Type a message"></textarea>
+                                    <button class="btn btn-md send_message" id="send_message">Send</button>
+                                </div>
+                            </div>
+                        </div>
 
-            const filteredCharacters = hpCharacters.filter((character) => {
-                return (
-                    character.name.toLowerCase().includes(searchString) ||
-                    character.house.toLowerCase().includes(searchString)
-                );
-            });
-            displayCharacters(filteredCharacters);
-        });
+                    </div>
+                </div>
 
-        const loadCharacters = async () => {
-            try {
-                const res = await fetch('https://hp-api.herokuapp.com/api/characters');
-                hpCharacters = await res.json();
-                displayCharacters(hpCharacters);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+            </div>
+        </div>
 
-        const displayCharacters = (characters) => {
-            const htmlString = characters
-                .map((character) => {
-                    return `
-            <li class="character">
-                <h2>${character.name}</h2>
-                <p>House: ${character.house}</p>
-                <img src="${character.image}"></img>
-            </li>
-        `;
-                })
-                .join('');
-            charactersList.innerHTML = htmlString;
-        };
-
-        loadCharacters();
-
-    </script>
-
+    </div>
 </body>
+
+</html>

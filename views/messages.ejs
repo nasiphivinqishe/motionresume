@@ -1,84 +1,351 @@
-<%- include ('Layout/header') %>
+<html>
+
+<head>
+    <title>Chat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
         #searchResults {
             z-index: 1;
             position: absolute;
             display: none;
-            width: 200px;
-            height: 200px;
-            left: 80px;
-            top: 15px;
+            width: 23vw;
+            height: 60vh;
             background-color: #f2f2f2;
         }
+
+        .chatDiv {
+            height: 75vh;
+            width: 80vw;
+            /* background-color: green; */
+            margin-top: 2%;
+        }
+
+        .nav {
+            height: 90px;
+            text-align: center !important;
+        }
+
+        .leftBar {
+            height: 69vh;
+        }
+
+        .searchChat {
+            height: 20%;
+            margin: 0 auto;
+            padding: 8% 0 8% 0;
+        }
+
+        .chatHistoryDiv {
+            margin-top: 0;
+            height: 88.5%;
+            overflow-y: scroll;
+        }
+
+        .defaultChatHolderBoxParent {
+            position: relative;
+            height: 69vh;
+        }
+
+        .defaultChatHolderBoxChild {
+            width: 70%;
+            position: absolute;
+            top: 50%;
+            left: 35%;
+            margin: -25px 0 0 -25px;
+        }
+
+
+        .chatBox {
+            display: none;
+        }
+
+        .nameOfUser {
+            height: 15%;
+            margin: 0 auto;
+            padding-left: 5px;
+            padding-top: 30px;
+        }
+
+        .messageInputDiv {
+            position: absolute;
+            bottom: 0;
+            height: 15%;
+            width: 100%;
+            padding-left: 5px;
+            padding-top: 15px;
+            float: right;
+            overflow: hidden;
+            padding-right: .5em;
+            text-indent: 10%;
+        }
+
+        .chatsDiv {
+            height: 74%;
+            overflow: scroll;
+
+        }
+
+        .container {
+            max-width: 1170px;
+            margin: auto
+        }
+
+        img {
+            max-width: 100%
+        }
+
+        .inbox_msg {
+            border: 1px solid #c4c4c4;
+            clear: both;
+            overflow: hidden
+        }
+
+        .top_spac {
+            margin: 20px 0 0
+        }
+
+        .incoming_msg_img {
+            display: inline-block;
+            width: 6%
+        }
+
+        .received_msg {
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%
+        }
+
+        .received_withd_msg p {
+            background: #ebebeb none repeat scroll 0 0;
+            border-radius: 3px;
+            color: #646464;
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 10px 5px 12px;
+            width: 100%
+        }
+
+        .time_date {
+            color: #747474;
+            display: block;
+            font-size: 12px;
+            margin: 8px 0 0
+        }
+
+        .received_withd_msg {
+            width: 57%
+        }
+
+        .mesgs {
+
+            padding: 30px 15px 0 25px;
+            /* width: 60% */
+        }
+
+        .sent_msg p {
+            background: #05728f none repeat scroll 0 0;
+            border-radius: 3px;
+            font-size: 14px;
+            margin: 0;
+            color: #fff;
+            padding: 5px 10px 5px 12px;
+            width: 100%
+        }
+
+        .outgoing_msg {
+            overflow: hidden;
+            margin: 26px 0 26px
+        }
+
+        .sent_msg {
+            float: right;
+            width: 46%
+        }
+
+        .input_msg_write input {
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            border: medium none;
+            color: #4c4c4c;
+            font-size: 15px;
+            min-height: 48px;
+            width: 47vw;
+            text-indent: 20px;
+        }
+
+        .type_msg {
+            border-top: 1px solid #c4c4c4;
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .msg_send_btn {
+            background: #05728f none repeat scroll 0 0;
+            border: medium none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 17px;
+            height: 33px;
+            position: absolute;
+            right: 0;
+            top: 11px;
+            width: 33px
+        }
+
+        .messaging {
+            padding: 0 0 50px 0
+        }
+
+        .msg_history {
+            /* height: 30%; */
+            width: 47vw;
+            overflow-y: auto
+        }
+
+        */
     </style>
+</head>
 
-    <body>
-        <br>
-        <center>
-            <h4><b>Messages</b></h4>
-        </center>
-        <div class="container">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="input-group rounded">
-                                <div id="search">
-                                    <input class="searchBar" type="text" name="searchBar" id="searchBar"
-                                        placeholder="search/ start new chat" />
-                                </div>
+<body>
+    <%- include ('Layout/header') %>
+        <div class="container mainChatContainer">
+            <center>
+                <div class="row  chatDiv  w3-card" style="padding: 0px !important">
+                    <div class="leftBar col-sm-4" style="text-align: left !important;">
+                        <div class="row searchChat"
+                            style="margin-right: -15px;;margin-left: -15px;border: 1px solid #e3e3e3">
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control searchBar" id="searchBar"
+                                    placeholder="Search or start new chat" />
                             </div>
-                            <br>
-                            <div class="searchResults" id="searchResults"></div>
-                            <% for(var i=0; i < chatter.length; i++) { %>
-                                <% if(chatter[i] !=null) { %>
-                                    <span class="personToChatWith" id="<%= chatter[i]._id%>">
-                                        <%= chatter[i].name%>
-                                    </span>
-                                    <br>
-                                    <% } %>
+                        </div>
 
+
+                        <div class="row chatHistoryDiv">
+                            <div class="col-sm-12">
+                                <div class="searchResults" id="searchResults"></div>
+                                <% for(var i=0; i < chatter.length; i++) { %>
+                                    <% if(chatter[i] !=null) { %>
+                                        <ul class="list-group"
+                                            style="margin-right: -15px;margin-left: -15px; border-radius: 0px !important;">
+                                            <li class="list-group-item personToChatWith" id="<%= chatter[i]._id%>">
+                                                <img src="/img/default.jpg" width="35" height="35"
+                                                    class="rounded-circle">
+                                                <b>
+                                                    <%= chatter[i].name%>
+                                                </b>
+                                            </li>
+                                        </ul>
                                         <% } %>
 
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="container" sty>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="messages-container" style="display: none;">
-                                            <div class="my_messages_place" id="my_messages_place"></div>
-                                            <textarea class="message" id="message"
-                                                placeholder="Type a message"></textarea><button
-                                                class="btn btn-md send_message" id="send_message">Send</button>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                            <% } %>
                             </div>
                         </div>
 
+
+                    </div>
+                    <div class="rightBar col-sm-8" style="text-align: left !important;">
+                        <div class="defaultChatHolderBoxParent">
+                            <div class="defaultChatHolderBoxChild">
+                                <h3><b>Click user to open chat...</b></h3>
+                            </div>
+                        </div>
+
+
+                        <div class="chatBox">
+                            <div class="row"
+                                style="height: 16% !important;  border: 1px solid #e3e3e3; border-left: none !important;">
+                                <div class="col-sm-12 nameOfUser">
+                                    <p class="name"><b>Name Name</b> <img src="img/default.jpg"
+                                            style="margin-bottom: 15px;" width="35" height="35"
+                                            class="rounded-circle float-right"></p>
+                                </div>
+                            </div>
+
+                            <div class="row mesgs" style="height: 71% !important; overflow-y: scroll;">
+                                <div class="msg_history"></div>
+                            </div>
+
+                            <div class="row type_msg" style="height: 11% !important; border: 1px solid #e3e3e3">
+                                <div class="input_msg_write">
+                                    <input type="text" class="write_msg" placeholder="Type a message" />
+                                    <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                                            aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </center>
         </div>
+
         <div id="messages_keeper" style="display: none;">
             <%=JSON.stringify(messages)%>
         </div>
-
+        <div id="chatters_keeper" style="display: none;">
+            <%=JSON.stringify(chatter)%>
+        </div>
         <script src="http://localhost:5000/socket.io/socket.io.js"></script>
         <script>
             $(document).ready(function () {
+                var personChattingWithId = ""
+
 
                 var socket = io();
                 var loggedInUserId = "<%=loggedInUserId%>"
 
+
                 socket.on(loggedInUserId, (data) => {
-                    $(".my_messages_place").append(`<p>${data.message}</p>`)
+
+                    /*************************************UPDATE STATE OF MESSAGES START********************************/
+                    //get messages state to temo variable
+                    var tempMessagesHolder = JSON.parse($("#messages_keeper").text())
+                    //update tem messages holder
+                    tempMessagesHolder.push({
+                        to: data.receiver,
+                        from: data.sender,
+                        text: data.message,
+                        created: new Date()
+                    })
+
+                    //set messages(original state) with value of updated temp holder
+                    $("#messages_keeper").text(JSON.stringify(tempMessagesHolder))
+
+                    console.log(JSON.parse($("#messages_keeper").text()))
+
+
+                    /*************************************UPDATE STATE OF MESSAGES END********************************/
+
+                    if (personChattingWithId == data.sender) { //append messages if you are an opened user
+                        $(".msg_history").append(
+                            `<div class="incoming_msg">
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <p>${data.message}</p>
+                                        <span class="time_date">${moment(new Date()).format('hh:m| DD/MM/YYYY')}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `)
+                    }
                 })
 
                 $(".searchBar").keyup(function () {
                     var search = $("#searchBar").val();
                     $("#searchResults").show();
+                    $(".personToChatWith").hide()
+                    $(".defaultChatHolderBoxParent").hide()
 
                     $.ajax({
                         method: "GET",
@@ -90,47 +357,96 @@
 
                                 var usersResults = data.users.map(user => {
                                     return `<li class='personToChatWithOnList list-group-item' id='${user._id}'>${user.name}</li>`
+
                                 })
 
                                 $(".searchResults").html(`<ul class='list-group'>${usersResults}</ul>`)
                                 $(".personToChatWithOnList").click(function (e) {
                                     $(".searchResults").hide()
+                                    $(".personToChatWith").show()
                                     $(".searchBar").val("")
+                                    $(".chatBox").show()
                                     var personToChatWith = $(this).attr('id')
+                                    personChattingWithId = personToChatWith
+
 
                                     var allMessages = $("#messages_keeper").text()
-                                    var messagToDisplay = JSON.parse(allMessages).map(message => {
-                                        if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
-                                            return `<p style='background-color: #f2f2f2; padding: 1%;'>${message.text}</p>`
-                                        }
-                                    })
 
-                                    $(".my_messages_place").html(messagToDisplay)
+                                    if (allMessages) {
+                                        var messagToDisplay = JSON.parse(allMessages).map(message => {
+                                            if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
 
-                                    // $(".my_messages_place").after(``); append()
-                                    // .before  vs prepend()
+                                                if (message.from == "<%=loggedInUserId%>") {
+                                                    return `<div class="outgoing_msg">
+                                                    <div class="sent_msg">
+                                                        <p>${message.text}</p>
+                                                        <span class="time_date">${moment(message.created).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>`
+                                                }
+                                                else {
+                                                    return `  <div class="incoming_msg">
+                                                    <div class="received_msg">
+                                                        <div class="received_withd_msg">
+                                                            <p>${message.text}</p>
+                                                            <span class="time_date">${moment(message.created).format('hh:m| DD/MM/YYYY')}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                `
+                                                }
+                                            }
+                                        })
 
-                                    $(".messages-container").show() //js style.display = "inline" or jquery .css("display":"inline")
+                                        $(".msg_history").html(messagToDisplay)
+                                    }
+
+                                    $(".rightBar").show()
 
 
-                                    $(".send_message").click(function (e) {
+                                    $(".msg_send_btn").click(function (e) {
                                         e.preventDefault()
                                         e.stopImmediatePropagation()
 
-                                        var message = $("#message").val();
-                                        $(".my_messages_place").append(message)
-                                        $("#message").val('');
+                                        var message = $(".write_msg").val();
+
+
+                                        $(".write_msg").val('');
 
                                         $.ajax({
                                             method: "POST",
                                             url: "/save_messages",
                                             data: { message: message, personToChatWith: personToChatWith },
                                             success: function (data) {
-                                                alert("Success, check logs");
+
+
+                                                /*************************************UPDATE STATE OF MESSAGES START********************************/
+                                                //get messages state to variable
+                                                var messagesHolder = JSON.parse($("#messages_keeper").text())
+
+                                                //update messages holder
+                                                messagesHolder.push({
+                                                    to: personToChatWith,
+                                                    text: message,
+                                                    from: loggedInUserId,
+                                                    created: new Date()
+                                                })
+
+                                                //set messages(original state) with value of updated holder
+                                                $("#messages_keeper").text(JSON.stringify(messagesHolder))
+
+                                                //append chat on success(if message was succesfuly saved to database)
+                                                $(".msg_history").append(`<div class="outgoing_msg">
+                                                    <div class="sent_msg">
+                                                        <p>${message}</p>
+                                                        <span class="time_date">${moment(new Date()).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>`)
+
+                                                /*************************************UPDATE STATE OF MESSAGES END********************************/
 
                                                 socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
 
-                                                console.log(data);
                                             },
                                             error: function (data, status, xhr) {
                                                 alert("Error, check logs");
@@ -151,36 +467,99 @@
 
                 $(".personToChatWith").click(function () {
                     var personToChatWith = $(this).attr('id')
+                    personChattingWithId = personToChatWith
+                    $(".chatBox").show()
+                    $(".defaultChatHolderBoxParent").hide()
+
+                    var allUsers = JSON.parse($("#chatters_keeper").text())
+
+                    if (allUsers) {
+                        var personChattingWith = allUsers.find((user) => {
+                            return user && user._id == personToChatWith
+                        })
+
+                        $(".name").html(`<p'><b>${personChattingWith.name} <img src="img/default.jpg"
+                                            style="margin-bottom: 15px;" width="35" height="35"
+                                            class="rounded-circle float-right"></p>`)
+                    }
+
 
 
                     var allMessages = $("#messages_keeper").text()
-                    var messagToDisplay = JSON.parse(allMessages).map(message => {
-                        if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
-                            return `<p style='background-color: #f2f2f2; padding: 1%;'>${message.text}</p>`
-                        }
-                    })
 
-                    $(".my_messages_place").html(messagToDisplay)
+                    if (allMessages) {
+                        var messagToDisplay = JSON.parse(allMessages).map(message => {
+                            if ((message.from == personToChatWith && message.to == "<%=loggedInUserId%>") || (message.from == "<%=loggedInUserId%>" && message.to == personToChatWith)) {
 
-                    // $(".my_messages_place").after(``); append()
-                    // .before  vs prepend()
+                                if (message.from == "<%=loggedInUserId%>") {
+                                    return `<div class="outgoing_msg">
+                                                    <div class="sent_msg">
+                                                        <p>${message.text}</p>
+                                                        <span class="time_date">${moment(message.created).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>`
+                                }
+                                else {
+                                    return `  <div class="incoming_msg">
+                                                <div class="received_msg">
+                                                    <div class="received_withd_msg">
+                                                        <p>${message.text}</p>
+                                                        <span class="time_date">${moment(message.created).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>
+                                             </div>
+                                            `
+                                }
 
-                    $(".messages-container").show() //js style.display = "inline" or jquery .css("display":"inline")
+                            }
+                        })
 
+                        $(".msg_history").html(messagToDisplay)
+                    }
 
-                    $(".send_message").click(function () {
-                        var message = $("#message").val();
-                        $(".my_messages_place").append(message)
-                        $("#message").val('');
+                    $(".msg_send_btn").click(function () {
+                        var message = $(".write_msg").val();
+                        $(".msg_history").append(`<div class="outgoing_msg">
+                                                    <div class="sent_msg">
+                                                        <p>${message}</p>
+                                                        <span class="time_date">${moment(new Date()).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>`)
+                        $(".write_msg").val('');
 
                         $.ajax({
                             method: "POST",
                             url: "/save_messages",
                             data: { message: message, personToChatWith: personToChatWith },
                             success: function (data) {
-                                alert("Success, check logs");
+
+
+                                /*************************************UPDATE STATE OF MESSAGES START********************************/
+                                //get messages state to variable
+                                var messagesHolder = JSON.parse($("#messages_keeper").text())
+
+                                //update messages holder
+                                messagesHolder.push({
+                                    to: personToChatWith,
+                                    text: message,
+                                    from: loggedInUserId,
+                                    created: new Date()
+                                })
+
+                                //set messages(original state) with value of updated holder
+                                $("#messages_keeper").text(JSON.stringify(messagesHolder))
+
+                                //append chat on success(if message was succesfuly saved to database)
+                                $(".msg_history").append(`<div class="outgoing_msg">
+                                                    <div class="sent_msg">
+                                                        <p>${message}</p>
+                                                        <span class="time_date">${moment(new Date()).format('hh:m| DD/MM/YYYY')}</span>
+                                                    </div>
+                                                </div>`)
+
+                                /*************************************UPDATE STATE OF MESSAGES END********************************/
+
                                 socket.emit("messages", { sender: loggedInUserId, message: message, receiver: personToChatWith })
-                                console.log(data);
                             },
                             error: function (data, status, xhr) {
                                 alert("Error, check logs");
@@ -191,5 +570,5 @@
                 })
             })
         </script>
-    </body>
-    <%- include ('Layout/footer') %>
+</body>
+<%- include ('Layout/footer') %>
