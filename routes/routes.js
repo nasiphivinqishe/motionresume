@@ -5,9 +5,19 @@ const User = require("../models/users");
 const Job = require("../models/jobs");
 const Message = require("../models/messages");
 const fs = require("fs");
-const nodemailer = require("nodemailer");
 var uuid = require("node-uuid");
 const SendEmail = require("./send_email")
+
+const AWS = require('aws-sdk');
+// AWS.config.update({ region: 'us-west-2' });
+
+// AWS.config.update({
+//     // endpoint: "http://localhost:5000",
+//     accessKeyId: "AKIAURJ45DN5DGYTJD5T",
+//     secretAccessKey: "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"
+// });
+
+const lambda = new AWS.Lambda();
 
 // const sendEmailService = new SendEmail()
 
@@ -16,13 +26,13 @@ const SendEmail = require("./send_email")
 // .then(())
 // .catch(())
 
-var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: "nassiphivinqishe@gmail.com",
-        pass: "07328911200",
-    },
-});
+// var transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//         user: "nassiphivinqishe@gmail.com",
+//         pass: "07328911200",
+//     },
+// });
 
 const levelDescriptionObj = {
     1: "Entry",
@@ -528,31 +538,58 @@ router.post("/register_recruiter", (req, res) => {
                         console.log("success")
                         //send email with verifac
 
-                        var mailOptions = {
-                            from: "nassiphivinqishe@gmail.com",
-                            to: userData.email,
-                            subject: "Verify Email.",
-                            html: `
-                                      <h1>Welcome</h1>
-                                      <p>This was sent to verify email</p>
-                                      <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
-                                      <h4>Thank you,</h4>
-                                      <h4><b>Motion Resume Team</b></h4>
-                                  `,
+                        // var mailOptions = {
+                        //     from: "nassiphivinqishe@gmail.com",
+                        //     to: userData.email,
+                        //     subject: "Verify Email.",
+                        //     html: `
+                        //               <h1>Welcome</h1>
+                        //               <p>This was sent to verify email</p>
+                        //               <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
+                        //               <h4>Thank you,</h4>
+                        //               <h4><b>Motion Resume Team</b></h4>
+                        //           `,
+                        // };
+
+                        var params = {
+                            FunctionName: 'sendEmail', /* required */
+                            Payload: JSON.stringify({
+                                "recepient": userData.email,
+                                "subject": "Verify Email",
+                                "emailBody": `
+                                    <h1>Welcome</h1>
+                                    <p>This was sent to verify email</p>
+                                    <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
+                                    <h4>Thank you,</h4>
+                                    <h4><b>Motion Resume Team</b></h4>
+                                `,
+                            })
                         };
 
-                        transporter.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                console.log(error);
+                        return lambda.invoke(params).promise()
+                            .then((result) => {
+                                res.send("Successfully registered, check your email for verification");
+                                res.render("index")
+                            })
+                            .catch(error => {
                                 console.log(error)
                                 res.status(500).send(
                                     "Error in sending email"
                                 );
-                            } else {
-                                res.send("Successfully registered, check your email for verification");
-                                res.render("index")
-                            }
-                        });
+                            })
+
+                        // transporter.sendMail(mailOptions, function (error, info) {
+                        //     if (error) {
+                        //         console.log(error);
+                        //         console.log(error)
+                        //         res.status(500).send(
+                        //             "Error in sending email"
+                        //         );
+                        //     } else {
+                        //         res.send("Successfully registered, check your email for verification");
+                        //         res.render("index")
+                        //     }
+                        // });
                     }
                 });
             }
@@ -1033,33 +1070,33 @@ router.post("/register_jobseeker", (req, res) => {
                         res.send("error in saving user");
                     } else {
                         console.log("success")
-                        //send email with verifac
 
-                        var mailOptions = {
-                            from: "nassiphivinqishe@gmail.com",
-                            to: userData.email,
-                            subject: "Verify Email.",
-                            html: `
-                                      <h1>Welcome</h1>
-                                      <p>This was sent to verify email</p>
-                                      <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
-                                      <h4>Thank you,</h4>
-                                      <h4><b>Motion Resume Team</b></h4>
-                                  `,
+                        var params = {
+                            FunctionName: 'sendEmail', /* required */
+                            Payload: JSON.stringify({
+                                "recepient": userData.email,
+                                "subject": "Verify Email",
+                                "emailBody": `
+                                    <h1>Welcome</h1>
+                                    <p>This was sent to verify email</p>
+                                    <p>Click here to <a href="http://localhost:5000/verify_email?verify_token=${verificationToken}"><button>Verify</button></a></p>
+                                    <h4>Thank you,</h4>
+                                    <h4><b>Motion Resume Team</b></h4>
+                                `,
+                            })
                         };
 
-                        transporter.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                console.log(error);
+                        return lambda.invoke(params).promise()
+                            .then((result) => {
+                                res.send("Successfully registered, check your email for verification");
+                                res.render("index")
+                            })
+                            .catch(error => {
                                 console.log(error)
                                 res.status(500).send(
                                     "Error in sending email"
                                 );
-                            } else {
-                                res.send("Successfully registered, check your email for verification");
-                                res.render("index")
-                            }
-                        });
+                            })
                     }
                 });
             }
